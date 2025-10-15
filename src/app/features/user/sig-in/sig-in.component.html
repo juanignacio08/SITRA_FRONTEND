@@ -1,0 +1,15 @@
+<div class="container text-center mt-5">
+    <p class="text-primary">LOGIN</p>
+</div>
+
+<main #fullScreenContainer>
+    <div class="container text-center mt-5">
+        <h1>Mi Aplicación Angular</h1>
+        <p>Haga clic en el botón para activar/desactivar el modo de pantalla completa.</p>
+
+        <button (click)="toggleFullScreen()">
+            {{ isFullScreen ? 'Salir de Pantalla Completa' : 'Entrar a Pantalla Completa' }}
+        </button>
+
+    </div>
+</main>
