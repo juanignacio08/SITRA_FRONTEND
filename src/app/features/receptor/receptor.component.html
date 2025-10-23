@@ -1,0 +1,134 @@
+<mat-sidenav-container class="sidenav-container ">
+
+    <!-- 🌐 Menú lateral -->
+    <mat-sidenav #sidenav mode="side" opened class="sidenav ">
+        <mat-toolbar class="sidenav-header login-logo-container ">
+            <img src="https://www.gob.pe/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjI4OSwicHVyIjoiYmxvYl9pZCJ9fQ==--870ca7e046354e769c8b91e9c70061374fd26123/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemVfdG9fbGltaXQiOltudWxsLDQ4XX0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--830247c4bafe7cadca50817d8559bf1a09e3aa28/essalud%20341x86%202019.png"
+                alt="Logo" class="login-logo">
+        </mat-toolbar>
+
+        <mat-nav-list>
+            <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
+                <mat-icon class="icon-menu">dashboard</mat-icon>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a mat-list-item routerLink="/pacientes" routerLinkActive="active">
+                <mat-icon class="icon-menu">groups</mat-icon>
+                <span>Pacientes</span>
+            </a>
+
+            <a mat-list-item routerLink="/citas" routerLinkActive="active">
+                <mat-icon class="icon-menu">event</mat-icon>
+                <span>Citas</span>
+            </a>
+
+            <a mat-list-item routerLink="/reportes" routerLinkActive="active">
+                <mat-icon class="icon-menu">bar_chart</mat-icon>
+                <span>Reportes</span>
+            </a>
+        </mat-nav-list>
+    </mat-sidenav>
+
+    <!-- 🧩 Contenido principal -->
+    <mat-sidenav-content class="main-content">
+        <mat-toolbar color="primary" class="toolbar">
+            <!-- Botón de menú -->
+            <button mat-icon-button (click)="sidenav.toggle()" class="menu-btn">
+                <mat-icon>menu</mat-icon>
+            </button>
+
+            <!-- Título -->
+            <span class="titulo-toolbar">Panel receptor</span>
+
+            <!-- Espaciador flexible -->
+            <span class="spacer"></span>
+
+            <!-- Información del usuario -->
+            <div class="usuario-info">
+                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Foto de perfil del usuario"
+                    class="foto-perfil" />
+                <div class="datos-usuario">
+                    <span class="nombre-usuario">Berrocal Creifer</span>
+                    <span class="rol-usuario">Receptor</span>
+                </div>
+                <!-- 🔽 Botón con menú desplegable -->
+                <button mat-icon-button [matMenuTriggerFor]="menuUsuario" class="btn-flecha">
+                    <mat-icon>expand_more</mat-icon>
+                </button>
+
+                <mat-menu #menuUsuario="matMenu">
+                    <button mat-menu-item (click)="verPerfil()">
+                        <mat-icon>person</mat-icon>
+                        <span>Ver perfil</span>
+                    </button>
+                    <button mat-menu-item (click)="cerrarSesion()">
+                        <mat-icon>logout</mat-icon>
+                        <span>Cerrar sesión</span>
+                    </button>
+                </mat-menu>
+            </div>
+        </mat-toolbar>
+
+
+        <div class="dashboard-recepcion">
+
+            <div class="dashboard-content">
+                <!-- Panel de Registro -->
+                <mat-card class="panel-registro">
+                    <mat-card-header class="center-title ">
+                        <mat-card-title> REGISTRO DE PACIENTE</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <form [formGroup]="registroForm">
+                            <mat-form-field appearance="outline" class="w-100" color="primary">
+                                <mat-label class="f-s-14 f-w-600 m-b-8 d-block">
+                                    Tipo de documento
+                                </mat-label>
+                                <mat-select formControlName="tipo_doc" required>
+                                    <mat-option value="ce">Cédula de Extranjería (CE)</mat-option>
+                                    <mat-option value="pas">DNI</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+
+                            <div class="campo-inline">
+                                <mat-form-field appearance="outline" class="campo-doc">
+                                    <mat-label>Número de Documento</mat-label>
+                                    <input matInput formControlName="num_doc" placeholder="Ej: 842531126" required>
+                                </mat-form-field>
+                                <button mat-icon-button color="primary" type="button" matTooltip="Buscar paciente">
+                                    <mat-icon>search</mat-icon>
+                                </button>
+                            </div>
+
+                            <mat-form-field appearance="outline" class="w-100" color="primary">
+                                <mat-label>Nombres Completos</mat-label>
+                                <input matInput formControlName="nombres" required>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="w-100" color="primary">
+                                <mat-label>Apellidos Completos</mat-label>
+                                <input matInput formControlName="apellidos" required>
+                            </mat-form-field>
+
+                            <div class="botones-form">
+                                <button mat-raised-button color="primary" type="button" (click)="registrarCita()">
+                                    <mat-icon>check_circle</mat-icon>
+                                    Registrar Cita
+                                </button>
+
+                                <button mat-stroked-button color="accent" type="reset">Limpiar</button>
+                            </div>
+                        </form>
+                    </mat-card-content>
+                </mat-card>
+
+            </div>
+
+
+        </div>
+    </mat-sidenav-content>
+
+</mat-sidenav-container>

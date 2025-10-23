@@ -1,0 +1,60 @@
+<mat-card class="tabla">
+  <mat-card-header class="center-title">
+    <mat-card-title>HISTORIAL DE ATENCIONES</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <table mat-table [dataSource]="pacientesService.historial" class="mat-elevation-z8 tabla-historial">
+
+      <!-- Turno -->
+      <ng-container matColumnDef="ordenAtencion">
+        <th mat-header-cell *matHeaderCellDef>Turno</th>
+        <td mat-cell *matCellDef="let p">{{ p.ordenAtencion }}</td>
+      </ng-container>
+
+      <!-- Nombre -->
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let p">{{ p.nombre }}</td>
+      </ng-container>
+
+      <!-- Documento -->
+      <ng-container matColumnDef="numeroDocumento">
+        <th mat-header-cell *matHeaderCellDef>N° Documento</th>
+        <td mat-cell *matCellDef="let p">{{ p.numeroDocumento }}</td>
+      </ng-container>
+
+      <!-- Hora Inicio -->
+      <ng-container matColumnDef="horaInicio">
+        <th mat-header-cell *matHeaderCellDef>Hora Inicio</th>
+        <td mat-cell *matCellDef="let p">{{ p.horaInicio }}</td>
+      </ng-container>
+
+      <!-- Hora Fin -->
+      <ng-container matColumnDef="horaFin">
+        <th mat-header-cell *matHeaderCellDef>Hora Fin</th>
+        <td mat-cell *matCellDef="let p">{{ p.horaFin }}</td>
+      </ng-container>
+
+      <!-- llamadas -->
+      <ng-container matColumnDef="llamadas">
+        <th mat-header-cell *matHeaderCellDef>Llamadas</th>
+        <td mat-cell *matCellDef="let p">{{ p.llamadas }}</td>
+      </ng-container>
+
+      <!-- Ventanilla -->
+      <ng-container matColumnDef="ventanilla">
+        <th mat-header-cell *matHeaderCellDef>Ventanilla</th>
+        <td mat-cell *matCellDef="let p">{{ p.ventanilla }}</td>
+      </ng-container>
+
+      <!-- Estado -->
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let p">{{ p.estado }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>

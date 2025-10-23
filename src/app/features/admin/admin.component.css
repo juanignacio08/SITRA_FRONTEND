@@ -1,0 +1,325 @@
+/* Contenedor general */
+.dashboard-admin {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f4f6f8;
+}
+
+
+/* El espacio que empuja el logout a la derecha */
+.spacer {
+  flex: 1 1 auto;
+}
+.panel-cola {
+  margin: 24px auto;
+  max-width: 800px;
+}
+
+.mat-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.center-title {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #1976d2;
+}
+
+.tabla-espera {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th.mat-header-cell {
+  background-color: #e3f2fd;
+  font-weight: 600;
+  text-align: center;
+}
+
+td.mat-cell {
+  text-align: center;
+  padding: 8px;
+}
+
+/* Colores según estado */
+.estado-pendiente {
+  color: #f57c00;
+  font-weight: 600;
+}
+
+.estado-confirmado {
+  color: #388e3c;
+  font-weight: 600;
+}
+
+.center-title {
+  
+  font-size: 20px;         /* tamaño de la fuente */
+  font-weight: bold;       /* negrita */
+ 
+  font-family: 'Helvetica', Arial, sans-serif;
+  display: flex;
+  justify-content: center;   /* Centra horizontalmente */
+  align-items: center;       /* Centra verticalmente */
+  text-align: center;
+  margin-bottom: 20px; 
+ 
+}
+
+/* ///////////////// */
+/* Contenedor Principal */
+.dashboard-container {
+    padding: 20px;
+    background-color: #f8f9fa; /* Fondo ligeramente gris como en la imagen */
+}
+
+/* Encabezado */
+.page-header h1 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #343a40;
+    margin-bottom: 25px;
+}
+
+/* ===== Estilos de las Tarjetas (Widgets) ===== */
+.widget-card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    height: 100%;
+}
+
+.widget-card .card-body {
+    padding: 15px;
+}
+
+.widget-card .card-title {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 400;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.metric-number {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #343a40;
+    line-height: 1.2;
+}
+
+.metric-total {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+/* Estilo para la Tarjeta Azul (Usuarios registrados) */
+.blue-card {
+    background-color: #e6f1f8; /* Fondo azul muy claro */
+    border-left: 5px solid #007bff; /* Borde izquierdo para destacar */
+}
+
+.blue-card .card-title,
+.blue-card .metric-number,
+.blue-card .metric-total {
+    color: #343a40;
+}
+.green-card {
+    background-color: #e6f8ed;      /* Fondo verde muy claro */
+    border-left: 5px solid #28a745; /* Borde izquierdo verde para destacar */
+}
+
+.green-card .card-title,
+.green-card .metric-number,
+.green-card .metric-total {
+    color: #343a40; /* Texto oscuro para buen contraste */
+}
+
+.gray-card {
+    background-color: #f0f0f0;      /* Fondo gris muy claro */
+    border-left: 5px solid #6c757d; /* Borde izquierdo gris para destacar */
+}
+
+.gray-card .card-title,
+.gray-card .metric-number,
+.gray-card .metric-total {
+    color: #343a40; /* Texto oscuro para buen contraste */
+}
+
+
+
+.add-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    line-height: 1;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* ===== Estilos de los Gráficos ===== */
+.chart-card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    height: 100%;
+}
+
+.chart-card .card-header {
+    border-bottom: 1px solid #e9ecef;
+    padding: 15px;
+}
+
+.chart-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #343a40;
+    margin: 0;
+}
+
+/* Gráfico Circular (Donut) y Leyenda */
+.donut-chart-body {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px;
+}
+
+.chart-legend {
+    font-size: 0.9rem;
+}
+
+.legend-box {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    border-radius: 3px;
+}
+
+/* Colores de la Leyenda (Basados en la imagen) */
+.yellow { background-color: #ffc107; }
+.blue-light { background-color: #17a2b8; }
+.blue-dark { background-color: #007bff; }
+.red { background-color: #dc3545; }
+.purple { background-color: #6f42c1; } /* El color dominante en la imagen */
+.grey { background-color: #6c757d; }
+
+/* Gráfico de Línea */
+.line-chart-body {
+    padding: 15px;
+    text-align: center;
+}
+
+.chart-subtitle {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.chart-footer {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 15px;
+    border-top: 1px solid #e9ecef;
+    margin-top: 15px;
+}
+
+.footer-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer-metric .metric-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.footer-metric .metric-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+
+
+/* ///// */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background-color: #69bbd3;
+}
+
+.menu-btn {
+  margin-right: 16px;
+}
+
+.titulo-toolbar {
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.usuario-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.foto-perfil {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  
+}
+
+.datos-usuario {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  text-align: right;
+}
+
+.nombre-usuario {
+  font-weight: 400;
+  font-size: 14px;
+  color: #fff;
+}
+
+.rol-usuario {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.btn-flecha mat-icon {
+  color: #fff;
+  font-size: 24px;
+  transition: transform 0.2s ease;
+}
+
+.btn-flecha:hover mat-icon {
+  transform: rotate(180deg);
+}
+
+
+
+

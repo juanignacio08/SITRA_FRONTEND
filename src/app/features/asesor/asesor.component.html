@@ -1,0 +1,71 @@
+<mat-sidenav-container class="sidenav-container">
+  <!-- 🌐 Menú lateral -->
+  <mat-sidenav #sidenav mode="side" opened class="sidenav">
+    <mat-toolbar class="sidenav-header login-logo-container">
+      <img
+        src="https://www.gob.pe/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjI4OSwicHVyIjoiYmxvYl9pZCJ9fQ==--870ca7e046354e769c8b91e9c70061374fd26123/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemVfdG9fbGltaXQiOltudWxsLDQ4XX0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--830247c4bafe7cadca50817d8559bf1a09e3aa28/essalud%20341x86%202019.png"
+        alt="Logo"
+        class="login-logo"
+      />
+    </mat-toolbar>
+
+    <mat-nav-list>
+      <a mat-list-item routerLink="pacientes" routerLinkActive="active">
+        <mat-icon class="icon-menu">groups</mat-icon>
+        <span>Pacientes en Cola</span>
+      </a>
+
+      <a mat-list-item routerLink="historial" routerLinkActive="active">
+        <mat-icon class="icon-menu">history</mat-icon>
+        <span>Historial de Atenciones</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- 🧩 Contenido principal -->
+  <mat-sidenav-content class="main-content">
+    <mat-toolbar color="primary" class="toolbar">
+      <button mat-icon-button (click)="sidenav.toggle()" class="menu-btn">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <span class="titulo-toolbar">Panel del Asesor</span>
+
+      <span class="spacer"></span>
+
+      <div class="usuario-info">
+        <button (click)="toggleFullScreen()">
+          {{ isFullScreen ? 'Salir de Pantalla Completa' : 'Pantalla Completa' }}
+        </button>
+
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+          alt="Foto de perfil"
+          class="foto-perfil"
+        />
+        <div class="datos-usuario">
+          <span class="nombre-usuario">Berrocal Cerda Creifer</span>
+          <span class="rol-usuario">Asesor</span>
+        </div>
+
+        <button mat-icon-button [matMenuTriggerFor]="menuUsuario" class="btn-flecha">
+          <mat-icon>expand_more</mat-icon>
+        </button>
+
+        <mat-menu #menuUsuario="matMenu">
+          <button mat-menu-item (click)="verPerfil()">
+            <mat-icon>person</mat-icon>
+            <span>Ver perfil</span>
+          </button>
+          <button mat-menu-item (click)="cerrarSesion()">
+            <mat-icon>logout</mat-icon>
+            <span>Cerrar sesión</span>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-toolbar>
+
+    <!-- 🧭 Aquí se cargan los componentes hijos -->
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

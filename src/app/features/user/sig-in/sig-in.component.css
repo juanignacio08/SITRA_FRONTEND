@@ -1,0 +1,176 @@
+/* --- Centrado total del contenedor --- */
+.login-container {
+  display: flex;
+  justify-content: center;   /* Centra horizontalmente */
+  align-items: center;       /* Centra verticalmente */
+  height: 100vh;             /* Ocupa toda la altura de la pantalla */
+  background-color: #f4f6f8; /* Fondo gris claro opcional */
+}
+
+/* --- Estilo de la tarjeta de login --- */
+.login-card {
+  width: 380px;
+  padding: 20px;
+  background-color: #ffffff; /* 🔹 Fondo blanco */
+  border: 2px solid #07aee5; /* 🔹 Borde celeste */
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(7, 174, 229, 0.2); /* Sombra celeste suave */
+}
+/* titulo */
+mat-card-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+
+/* --- Ancho completo para los inputs --- */
+.full-width-input {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* --- Borde gris para los campos --- */
+mat-form-field.mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #ec0ce1e3 !important; /* 🔹 Gris para el borde */
+}
+
+/* --- Color del texto dentro de los inputs --- */
+mat-form-field input,
+mat-form-field select,
+.mat-select-value,
+.mat-select-placeholder {
+  color: #000 !important;       /* Texto negro */
+  caret-color: #000 !important; /* Cursor negro */
+  background-color: #fff;       /* Fondo blanco dentro del campo */
+}
+
+/* --- Color de la etiqueta del input ("Correo Electrónico", etc.) --- */
+mat-form-field .mat-form-field-label {
+  color: #555 !important; /* Gris oscuro */
+}
+
+/* --- Íconos (email, ojo de contraseña, etc.) --- */
+mat-icon,
+.mat-select-arrow {
+  color: #0c0d0d !important; /* Celeste */
+}
+
+/* --- Fondo y texto en la lista desplegable del combo --- */
+.mat-select-panel {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+/* --- Contenedor del botón --- */
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  
+}
+
+/* --- Estilo del botón principal --- */
+button[mat-raised-button] {
+  width: 100%;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  background-color: #07aee5 !important; /* Celeste */
+  color: #fff !important;               /* Texto blanco */
+}
+
+/* --- Acciones inferiores (olvidaste contraseña / registrarte) --- */
+.login-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+
+/*  */
+/* Quita el espacio entre el campo de contraseña y el enlace */
+.full-width-input:last-of-type {
+  margin-bottom: 0; /* elimina el margen inferior del último mat-form-field */
+}
+
+a[mat-button] {
+  display: inline-block;
+  width: 100%;
+  justify-content: center;
+  display: flex;
+
+}
+/* Quita el fondo de hover del enlace Angular Material */
+a[mat-button]:hover {
+  background-color: transparent !important;
+  
+}
+
+
+/* LOGO */
+.login-logo-container {
+  display: flex;
+  justify-content: center;  /* centra horizontalmente */
+  margin-bottom: 5px;      /* separa la imagen del título "Iniciar Sesión" */
+}
+
+.login-logo {
+  max-width: 300px;   /* ancho máximo de la imagen */
+  height: auto;       /* mantiene la proporción */
+}
+
+.center-title {
+  text-align: center;      /* centra el texto */
+  font-size: 20px;         /* tamaño de la fuente */
+  font-weight: bold;       /* negrita */
+  color: #07aee5;          /* color celeste */
+  margin: 0;               /* elimina márgenes extra del mat-card-title */
+  font-family: 'Helvetica', Arial, sans-serif;
+}
+@keyframes waveEffect {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+}
+
+.animated-wave {
+  animation: waveEffect 4s ease-in-out ;
+}
+
+
+
+/* RDFTGHYUJI */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background: #eff2f3; /* color de fondo tipo cielo */
+}
+
+
+.login-container {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f6f8f9;
+  overflow: hidden; /* para que las olas no se salgan */
+}
+
+.wave {
+  position: absolute;
+  font-size: 2rem;
+  pointer-events: none; /* no bloquea clicks */
+}
+
