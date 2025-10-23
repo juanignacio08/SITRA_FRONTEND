@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { SigInComponent } from './features/user/sig-in/sig-in.component';
-
 import { AsesorComponent } from './features/asesor/asesor.component';
 import { AdminComponent } from './features/admin/admin.component';
 import { PacientesComponent } from './features/asesor/pacientes/pacientes.component';

@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule, Router } from '@angular/router';
+import { PacientesService } from '../../shared/pacientes.service';
 interface Paciente {
   ordenAtencion: string;
   nombre: string;
@@ -53,7 +54,9 @@ export class AsesorComponent {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   isFullScreen = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,public pacientesService: PacientesService) { }
+  
+
 
   verPerfil() {
     console.log('Ver perfil');
