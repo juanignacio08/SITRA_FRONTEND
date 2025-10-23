@@ -33,6 +33,7 @@
 
     <!-- 🧩 Contenido principal -->
     <mat-sidenav-content class="main-content">
+        <!-- HEADER -->
         <mat-toolbar color="primary" class="toolbar">
             <!-- Botón de menú -->
             <button mat-icon-button (click)="sidenav.toggle()" class="menu-btn">
@@ -72,10 +73,12 @@
         </mat-toolbar>
 
 
-        <div class="dashboard-recepcion">
+        <!-- MAIN -->
+        <div class="row p-2 mt-4">
+            <div class="col-12 col-lg-4">
 
-            <div class="dashboard-content">
-                <!-- Panel de Registro -->
+            </div>
+            <div class="col-12 col-lg-4 p-2">
                 <mat-card class="panel-registro">
                     <mat-card-header class="center-title ">
                         <mat-card-title> REGISTRO DE PACIENTE</mat-card-title>
@@ -88,30 +91,50 @@
                                 </mat-label>
                                 <mat-select formControlName="tipo_doc" required>
                                     <mat-option value="ce">Cédula de Extranjería (CE)</mat-option>
-                                    <mat-option value="pas">DNI</mat-option>
+                                    <mat-option value="dni">DNI</mat-option>
                                 </mat-select>
                             </mat-form-field>
 
 
-                            <div class="campo-inline">
-                                <mat-form-field appearance="outline" class="campo-doc">
-                                    <mat-label>Número de Documento</mat-label>
-                                    <input matInput formControlName="num_doc" placeholder="Ej: 842531126" required>
-                                </mat-form-field>
-                                <button mat-icon-button color="primary" type="button" matTooltip="Buscar paciente">
-                                    <mat-icon>search</mat-icon>
-                                </button>
+                            <div class="row p-0 m-0">
+                                <div class="col-10 m-0 p-0">
+                                    <mat-form-field appearance="outline" class="campo-doc w-100">
+                                        <mat-label>Número de Documento</mat-label>
+                                        <input matInput type="text" formControlName="num_doc" placeholder="Ej: 842531126" required
+                                            aria-label="'Número de Documento'">
+                                    </mat-form-field>
+
+                                </div>
+                                <div class="col-2 text-end">
+                                    <button mat-icon-button color="primary" type="button" matTooltip="Buscar paciente" (click)="searchPerson()">
+                                        <mat-icon>search</mat-icon>
+                                    </button>
+                                </div>
+
+                                @if (!existsPerson && clickedSearch) {
+                                    <p>Persona no encontrada...</p>
+                                }
                             </div>
 
                             <mat-form-field appearance="outline" class="w-100" color="primary">
                                 <mat-label>Nombres Completos</mat-label>
-                                <input matInput formControlName="nombres" required>
+                                <input matInput formControlName="nombres" required aria-label="Nombre">
                             </mat-form-field>
 
-                            <mat-form-field appearance="outline" class="w-100" color="primary">
-                                <mat-label>Apellidos Completos</mat-label>
-                                <input matInput formControlName="apellidos" required>
-                            </mat-form-field>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <mat-form-field appearance="outline" class="w-100" color="primary">
+                                        <mat-label>Apellidos Completos</mat-label>
+                                        <input matInput formControlName="apellido_paterno"  aria-label="Apellidos">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <mat-form-field appearance="outline" class="w-100" color="primary">
+                                        <mat-label>Apellidos Completos</mat-label>
+                                        <input matInput formControlName="apellido_materno"  aria-label="Apellidos">
+                                    </mat-form-field>
+                                </div>
+                            </div>
 
                             <div class="botones-form">
                                 <button mat-raised-button color="primary" type="button" (click)="registrarCita()">
@@ -124,11 +147,12 @@
                         </form>
                     </mat-card-content>
                 </mat-card>
+            </div>
+            <div class="col-12 col-lg-4">
 
             </div>
-
-
         </div>
+
     </mat-sidenav-content>
 
 </mat-sidenav-container>

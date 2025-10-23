@@ -30,7 +30,7 @@
 
 /* Tarjeta de registro */
 .panel-registro {
-  width: 33.33vw;             /* 🔹 Ocupa un tercio del ancho de la pantalla */
+  width: 100%;             /* 🔹 Ocupa un tercio del ancho de la pantalla */
   background-color: #ffffff;  /* Color base limpio */
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
@@ -46,12 +46,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.campo-inline {
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .botones-form {
