@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
 import { Observable } from 'rxjs';
-import { PersonaResponse } from '../../models/seguridad/persona.model';
+import { PersonaResponse, Persona } from '../../models/seguridad/persona.model';
 import { DniInfo } from '../../models/base/dniInfo.model';
 
 @Injectable({
@@ -23,6 +23,11 @@ export class PersonaService {
   getDniInfo(dni: string): Observable<DniInfo> {
     const url = `${this.baseUrl}/persona/dni/${dni}`;
     return this.http.get<DniInfo>(url);
+  }
+
+  savePerson(person : Persona): Observable<PersonaResponse> {
+    const url = `${this.baseUrl}/persona/save`;
+    return this.http.post<PersonaResponse>(url, person);
   }
 
 }

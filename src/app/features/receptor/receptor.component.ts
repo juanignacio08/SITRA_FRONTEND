@@ -21,6 +21,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { PersonaService } from '../../services/seguridad/persona.service';
 import { Persona } from '../../models/seguridad/persona.model';
+import { TablaMaestra } from '../../models/maestros/tablaMaestra.model';
 
 @Component({
   selector: 'app-receptor',
@@ -45,19 +46,27 @@ import { Persona } from '../../models/seguridad/persona.model';
   styleUrls: ['./receptor.component.css'],
 })
 export class ReceptorComponent {
-
   isDesktop = window.innerWidth > 992; // breakpoint como Bootstrap lg
 
   @HostListener('window:resize') //Escucha eventos del navegador
   onResize() {
     this.isDesktop = window.innerWidth > 992;
   }
-  
-  
+
   registroForm: FormGroup;
 
   existsPerson: boolean = false;
   clickedSearch: boolean = false;
+  personFound: boolean = false;
+
+  typeDocumentOptions: TablaMaestra[] = [
+    { idTablaMaestra: 1, codigo: '001001', denominacion: 'DNI' },
+    {
+      idTablaMaestra: 2,
+      codigo: '001002',
+      denominacion: 'Cédula de Extranjería (CE)',
+    },
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -66,7 +75,7 @@ export class ReceptorComponent {
     private personaService: PersonaService
   ) {
     this.registroForm = this.fb.group({
-      tipo_doc: ['cc', Validators.required],
+      tipo_doc: ['', Validators.required],
       num_doc: ['', Validators.required],
       nombres: ['', Validators.required],
       apellido_paterno: ['', Validators.required],
@@ -78,14 +87,44 @@ export class ReceptorComponent {
   registrarCita() {
     if (this.registroForm.valid) {
       const form = this.registroForm.value;
-      const nombreCompleto = `${form.nombres} ${form.apellidos}`;
+      const name = this.capitalize(form.nombres);
+      const apellidoPaterno = this.capitalize(form.apellido_paterno);
+      const apellidoMaterno = this.capitalize(form.apellido_materno);
+      const documentType = form.tipo_doc;
       const numeroDocumento = form.num_doc;
 
-      // Agregar paciente al servicio
-      this.pacientesService.agregarPaciente(nombreCompleto, numeroDocumento);
+      if (this.personFound) {
+        //Register cita
+        // Agregar paciente al servicio
+        this.pacientesService.agregarPaciente(
+          name + ' ' + apellidoPaterno + ' ' + apellidoMaterno,
+          numeroDocumento
+        );
+      } else {
+        // Register person
+        const newPerson: Persona = {
+          personaId: 1, // Este valor será ignorado por el backend
+          nombre: name,
+          apellidoPaterno: apellidoPaterno,
+          apellidoMaterno: apellidoMaterno,
+          tipoDocumentoIdentidad: documentType,
+          numeroDocumentoIdentidad: numeroDocumento,
+          estado: 1,
+        };
 
-      // Opcional: limpiar el formulario
-      this.registroForm.reset({ tipo_doc: 'cc' });
+        this.personaService.savePerson(newPerson).subscribe({
+          next: (response) => {
+            const person: Persona = response.data;
+            console.log('Persona registrada:', person);
+
+            // Agregar paciente al servicio
+            this.pacientesService.agregarPaciente(
+              name + ' ' + apellidoPaterno + ' ' + apellidoMaterno,
+              numeroDocumento
+            );
+          },
+        });
+      }
     } else {
       console.warn('Formulario incompleto');
     }
@@ -99,53 +138,57 @@ export class ReceptorComponent {
   }
 
   searchPerson() {
-    if (this.registroForm.get(('tipo_doc'))?.value !== 'dni') {
+    if (this.registroForm.get('tipo_doc')?.value !== '001001') {
       return;
     }
-    
+
     if (this.registroForm.get('num_doc')?.invalid) {
       console.warn('Número de documento inválido');
       return;
-    }    
+    }
 
     this.clickedSearch = true;
     const dni = this.registroForm.get('num_doc')?.value;
 
     this.personaService.getPersonByDni(dni).subscribe({
       next: (response) => {
-        const person : Persona = response.data;
+        const person: Persona = response.data;
         this.completeDataPerson(person);
         this.existsPerson = true;
+        this.personFound = true;
       },
       error: (err) => {
         this.personaService.getDniInfo(dni).subscribe({
           next: (response) => {
             this.registroForm.patchValue({
-              nombres: response.first_name,
-              apellido_paterno: response.first_last_name,
-              apellido_materno: response.second_last_name,
+              nombres: this.capitalize(response.first_name),
+              apellido_paterno: this.capitalize(response.first_last_name),
+              apellido_materno: this.capitalize(response.second_last_name),
             });
             this.existsPerson = true;
-          }, error: (err) => {
+            this.personFound = false;
+          },
+          error: (err) => {
             this.notFoundPerson();
             this.existsPerson = false;
-          }
-        })
+            this.personFound = false;
+          },
+        });
       },
     });
   }
 
   private completeDataPerson(persona: Persona) {
     this.registroForm.patchValue({
-      nombres: persona.nombre,
-      apellido_paterno: persona.apellidoPaterno,
-      apellido_materno: persona.apellidoMaterno,
+      nombres: this.capitalize(persona.nombre),
+      apellido_paterno: this.capitalize(persona.apellidoPaterno),
+      apellido_materno: this.capitalize(persona.apellidoMaterno),
     });
   }
 
   private resetForm() {
     this.registroForm.reset({
-      tipo_doc: 'cc',
+      tipo_doc: '',
       num_doc: '',
       nombres: '',
       apellido_paterno: '',
@@ -158,6 +201,18 @@ export class ReceptorComponent {
       nombres: '',
       apellido_paterno: '',
       apellido_materno: '',
-    })
+    });
+  }
+
+  private capitalize(str: string | null | undefined): string {
+    if (!str) return '';
+
+    const cleanStr = String(str).trim();
+
+    const lowerCaseStr = cleanStr.toLowerCase();
+
+    return lowerCaseStr.replace(/(^|\s)([a-zñáéíóúü])/g, (match, p1, p2) => {
+      return p1 + p2.toUpperCase();
+    });
   }
 }

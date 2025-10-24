@@ -1,10 +1,7 @@
 <mat-sidenav-container class="sidenav-container ">
 
     <!-- 🌐 Menú lateral -->
-    <mat-sidenav #sidenav 
-             [mode]="isDesktop ? 'side' : 'over'" 
-             [opened]="isDesktop" 
-             class="sidenav">
+    <mat-sidenav #sidenav [mode]="isDesktop ? 'side' : 'over'" [opened]="isDesktop" class="sidenav">
         <mat-toolbar class="sidenav-header login-logo-container ">
             <img src="https://www.gob.pe/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjI4OSwicHVyIjoiYmxvYl9pZCJ9fQ==--870ca7e046354e769c8b91e9c70061374fd26123/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemVfdG9fbGltaXQiOltudWxsLDQ4XX0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--830247c4bafe7cadca50817d8559bf1a09e3aa28/essalud%20341x86%202019.png"
                 alt="Logo" class="login-logo">
@@ -78,23 +75,24 @@
 
         <!-- MAIN -->
         <div class="row p-2 mt-4">
-            <div class="col-12 col-lg-4">
+            <div class="col-12 col-lg-3">
 
             </div>
-            <div class="col-12 col-lg-4 p-2">
+            <div class="col-12 col-lg-6 p-2">
                 <mat-card class="panel-registro">
                     <mat-card-header class="center-title ">
                         <mat-card-title> REGISTRO DE PACIENTE</mat-card-title>
                     </mat-card-header>
                     <mat-card-content>
                         <form [formGroup]="registroForm">
-                            <mat-form-field appearance="outline" class="w-100" color="primary">
+                            <mat-form-field appearance="outline" class="w-100 rounded-5" color="primary">
                                 <mat-label class="f-s-14 f-w-600 m-b-8 d-block">
                                     Tipo de documento
                                 </mat-label>
                                 <mat-select formControlName="tipo_doc" required>
-                                    <mat-option value="ce">Cédula de Extranjería (CE)</mat-option>
-                                    <mat-option value="dni">DNI</mat-option>
+                                    @for (typeDocument of typeDocumentOptions; track $index) {
+                                    <mat-option [value]="typeDocument.codigo">{{typeDocument.denominacion}}</mat-option>
+                                    }
                                 </mat-select>
                             </mat-form-field>
 
@@ -103,19 +101,23 @@
                                 <div class="col-10 m-0 p-0">
                                     <mat-form-field appearance="outline" class="campo-doc w-100">
                                         <mat-label>Número de Documento</mat-label>
-                                        <input matInput type="text" formControlName="num_doc" placeholder="Ej: 842531126" required
-                                            aria-label="'Número de Documento'">
+                                        <input matInput type="text" formControlName="num_doc"
+                                            placeholder="Ej: 842531126" required aria-label="'Número de Documento'" class="rounded-5">
                                     </mat-form-field>
 
                                 </div>
                                 <div class="col-2 text-end">
-                                    <button mat-icon-button color="primary" type="button" matTooltip="Buscar paciente" (click)="searchPerson()">
+                                    <button mat-icon-button color="primary" type="button" matTooltip="Buscar paciente"
+                                        (click)="searchPerson()">
                                         <mat-icon>search</mat-icon>
                                     </button>
                                 </div>
 
                                 @if (!existsPerson && clickedSearch) {
-                                    <p>Persona no encontrada...</p>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>Error!</strong> Persono no registrada.
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
                                 }
                             </div>
 
@@ -128,13 +130,13 @@
                                 <div class="col-12 col-md-6">
                                     <mat-form-field appearance="outline" class="w-100" color="primary">
                                         <mat-label>Apellidos Completos</mat-label>
-                                        <input matInput formControlName="apellido_paterno"  aria-label="Apellidos">
+                                        <input matInput formControlName="apellido_paterno" aria-label="Apellidos">
                                     </mat-form-field>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <mat-form-field appearance="outline" class="w-100" color="primary">
                                         <mat-label>Apellidos Completos</mat-label>
-                                        <input matInput formControlName="apellido_materno"  aria-label="Apellidos">
+                                        <input matInput formControlName="apellido_materno" aria-label="Apellidos">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -151,7 +153,7 @@
                     </mat-card-content>
                 </mat-card>
             </div>
-            <div class="col-12 col-lg-4">
+            <div class="col-12 col-lg-3">
 
             </div>
         </div>
