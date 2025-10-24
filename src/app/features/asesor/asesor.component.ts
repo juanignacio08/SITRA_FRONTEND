@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
@@ -36,6 +36,13 @@ interface Paciente {
   styleUrls: ['./asesor.component.css']
 })
 export class AsesorComponent {
+   isDesktop = window.innerWidth > 992; // breakpoint como Bootstrap lg
+
+  @HostListener('window:resize') //Escucha eventos del navegador
+  onResize() {
+    this.isDesktop = window.innerWidth > 992;
+  }
+  
 
   currentUtterance: SpeechSynthesisUtterance | null = null;
 

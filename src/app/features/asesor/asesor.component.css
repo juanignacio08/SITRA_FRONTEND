@@ -1,143 +1,9 @@
-/* Contenedor general */
-.dashboard-asesor {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background-color: #f4f6f8;
-
-}
-
-.panel-cola {
-  margin: 24px auto;
-  max-width: 1200px;
-}
-
-.center {
-  text-align: center;
-}
-
-.tabla {
-  background-color: #69bbd3 !important; 
-}
-
-.tabla-espera {
-  width: 100%;
-  border-radius: 8px;
-  overflow: hidden;
-
-}
-
-th.mat-header-cell {
-  background-color: #e3f2fd;
-  font-weight: 400;
-  text-align: center;
-}
-
-td.mat-cell {
-  text-align: center;
-  padding: 8px;
-}
-
-/* Colores según estado */
-.estado-pendiente {
-  color: #f57c00;
-  font-weight: 600;
-}
-
-.estado-confirmado {
-  color: #388e3c;
-  font-weight: 400;
-}
-
-.center-title {
-
-  font-size: 20px;
-  /* tamaño de la fuente */
-  font-weight: bold;
-  /* negrita */
-  font-family: 'Helvetica', Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  /* Centra horizontalmente */
-  align-items: center;
-  /* Centra verticalmente */
-  text-align: center;
-  margin-bottom: 20px;
-
-
-}
-
-/* Botón en estado llamando */
-.boton-llamando {
-  background-color: green !important;
-  color: white !important;
-}
-
-
-/* Texto de estado */
-.estado-llamando {
-  color: green;
-  font-weight: bold;
-}
-
-/* LOGO */
-.login-logo-container {
-  display: flex;
-  justify-content: center;
-  /* centra horizontalmente */
-  margin-bottom: 8px;
-  /* separa la imagen del título "Iniciar Sesión" */
-  border: none;
-  background-color: #ffffff;
-}
-
-.login-logo {
-  max-width: 300px;
-  /* ancho máximo de la imagen */
-  height: auto;
-  /* mantiene la proporción */
-}
-
-/* .sidenav-container{
-  
-} */
-.sidenav {
-  max-width: 250px;
-  background-color: #fff;
-  box-shadow: 1000px 0 1000px rgba(0, 0, 0, 0.1);
-  /* sombra lateral derecha */
-}
-
-
-
-.main-content {
-  background-color: #eaeaf5;
-}
-
-
-/* /// */
-.sidenav {
-  border-radius: 0 !important;
-  /* elimina cualquier esquina redondeada */
-  box-shadow: none !important;
-  /* elimina sombras */
-  border: none !important;
-  /* sin bordes visibles */
-  padding: 0 !important;
-  /* elimina espacio interno extra */
-  margin: 0 !important;
-  /* elimina espacio externo */
-  width: 100%;
-
-}
-
-
-html,
-body {
+/* ====== CONTENEDORES PRINCIPALES ====== */
+html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* mantiene sin scroll global */
+  overflow: hidden; /* evita scroll global */
 }
 
 mat-sidenav-container {
@@ -148,59 +14,62 @@ mat-sidenav-content {
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* evita scroll en toda la página */
+  overflow: hidden; /* evita scroll fuera del contenido */
 }
 
-.dashboard-asesor {
-  flex: 1; /* 🔹 ocupa todo el espacio disponible */
-  overflow-y: auto; /* solo scroll vertical interno */
-  padding-bottom: 10px; /* 🔥 deja espacio al final */
-  box-sizing: border-box;
+.main-content {
+  background-color: #eaeaf5;
 }
 
-
-
-
-/* Opcional: da algo de margen lateral si el texto queda muy pegado */
-.icon-menu {
-  margin-right: 20px !important;
-  color: #1976d2;
+/* ====== SIDENAV ====== */
+.sidenav {
+  max-width: 260px;
+  background-color: #fff;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100%;
 }
 
+/* ====== LOGO EN EL MENÚ LATERAL ====== */
+.login-logo-container {
+  display: flex;
+  justify-content: center;
+  background-color: #ffffff;
+  border: none;
+  margin-bottom: 8px;
+}
 
+.login-logo {
+  max-width: 300px;
+  height: auto;
+}
 
-/* Alinea ícono y texto dentro del mat-list-item */
+/* ====== ITEMS DEL MENÚ ====== */
 a.mat-list-item {
   display: flex !important;
   align-items: center !important;
   gap: 12px !important;
-  /* separa ícono y texto */
 }
 
-/* Ajuste fino para íconos */
 .icon-menu {
-  vertical-align: middle;
+  margin-right: 20px !important;
+  color: #1976d2;
   font-size: 22px;
-  /* tamaño uniforme */
+  vertical-align: middle;
   position: relative;
   top: 2px;
-  /* baja o sube el icono según se vea */
 }
 
-/* Ajuste fino para el texto */
 a.mat-list-item span {
   position: relative;
   top: -1px;
-  /* sube el texto ligeramente */
   font-size: 15px;
-  /* tamaño equilibrado */
 }
 
-
-
-
-
-/* /////////// */
+/* ====== TOOLBAR SUPERIOR ====== */
 .toolbar {
   display: flex;
   align-items: center;
@@ -222,6 +91,7 @@ a.mat-list-item span {
   flex: 1 1 auto;
 }
 
+/* ====== USUARIO (foto y datos) ====== */
 .usuario-info {
   display: flex;
   align-items: center;
@@ -234,7 +104,6 @@ a.mat-list-item span {
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #fff;
-  
 }
 
 .datos-usuario {
@@ -255,6 +124,7 @@ a.mat-list-item span {
   color: rgba(255, 255, 255, 0.8);
 }
 
+/* ====== BOTÓN DESPLEGABLE ====== */
 .btn-flecha mat-icon {
   color: #fff;
   font-size: 24px;
@@ -263,44 +133,4 @@ a.mat-list-item span {
 
 .btn-flecha:hover mat-icon {
   transform: rotate(180deg);
-}
-
-
-
-/* No permitir que la tabla cambie de tamaño */
-/* Asegura que la tabla tenga layout fijo */
-/* 💪 Forzamos layout fijo en toda la tabla */
-.mat-mdc-table {
-  width: 100%;
-  table-layout: fixed !important;
-  border-collapse: collapse;
-}
-
-/* 🔹 Las celdas del mat-table usan flex, así que lo anulamos */
-.mat-mdc-cell, 
-.mat-mdc-header-cell {
-  display: table-cell !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  vertical-align: middle;
-  padding: 8px 12px;
-}
-
-/* 🔹 Columna nombre con ancho fijo */
-.mat-column-nombre {
-  max-width: 220px !important; /* Ajusta según el diseño */
-  width: 220px !important;
-}
-
-/* 🔹 Opcional: ancho del resto de columnas */
-.mat-column-ordenAtencion { width: 8%; min-width: 60px; }
-.mat-column-hora          { width: 15%; }
-.mat-column-estado        { width: 12%; }
-.mat-column-accion        { width: 25%; }
-.mat-column-numeroDocumento{width:15%}
-
-/* 🔹 Al pasar el mouse, muestra el título completo */
-.col-nombre:hover {
-  cursor: pointer;
 }

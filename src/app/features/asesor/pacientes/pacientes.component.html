@@ -1,67 +1,65 @@
 <mat-card class="tabla">
-    <mat-card-header class="center-title">
-        <mat-card-title>PACIENTES EN COLA</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        <table mat-table [dataSource]="pacientesService.pacientes" class="mat-elevation-z8 tabla-espera">
+  <mat-card-header class="center-title">
+    <mat-card-title>PACIENTES EN COLA</mat-card-title>
+  </mat-card-header>
 
-            <!-- Turno -->
-            <ng-container matColumnDef="ordenAtencion">
-                <th mat-header-cell *matHeaderCellDef class="center">Turno</th>
-                <td mat-cell *matCellDef="let p" class="center">{{ p.ordenAtencion }}</td>
-            </ng-container>
+  <mat-card-content>
+    <table mat-table [dataSource]="pacientesService.pacientes" class="mat-elevation-z8 tabla-espera">
 
-            <!-- Nombre -->
-            <ng-container matColumnDef="nombre">
-                <th mat-header-cell *matHeaderCellDef>Nombre</th>
-                <td mat-cell *matCellDef="let p">{{ p.nombre }}</td>
-            </ng-container>
+      <!-- Turno -->
+      <ng-container matColumnDef="ordenAtencion">
+        <th mat-header-cell *matHeaderCellDef class="center">Turno</th>
+        <td mat-cell *matCellDef="let p" class="center" data-label="Turno">{{ p.ordenAtencion }}</td>
+      </ng-container>
 
-            <!-- Documento -->
-            <ng-container matColumnDef="numeroDocumento">
-                <th mat-header-cell *matHeaderCellDef class="center">N° Documento</th>
-                <td mat-cell *matCellDef="let p" class="center">{{ p.numeroDocumento }}</td>
-            </ng-container>
+      <!-- Nombre -->
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let p" data-label="Nombre">{{ p.nombre }}</td>
+      </ng-container>
 
-            <!-- Acción -->
-            <ng-container matColumnDef="accion">
-                <th mat-header-cell *matHeaderCellDef class="center">Acción</th>
-                <td mat-cell *matCellDef="let p">
-                    <div class="acciones-btns">
-                        <button mat-raised-button [ngClass]="{'boton-llamando': p.llamando}" (click)="llamar(p)">
-                            <mat-icon>call</mat-icon> Llamar
-                        </button>
+      <!-- Documento -->
+      <ng-container matColumnDef="numeroDocumento">
+        <th mat-header-cell *matHeaderCellDef class="center">N° Documento</th>
+        <td mat-cell *matCellDef="let p" class="center" data-label="Documento">{{ p.numeroDocumento }}</td>
+      </ng-container>
 
-                        <button mat-raised-button color="warn" (click)="finalizar(p)">
-                            <mat-icon>stop</mat-icon> Finalizar
-                        </button>
+      <!-- Acción -->
+      <ng-container matColumnDef="accion">
+        <th mat-header-cell *matHeaderCellDef class="center">Acción</th>
+        <td mat-cell *matCellDef="let p" data-label="Acción">
+          <div class="acciones-btns bg-primary">
+            <button mat-raised-button [ngClass]="{'boton-llamando': p.llamando}"  (click)="llamar(p)">
+              <mat-icon>call</mat-icon> Llamar
+            </button>
 
+            <button mat-raised-button color="warn" (click)="finalizar(p)">
+              <mat-icon>stop</mat-icon> Finalizar
+            </button>
 
-                        <button mat-raised-button color="accent" (click)="ausente(p)">
-                            <mat-icon>block</mat-icon> Ausente
-                        </button>
+            <button mat-raised-button color="accent" (click)="ausente(p)">
+              <mat-icon>block</mat-icon> Ausente
+            </button>
+          </div>
+        </td>
+      </ng-container>
 
-                    </div>
-                </td>
-            </ng-container>
-            <!-- Estado -->
-            <ng-container matColumnDef="estado">
-                <th mat-header-cell *matHeaderCellDef class="center">Estado</th>
-                <td mat-cell *matCellDef="let p" [ngClass]="{'estado-llamando': p.llamando}" class="center">
-                    {{ p.estado }}
-                </td>
-            </ng-container>
+      <!-- Estado -->
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef class="center">Estado</th>
+        <td mat-cell *matCellDef="let p" class="center" [ngClass]="{'estado-llamando': p.llamando}" data-label="Estado">
+          {{ p.estado }}
+        </td>
+      </ng-container>
 
-            <!-- Llamadas -->
-            <ng-container matColumnDef="llamadas">
-                <th mat-header-cell *matHeaderCellDef class="center">Llamadas</th>
-                <td mat-cell *matCellDef="let p" class="center">{{ p.llamadas }}</td>
-            </ng-container>
+      <!-- Llamadas -->
+      <ng-container matColumnDef="llamadas">
+        <th mat-header-cell *matHeaderCellDef class="center">Llamadas</th>
+        <td mat-cell *matCellDef="let p" class="center" data-label="Llamadas">{{ p.llamadas }}</td>
+      </ng-container>
 
-
-
-            <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-            <tr mat-row *matRowDef="let row; columns: columnas"></tr>
-        </table>
-    </mat-card-content>
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+    </table>
+  </mat-card-content>
 </mat-card>

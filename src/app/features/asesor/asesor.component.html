@@ -1,6 +1,9 @@
 <mat-sidenav-container class="sidenav-container">
   <!-- 🌐 Menú lateral -->
-  <mat-sidenav #sidenav mode="side" opened class="sidenav">
+  <mat-sidenav #sidenav 
+             [mode]="isDesktop ? 'side' : 'over'" 
+             [opened]="isDesktop" 
+             class="sidenav">
     <mat-toolbar class="sidenav-header login-logo-container">
       <img
         src="https://www.gob.pe/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjI4OSwicHVyIjoiYmxvYl9pZCJ9fQ==--870ca7e046354e769c8b91e9c70061374fd26123/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemVfdG9fbGltaXQiOltudWxsLDQ4XX0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--830247c4bafe7cadca50817d8559bf1a09e3aa28/essalud%20341x86%202019.png"

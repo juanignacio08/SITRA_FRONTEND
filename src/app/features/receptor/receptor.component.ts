@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -45,6 +45,13 @@ import { Persona } from '../../models/seguridad/persona.model';
   styleUrls: ['./receptor.component.css'],
 })
 export class ReceptorComponent {
+
+  isDesktop = window.innerWidth > 992; // breakpoint como Bootstrap lg
+
+  @HostListener('window:resize') //Escucha eventos del navegador
+  onResize() {
+    this.isDesktop = window.innerWidth > 992;
+  }
   
   
   registroForm: FormGroup;
