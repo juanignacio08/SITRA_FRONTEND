@@ -330,3 +330,23 @@ a.mat-list-item span {
 }
 
 
+.boton-preferencial {
+  background: linear-gradient(135deg, #f8b500, #ffdd00);
+  color: #333;
+  font-weight: 500;
+  border-radius: 8px;
+}
+.boton-preferencial:hover {
+  background: linear-gradient(135deg, #e0a600, #ffcc00);
+}
+
+.boton-cita {
+  background: linear-gradient(135deg, #007BFF, #00C6FF);
+  color: white;
+  font-weight: 500;
+  border-radius: 8px;
+  color: #fff !important; 
+}
+.boton-cita:hover {
+  background: linear-gradient(135deg, #0069d9, #00a8e8);
+}

@@ -98,26 +98,23 @@
 
 
                             <div class="row p-0 m-0">
-                                <div class="col-10 m-0 p-0">
+                                <div class="col-12 m-0 p-0">
                                     <mat-form-field appearance="outline" class="campo-doc w-100">
                                         <mat-label>Número de Documento</mat-label>
                                         <input matInput type="text" formControlName="num_doc"
-                                            placeholder="Ej: 842531126" required aria-label="'Número de Documento'" class="rounded-5">
+                                             maxlength="8" placeholder="Ej: 842531126" required aria-label="'Número de Documento'"
+                                            class="rounded-5"  (input)="onDniInput()">
+                                
                                     </mat-form-field>
 
                                 </div>
-                                <div class="col-2 text-end">
-                                    <button mat-icon-button color="primary" type="button" matTooltip="Buscar paciente"
-                                        (click)="searchPerson()">
-                                        <mat-icon>search</mat-icon>
-                                    </button>
-                                </div>
-
+                                
                                 @if (!existsPerson && clickedSearch) {
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-  <strong>Error!</strong> Persono no registrada.
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+                                    <strong>Error!</strong> Persono no registrada.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
                                 }
                             </div>
 
@@ -142,20 +139,20 @@
                             </div>
 
                             <div class="botones-form">
-                                <button mat-raised-button color="primary" type="button" (click)="registrarCita()">
+                                <button mat-raised-button  class="boton-cita" type="button" (click)="registrarCita()">
                                     <mat-icon>check_circle</mat-icon>
                                     Registrar Cita
                                 </button>
-
-                                <button mat-stroked-button color="accent" type="reset">Limpiar</button>
+                                <button mat-raised-button class="boton-preferencial" type="button">
+                                    <mat-icon>check_circle</mat-icon>
+                                    Registrar Preferencial
+                                </button>
                             </div>
                         </form>
                     </mat-card-content>
                 </mat-card>
             </div>
-            <div class="col-12 col-lg-3">
-
-            </div>
+           
         </div>
 
     </mat-sidenav-content>

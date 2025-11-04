@@ -1,0 +1,33 @@
+<div class="pantalla-container">
+
+    <!-- Columna 1: Ventanilla 1 -->
+    <div class="col-ventanilla">
+       
+        <div class="paciente-actual">
+            <h2>Ventanilla 1</h2>
+            <h3>{{ pacienteVentanilla1 }}</h3>
+        </div>
+    </div>
+
+    <!-- Columna 2: Logo + Lista de Pacientes -->
+    <div class="col-central">
+        <div class="lista-pacientes">
+            <h3>Pacientes a atender</h3>
+            <mat-list>
+                <mat-list-item *ngFor="let paciente of listaPacientes">
+                    {{ paciente }}
+                </mat-list-item>
+            </mat-list>
+        </div>
+    </div>
+
+    <!-- Columna 3: Ventanilla 2 -->
+    <div class="col-ventanilla">
+        
+        <div class="paciente-actual">
+            <h2>Ventanilla 2</h2>
+            <h3>{{ pacienteVentanilla2 }}</h3>
+        </div>
+    </div>
+
+</div>
