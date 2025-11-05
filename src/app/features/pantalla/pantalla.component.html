@@ -1,33 +1,75 @@
 <div class="pantalla-container">
 
-    <!-- Columna 1: Ventanilla 1 -->
-    <div class="col-ventanilla">
-       
-        <div class="paciente-actual">
+    <!-- Header -->
+    <header class="header">
+        <h1>ESSALUD - RED ASISTENCIAL AYACUCHO</h1>
+    </header>
+
+    <!-- Ventanillas -->
+    <div class="ventanillas">
+        <div class="ventanilla">
             <h2>Ventanilla 1</h2>
-            <h3>{{ pacienteVentanilla1 }}</h3>
+            <p class="nombre">{{ ventanilla1.nombre }}</p>
+            <p class="turno">Turno: {{ ventanilla1.codigo }}</p>
         </div>
-    </div>
 
-    <!-- Columna 2: Logo + Lista de Pacientes -->
-    <div class="col-central">
-        <div class="lista-pacientes">
-            <h3>Pacientes a atender</h3>
-            <mat-list>
-                <mat-list-item *ngFor="let paciente of listaPacientes">
-                    {{ paciente }}
-                </mat-list-item>
-            </mat-list>
-        </div>
-    </div>
-
-    <!-- Columna 3: Ventanilla 2 -->
-    <div class="col-ventanilla">
-        
-        <div class="paciente-actual">
+        <div class="ventanilla">
             <h2>Ventanilla 2</h2>
-            <h3>{{ pacienteVentanilla2 }}</h3>
+            <p class="nombre">{{ ventanilla2.nombre }}</p>
+            <p class="turno">Turno: {{ ventanilla2.codigo }}</p>
         </div>
     </div>
+
+    <!-- Próximos Pacientes -->
+    <!-- Próximos Pacientes -->
+    <div class=" row proximos">
+        <div class="col-6 Pacientes">
+            <h3>Próximos Pacientes</h3>
+            <table class="tabla-pacientes">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre Completo</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let paciente of proximosPacientes">
+                        <td>{{ paciente.codigo }}</td>
+                        <td>{{ paciente.nombre }}</td>
+                        <td>{{ paciente.estado }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-6 Paciente_Preferencial">
+            <h3>Pacientes Preferenciales</h3>
+            <table class="tabla-pacientes">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre Completo</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let paciente of proximosPacientes">
+                        <td>{{ paciente.codigo }}</td>
+                        <td>{{ paciente.nombre }}</td>
+                        <td>{{ paciente.estado }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+    <!-- Footer -->
+    <footer>
+        <p>Recuerde tener su documento de identidad en la mano
+        </p>
+        <span class="hora">{{ horaFormateada() }}</span>
+    </footer>
 
 </div>
