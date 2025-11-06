@@ -28,15 +28,15 @@
             <table class="tabla-pacientes">
                 <thead>
                     <tr>
-                        <th>Código</th>
+                        <th>Turno</th>
                         <th>Nombre Completo</th>
                         <th>Estado</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let paciente of proximosPacientes">
-                        <td>{{ paciente.codigo }}</td>
-                        <td>{{ paciente.nombre }}</td>
+                    <tr *ngFor="let paciente of ordersAtentionList">
+                        <td>{{ paciente.turno }}</td>
+                        <td>{{ paciente.persona.nombre + ' ' + paciente.persona.apellidoPaterno + ' ' + paciente.persona.apellidoMaterno}}</td>
                         <td>{{ paciente.estado }}</td>
                     </tr>
                 </tbody>

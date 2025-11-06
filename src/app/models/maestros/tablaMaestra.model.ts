@@ -7,3 +7,17 @@ export interface TablaMaestra {
 }
 
 export type TablaMaestraResponse = ResponseDTO<TablaMaestra>;
+
+export const enum TablaMaestraPrioridades {
+    NORMAL = '001001',
+    PREFERENCIAL = '001002',
+    URGENTE = '001003'
+}
+
+export const enum TablaMaestraEstadosOrdenAtencion {
+    PENDIENTE = '002001',
+    EN_LLAMADA = '002002',
+    ATENDIDO = '002003',
+    AUSENTE = '002004',
+    ATENDIENDO = '002005'
+}
