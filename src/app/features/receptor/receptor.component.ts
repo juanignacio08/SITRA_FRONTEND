@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -22,9 +22,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { PersonaService } from '../../services/seguridad/persona.service';
 import { Persona } from '../../models/seguridad/persona.model';
 import {
-  TablaMaestra,
   TablaMaestraEstadosOrdenAtencion,
   TablaMaestraPrioridades,
+  TablaMaestraTypeDocument,
 } from '../../models/maestros/tablaMaestra.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -33,7 +33,8 @@ import {
   OrdenAtencion,
   OrdenAtencionRequest,
 } from '../../models/turnos/ordenatencion.model';
-import { Usuario } from '../../models/seguridad/usuario.model';
+import { TablaMaestra } from '../../models/maestros/tablaMaestra.model';
+import { TablamaestraService } from '../../services/maestro/tablamaestra.service';
 
 @Component({
   selector: 'app-receptor',
@@ -58,7 +59,7 @@ import { Usuario } from '../../models/seguridad/usuario.model';
   templateUrl: './receptor.component.html',
   styleUrls: ['./receptor.component.css'],
 })
-export class ReceptorComponent {
+export class ReceptorComponent implements OnInit {
   isDesktop = window.innerWidth > 992; // breakpoint como Bootstrap lg
 
   @HostListener('window:resize') //Escucha eventos del navegador
@@ -66,23 +67,18 @@ export class ReceptorComponent {
     this.isDesktop = window.innerWidth > 992;
   }
 
-  registroForm: FormGroup;
+  registroForm!: FormGroup;
 
   person?: Persona;
   usuarioId: number = 2;
 
   existsPerson: boolean = false;
-  clickedSearch: boolean = false;
   personFound: boolean = false;
+  clickedSearch: boolean = false;
 
-  typeDocumentOptions: TablaMaestra[] = [
-    { idTablaMaestra: 1, codigo: '001001', denominacion: 'DNI' },
-    {
-      idTablaMaestra: 2,
-      codigo: '001002',
-      denominacion: 'Cédula de Extranjería (CE)',
-    },
-  ];
+  typeDocumentOptions: TablaMaestra[] = [];
+
+  public Prioridades = TablaMaestraPrioridades;
 
   constructor(
     private fb: FormBuilder,
@@ -90,10 +86,42 @@ export class ReceptorComponent {
     private pacientesService: PacientesService,
     private personaService: PersonaService,
     private ordenAtencionService: OrdenatencionService,
+    private tablamaestraService: TablamaestraService,
     private snackBar: MatSnackBar
   ) {
     this.registroForm = this.fb.group({
-      tipo_doc: ['001001', Validators.required],
+      // Puedes usar valores nulos o vacíos temporales, pero deben coincidir con la estructura
+      tipo_doc: [TablaMaestraTypeDocument.DNI],
+      num_doc: [''],
+      nombres: [''],
+      apellido_paterno: [''],
+      apellido_materno: [''],
+    });
+  }
+
+  ngOnInit(): void {
+    this.tablamaestraService
+      .getItemsTable(this.tablamaestraService.codeTableDocumentType)
+      .subscribe({
+        next: (response) => {
+          this.typeDocumentOptions = response.data;
+          const firstOption =
+            this.typeDocumentOptions.length > 0
+              ? this.typeDocumentOptions[0].codigo
+              : TablaMaestraTypeDocument.DNI;
+          this.initForm(firstOption);
+        },
+        error: (err) => {
+          this.initForm(TablaMaestraTypeDocument.DNI);
+          console.error('Error al cargar los tipos de documento', err);
+        },
+      });
+  }
+
+  initForm(typeDocument: string) {
+    this.registroForm = this.fb.group({
+      // Usamos el valor determinado (el primer elemento cargado)
+      tipo_doc: [typeDocument, Validators.required],
       num_doc: ['', Validators.required],
       nombres: ['', Validators.required],
       apellido_paterno: ['', Validators.required],
@@ -102,7 +130,7 @@ export class ReceptorComponent {
   }
 
   // Método que se ejecuta al registrar la cita
-  registrarCita() {
+  registrarCita(priority: TablaMaestraPrioridades) {
     if (this.registroForm.valid) {
       const form = this.registroForm.value;
       const name = this.capitalize(form.nombres);
@@ -112,52 +140,18 @@ export class ReceptorComponent {
       const numeroDocumento = form.num_doc;
 
       if (this.personFound) {
-        this.pacientesService.agregarPaciente(
-          name + ' ' + apellidoPaterno + ' ' + apellidoMaterno,
-          numeroDocumento
+        const orderAtencionRequest = this.createOrderAtentionRequest(
+          1,
+          this.person != undefined ? this.person.personaId : 0,
+          this.usuarioId,
+          priority,
+          TablaMaestraEstadosOrdenAtencion.PENDIENTE,
+          0,
+          1
         );
 
-        //Create Order Atention
-        const orderAtencionRequest: OrdenAtencionRequest = {
-          ordenAtencionId: 1,
-          personaId: this.person!.personaId,
-          usuarioId: this.usuarioId,
-          codPrioridad: TablaMaestraPrioridades.NORMAL,
-          codEstadoAtencion: TablaMaestraEstadosOrdenAtencion.PENDIENTE,
-          numLlamadas: 0,
-          estado: 1,
-        };
+        this.saveOrderAtention(orderAtencionRequest);
 
-        this.ordenAtencionService
-          .saveOrderAtention(orderAtencionRequest)
-          .subscribe({
-            next: (response) => {
-              const ordenAtencionResponse: OrdenAtencion = response.data;
-              console.log(`Orden Atencion: `, ordenAtencionResponse);
-
-              this.snackBar.open(
-                `Orden de Atención registrado con éxito. Turno: ${ordenAtencionResponse.turno} ✅`,
-                'Cerrar',
-                {
-                  duration: 2500,
-                  panelClass: ['snackbar-success'],
-                }
-              );
-
-              this.resetAfterRegister(); // 🧹 Limpieza automática
-              this.personFound = false;
-            },
-            error: (err) => {
-              this.snackBar.open(
-                '⚠️ Error al registrar el orden de atención',
-                'Cerrar',
-                {
-                  duration: 3000,
-                  panelClass: ['snackbar-error'],
-                }
-              );
-            },
-          });
       } else {
         const newPerson: Persona = {
           personaId: 1,
@@ -173,72 +167,76 @@ export class ReceptorComponent {
           next: (response) => {
             const person: Persona = response.data;
             console.log('Persona registrada:', person);
-            
+
             //Create Order Atention
             const orderAtencionRequest: OrdenAtencionRequest = {
               ordenAtencionId: 1,
               personaId: person.personaId,
               usuarioId: this.usuarioId,
-              codPrioridad: TablaMaestraPrioridades.NORMAL,
+              codPrioridad: priority,
               codEstadoAtencion: TablaMaestraEstadosOrdenAtencion.PENDIENTE,
               numLlamadas: 0,
               estado: 1,
             };
 
-            this.ordenAtencionService
-              .saveOrderAtention(orderAtencionRequest)
-              .subscribe({
-                next: (response) => {
-                  const ordenAtencionResponse: OrdenAtencion = response.data;
-                  console.log(`Orden Atencion: `, ordenAtencionResponse);
-
-                  this.snackBar.open(
-                    `Orden de Atención registrado con éxito. Turno: ${ordenAtencionResponse.turno} ✅`,
-                    'Cerrar',
-                    {
-                      duration: 2500,
-                      panelClass: ['snackbar-success'],
-                    }
-                  );
-
-                  this.resetAfterRegister(); // 🧹 Limpieza automática
-                  this.personFound = false;
-                },
-                error: (err) => {
-                  this.snackBar.open(
-                    '⚠️ Error al registrar el orden de atención',
-                    'Cerrar',
-                    {
-                      duration: 3000,
-                      panelClass: ['snackbar-error'],
-                    }
-                  );
-                },
-              });
-
-            this.pacientesService.agregarPaciente(
-              name + ' ' + apellidoPaterno + ' ' + apellidoMaterno,
-              numeroDocumento
-            );
+            this.saveOrderAtention(orderAtencionRequest);
           },
           error: (err) => {
-            this.snackBar.open('Error al registrar persona ⚠️', 'Cerrar', {
-              duration: 3000,
-              panelClass: ['snackbar-error'],
-            });
+            this.messageSnackBar('Error al registrar persona ⚠️');
           },
         });
       }
     } else {
-      this.snackBar.open(
-        'Completa todos los campos obligatorios ⚠️',
-        'Cerrar',
-        {
-          duration: 3000,
-          panelClass: ['snackbar-error'],
-        }
-      );
+      this.messageSnackBar('Completa todos los campos obligatorios ⚠️');
     }
+  }
+
+  messageSnackBar(message: string) {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 3000,
+    });
+  }
+
+  createOrderAtentionRequest(
+    orderAtencionId: number,
+    personaId: number,
+    usuarioId: number,
+    codPrioridad: TablaMaestraPrioridades,
+    codEstadoAtencion: TablaMaestraEstadosOrdenAtencion,
+    numLlamadas: number,
+    estado: number
+  ): OrdenAtencionRequest {
+    const orderAtencionRequest: OrdenAtencionRequest = {
+      ordenAtencionId: orderAtencionId,
+      personaId: personaId,
+      usuarioId: usuarioId,
+      codPrioridad: codPrioridad,
+      codEstadoAtencion: codEstadoAtencion,
+      numLlamadas: numLlamadas,
+      estado: estado,
+    };
+    return orderAtencionRequest;
+  }
+
+  saveOrderAtention(orderAtencionRequest: OrdenAtencionRequest) {
+    this.ordenAtencionService
+      .saveOrderAtention(orderAtencionRequest)
+      .subscribe({
+        next: (response) => {
+          const ordenAtencionResponse: OrdenAtencion = response.data;
+          console.log(`Orden Atencion: `, ordenAtencionResponse);
+
+          this.messageSnackBar(
+            `Orden de Atención registrado con éxito. Turno: ${ordenAtencionResponse.turno} ✅`
+          );
+
+          this.resetAfterRegister(); // 🧹 Limpieza automática
+        },
+        error: (err) => {
+          this.messageSnackBar('⚠️ Error al registrar el orden de atención');
+          this.resetAfterRegister();
+        },
+      });
   }
 
   verPerfil() {
@@ -249,7 +247,7 @@ export class ReceptorComponent {
   }
 
   searchPerson() {
-    if (this.registroForm.get('tipo_doc')?.value !== '001001') {
+    if (this.registroForm.get('tipo_doc')?.value !== TablaMaestraTypeDocument.DNI) {
       return;
     }
 
@@ -297,6 +295,7 @@ export class ReceptorComponent {
       apellido_materno: this.capitalize(persona.apellidoMaterno),
     });
   }
+
   private resetAfterRegister() {
     this.registroForm.reset({
       tipo_doc: '001001', // Vuelve a seleccionar DNI por defecto
@@ -346,7 +345,7 @@ export class ReceptorComponent {
     const dniControl = this.registroForm.get('num_doc');
     const tipoDoc = this.registroForm.get('tipo_doc')?.value;
 
-    if (tipoDoc === '001001' && dniControl) {
+    if (tipoDoc === TablaMaestraTypeDocument.DNI && dniControl) {
       const dni = dniControl.value;
 
       // Solo ejecuta búsqueda si tiene 8 dígitos y todos son números

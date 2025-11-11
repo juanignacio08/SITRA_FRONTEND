@@ -21,4 +21,9 @@ export class OrdenatencionService {
     const url = `${this.baseUrl}/ordenAtencion/getNormalPaginated?page=${page}&size=${size}&date=${date}`;
     return this.http.get<OrdenAtencionPaginatedResponse>(url);
   }
+
+  getPreferentialPaginatedOrders(page: number, size: number, date: string): Observable<OrdenAtencionPaginatedResponse> {
+    const url = `${this.baseUrl}/ordenAtencion/getPreferentialPaginated?page=${page}&size=${size}&date=${date}`;
+    return this.http.get<OrdenAtencionPaginatedResponse>(url);
+  }
 }

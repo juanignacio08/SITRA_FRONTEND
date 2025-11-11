@@ -72,7 +72,6 @@
             </div>
         </mat-toolbar>
 
-
         <!-- MAIN -->
         <div class="row p-2 mt-4">
             <div class="col-12 col-lg-3">
@@ -139,11 +138,11 @@
                             </div>
 
                             <div class="botones-form">
-                                <button mat-raised-button  class="boton-cita" type="button" (click)="registrarCita()">
+                                <button mat-raised-button  class="boton-cita" type="button" (click)="registrarCita(Prioridades.NORMAL)">
                                     <mat-icon>check_circle</mat-icon>
                                     Registrar Cita
                                 </button>
-                                <button mat-raised-button class="boton-preferencial" type="button">
+                                <button mat-raised-button class="boton-preferencial" type="button" (click)="registrarCita(Prioridades.PREFERENCIAL)">
                                     <mat-icon>check_circle</mat-icon>
                                     Registrar Preferencial
                                 </button>

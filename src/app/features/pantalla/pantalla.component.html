@@ -34,10 +34,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let paciente of ordersAtentionList">
+                    <tr *ngFor="let paciente of ordersAtentionNormalList">
                         <td>{{ paciente.turno }}</td>
                         <td>{{ paciente.persona.nombre + ' ' + paciente.persona.apellidoPaterno + ' ' + paciente.persona.apellidoMaterno}}</td>
-                        <td>{{ paciente.estado }}</td>
+                        <td>{{ paciente.codEstadoAtencion | viewStatusOrderAtention}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -53,10 +53,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let paciente of proximosPacientes">
-                        <td>{{ paciente.codigo }}</td>
-                        <td>{{ paciente.nombre }}</td>
-                        <td>{{ paciente.estado }}</td>
+                    <tr *ngFor="let paciente of ordersAtentionPreferentialList">
+                        <td>{{ paciente.turno }}</td>
+                        <td>{{ paciente.persona.nombre + ' ' + paciente.persona.apellidoPaterno + ' ' + paciente.persona.apellidoMaterno}}</td>
+                        <td>{{ paciente.codEstadoAtencion | viewStatusOrderAtention}}</td>
                     </tr>
                 </tbody>
             </table>

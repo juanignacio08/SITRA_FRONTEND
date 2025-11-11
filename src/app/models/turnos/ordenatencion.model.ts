@@ -1,5 +1,6 @@
 import { ConsultaResponseDTO } from '../base/ConsultaResponseDTO.model';
 import { ResponseDTO } from '../base/ResponseDTO.model';
+import { TablaMaestra, TablaMaestraEstadosOrdenAtencion, TablaMaestraPrioridades } from '../maestros/tablaMaestra.model';
 import { Persona } from '../seguridad/persona.model';
 import { Usuario } from '../seguridad/usuario.model';
 
@@ -21,8 +22,8 @@ export interface OrdenAtencionRequest {
   ordenAtencionId: number
   personaId: number
   usuarioId: number
-  codPrioridad: string
-  codEstadoAtencion: string
+  codPrioridad: TablaMaestraPrioridades,
+  codEstadoAtencion: TablaMaestraEstadosOrdenAtencion,
   numLlamadas: number
   estado: number
 }
