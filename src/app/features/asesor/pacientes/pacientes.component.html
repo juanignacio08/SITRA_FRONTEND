@@ -1,61 +1,54 @@
 <mat-card class="tabla">
+  
   <mat-card-header class="center-title">
-    <mat-card-title>PACIENTES EN COLA</mat-card-title>
+    <mat-card-title class="fw-bold">VENTANILLA 1</mat-card-title>
   </mat-card-header>
 
   <mat-card-content>
-    <table mat-table [dataSource]="pacientesService.pacientes" class="mat-elevation-z8 tabla-espera">
+    <div class="text-center rounded rounded-3 text-dark py-4 mb-3 bordered-card bg-pantalla">
+      <p class="fs-4 fw-bold">Nombre del Paciente</p>
+      <p class="fs-5">Numero del turno</p>
+    </div>
+
+    <div class="div text-end mb-3">
+      <button type="button" class="btn btn-primary me-1 btn-lg" aria-label="Llamar al paciente">
+        <i class="bi bi-telephone-plus-fill"></i> Llamar
+      </button>
+      <button type="button" class="btn btn-secondary me-1 btn-lg" aria-label="Iniciar atencion">
+        <i class="bi bi-play-circle"></i> Iniciar
+      </button>
+      <button type="button" class="btn btn-success me-3 btn-lg" aria-label="Finalizar atencion">
+        <i class="bi bi-stop-circle"></i> Finalizar
+      </button>
+      <button type="button" class="btn btn-danger btn-lg" aria-label="Marcar Ausente">
+        <i class="bi bi-x-circle"></i> Ausente
+      </button>
+    </div>
+
+    <table mat-table [dataSource]="orderAtentionList" class="mat-elevation-z8 tabla-espera">
 
       <!-- Turno -->
-      <ng-container matColumnDef="ordenAtencion">
+      <ng-container matColumnDef="turno">
         <th mat-header-cell *matHeaderCellDef class="center">Turno</th>
-        <td mat-cell *matCellDef="let p" class="center" data-label="Turno">{{ p.ordenAtencion }}</td>
+        <td mat-cell *matCellDef="let p" class="center" data-label="Turno">{{ p.turno }}</td>
       </ng-container>
 
       <!-- Nombre -->
       <ng-container matColumnDef="nombre">
         <th mat-header-cell *matHeaderCellDef>Nombre</th>
-        <td mat-cell *matCellDef="let p" data-label="Nombre">{{ p.nombre }}</td>
+        <td mat-cell *matCellDef="let p" data-label="Nombre">{{ p.persona.nombre + " " + p.persona.apellidoPaterno + " " + p.persona.apellidoMaterno }}</td>
       </ng-container>
 
       <!-- Documento -->
       <ng-container matColumnDef="numeroDocumento">
         <th mat-header-cell *matHeaderCellDef class="center">N° Documento</th>
-        <td mat-cell *matCellDef="let p" class="center" data-label="Documento">{{ p.numeroDocumento }}</td>
-      </ng-container>
-
-      <!-- Acción -->
-      <ng-container matColumnDef="accion">
-        <th mat-header-cell *matHeaderCellDef class="center">Acción</th>
-        <td mat-cell *matCellDef="let p" data-label="Acción">
-          <div class="acciones-btns bg-primary">
-            <button mat-raised-button [ngClass]="{'boton-llamando': p.llamando}"  (click)="llamar(p)">
-              <mat-icon>call</mat-icon> Llamar
-            </button>
-
-            <button mat-raised-button color="warn" (click)="finalizar(p)">
-              <mat-icon>stop</mat-icon> Finalizar
-            </button>
-
-            <button mat-raised-button color="accent" (click)="ausente(p)">
-              <mat-icon>block</mat-icon> Ausente
-            </button>
-          </div>
-        </td>
-      </ng-container>
-
-      <!-- Estado -->
-      <ng-container matColumnDef="estado">
-        <th mat-header-cell *matHeaderCellDef class="center">Estado</th>
-        <td mat-cell *matCellDef="let p" class="center" [ngClass]="{'estado-llamando': p.llamando}" data-label="Estado">
-          {{ p.estado }}
-        </td>
+        <td mat-cell *matCellDef="let p" class="center" data-label="Documento">{{ p.persona.numeroDocumentoIdentidad }}</td>
       </ng-container>
 
       <!-- Llamadas -->
       <ng-container matColumnDef="llamadas">
         <th mat-header-cell *matHeaderCellDef class="center">Llamadas</th>
-        <td mat-cell *matCellDef="let p" class="center" data-label="Llamadas">{{ p.llamadas }}</td>
+        <td mat-cell *matCellDef="let p" class="center" data-label="Llamadas">{{ p.numLlamadas }}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columnas"></tr>

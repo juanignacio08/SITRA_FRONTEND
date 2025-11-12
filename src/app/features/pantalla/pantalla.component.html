@@ -1,72 +1,72 @@
-<div class="pantalla-container">
+<div class="container-fluid p-0 m-0 main-container">
 
     <!-- Header -->
-    <header class="header">
-        <h1>ESSALUD - RED ASISTENCIAL AYACUCHO</h1>
+    <header class="bg-primary text-center text-light py-2 mb-2">
+        <h1 class="fs-2">ESSALUD - RED ASISTENCIAL AYACUCHO</h1>
     </header>
 
     <!-- Ventanillas -->
-    <div class="ventanillas">
-        <div class="ventanilla">
-            <h2>Ventanilla 1</h2>
-            <p class="nombre">{{ ventanilla1.nombre }}</p>
-            <p class="turno">Turno: {{ ventanilla1.codigo }}</p>
-        </div>
+    <div class="content-wrapper">
+        <div class="row m-0">
+            <div class="col-12 col-lg-6">
+                <div class="ventanilla text-center rounded rounded-3 text-light py-4 ms-1 mb-3">
+                    <h2 class="fs-2">Ventanilla 1</h2>
+                    <p class="fs-4 fw-bold">{{ ventanilla1.nombre }}</p>
+                    <p class="fs-5">Turno: {{ ventanilla1.codigo }}</p>
+                </div>
 
-        <div class="ventanilla">
-            <h2>Ventanilla 2</h2>
-            <p class="nombre">{{ ventanilla2.nombre }}</p>
-            <p class="turno">Turno: {{ ventanilla2.codigo }}</p>
-        </div>
-    </div>
+                <h3>Próximos Pacientes</h3>
+                <table class="tabla-pacientes">
+                    <thead>
+                        <tr>
+                            <th>Turno</th>
+                            <th>Nombre Completo</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let paciente of ordersAtentionNormalList">
+                            <td class="text-center">{{ paciente.turno }}</td>
+                            <td class="text-center">{{ paciente.persona.nombre + ' ' + paciente.persona.apellidoPaterno + ' ' +
+                                paciente.persona.apellidoMaterno}}</td>
+                            <td class="text-center">{{ paciente.codEstadoAtencion | viewStatusOrderAtention}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-    <!-- Próximos Pacientes -->
-    <!-- Próximos Pacientes -->
-    <div class=" row proximos">
-        <div class="col-6 Pacientes">
-            <h3>Próximos Pacientes</h3>
-            <table class="tabla-pacientes">
-                <thead>
-                    <tr>
-                        <th>Turno</th>
-                        <th>Nombre Completo</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let paciente of ordersAtentionNormalList">
-                        <td>{{ paciente.turno }}</td>
-                        <td>{{ paciente.persona.nombre + ' ' + paciente.persona.apellidoPaterno + ' ' + paciente.persona.apellidoMaterno}}</td>
-                        <td>{{ paciente.codEstadoAtencion | viewStatusOrderAtention}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-6 Paciente_Preferencial">
-            <h3>Pacientes Preferenciales</h3>
-            <table class="tabla-pacientes">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Nombre Completo</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let paciente of ordersAtentionPreferentialList">
-                        <td>{{ paciente.turno }}</td>
-                        <td>{{ paciente.persona.nombre + ' ' + paciente.persona.apellidoPaterno + ' ' + paciente.persona.apellidoMaterno}}</td>
-                        <td>{{ paciente.codEstadoAtencion | viewStatusOrderAtention}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <div class="col-12 col-lg-6">
+                <div class="ventanilla text-center rounded rounded-3 text-light py-4 me-1 mb-3">
+                    <h2 class="fs-2">Ventanilla 2</h2>
+                    <p class="fs-4 fw-bold">{{ ventanilla2.nombre }}</p>
+                    <p class="fs-5">Turno: {{ ventanilla2.codigo }}</p>
+                </div>
 
+                <h3>Pacientes Preferenciales</h3>
+                <table class="tabla-pacientes">
+                    <thead>
+                        <tr>
+                            <th>Turno</th>
+                            <th>Nombre Completo</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let paciente of ordersAtentionPreferentialList">
+                            <td class="text-center">{{ paciente.turno }}</td>
+                            <td class="text-center">{{ paciente.persona.nombre + ' ' + paciente.persona.apellidoPaterno + ' ' +
+                                paciente.persona.apellidoMaterno}}</td>
+                            <td class="text-center">{{ paciente.codEstadoAtencion | viewStatusOrderAtention}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 
     <!-- Footer -->
-    <footer>
+    <footer class="fixed-footer">
         <p>Recuerde tener su documento de identidad en la mano
         </p>
         <span class="hora">{{ horaFormateada() }}</span>

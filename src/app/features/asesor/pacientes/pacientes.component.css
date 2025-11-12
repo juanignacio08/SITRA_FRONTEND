@@ -6,6 +6,18 @@
   border-radius: 8px;
 }
 
+.bordered-card {
+  border: 2px solid #422066;
+  border-radius: 8px;
+}
+
+.bg-pantalla {
+  background: #69BBD3;
+  background: linear-gradient(90deg, rgba(105, 187, 211, 1) 0%, rgba(230, 250, 239, 1) 50%, rgba(255, 245, 156, 1) 100%);
+
+
+}
+
 /* utilitario centrado (usado en th/td) */
 .center {
   text-align: center;
@@ -70,9 +82,7 @@ td.mat-cell {
 }
 
 /* anchos por columna (coinciden con tus matColumnDef) */
-.mat-column-ordenAtencion { width: 10%; }
-.mat-column-nombre { width: 20%; }
-.mat-column-numeroDocumento { width: 15%; }
-.mat-column-accion { width: 35%; }
-.mat-column-estado { width: 10%; }
-.mat-column-llamadas { width: 10%; }
+.mat-column-turno { width: 15%; }
+.mat-column-nombre { width: 40%; }
+.mat-column-numeroDocumento { width: 30%; }
+.mat-column-llamadas { width: 15%; }
