@@ -33,3 +33,8 @@ export enum TablaMaestraTypeDocument {
     DNI = '004001',
     CE = '004002'
 }
+
+export enum TablaMaestraVentanillas {
+    VENTANILLA_1 = '003001',
+    VENTANILLA_2 = '003002'
+}

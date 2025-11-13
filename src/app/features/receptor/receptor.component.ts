@@ -172,7 +172,7 @@ export class ReceptorComponent implements OnInit {
             const orderAtencionRequest: OrdenAtencionRequest = {
               ordenAtencionId: 1,
               personaId: person.personaId,
-              usuarioId: this.usuarioId,
+              receptorId: this.usuarioId,
               codPrioridad: priority,
               codEstadoAtencion: TablaMaestraEstadosOrdenAtencion.PENDIENTE,
               numLlamadas: 0,
@@ -209,7 +209,7 @@ export class ReceptorComponent implements OnInit {
     const orderAtencionRequest: OrdenAtencionRequest = {
       ordenAtencionId: orderAtencionId,
       personaId: personaId,
-      usuarioId: usuarioId,
+      receptorId: usuarioId,
       codPrioridad: codPrioridad,
       codEstadoAtencion: codEstadoAtencion,
       numLlamadas: numLlamadas,

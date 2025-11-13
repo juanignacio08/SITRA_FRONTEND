@@ -6,12 +6,18 @@
 
   <mat-card-content>
     <div class="text-center rounded rounded-3 text-dark py-4 mb-3 bordered-card bg-pantalla">
-      <p class="fs-4 fw-bold">Nombre del Paciente</p>
-      <p class="fs-5">Numero del turno</p>
+      @if (orderAtentionInCall) {
+        <p class="fs-4 fw-bold">{{orderAtentionInCall.persona.nombre + " " + orderAtentionInCall.persona.apellidoPaterno + " " + orderAtentionInCall.persona.apellidoMaterno}}</p>
+        <p class="fs-5">Turno: {{orderAtentionInCall.turno}}</p>
+        <p class="fs-5">Numero de Llamadas: {{orderAtentionInCall.numLlamadas}}</p>
+      } @else {
+        <p class="fs-4">No hay paciente en atención...</p>
+      }
+      
     </div>
 
     <div class="div text-end mb-3">
-      <button type="button" class="btn btn-primary me-1 btn-lg" aria-label="Llamar al paciente">
+      <button type="button" class="btn btn-primary me-1 btn-lg" aria-label="Llamar al paciente" (click)="callPacient()">
         <i class="bi bi-telephone-plus-fill"></i> Llamar
       </button>
       <button type="button" class="btn btn-secondary me-1 btn-lg" aria-label="Iniciar atencion">

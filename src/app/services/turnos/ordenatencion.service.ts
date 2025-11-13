@@ -26,4 +26,9 @@ export class OrdenatencionService {
     const url = `${this.baseUrl}/ordenAtencion/getPreferentialPaginated?page=${page}&size=${size}&date=${date}`;
     return this.http.get<OrdenAtencionPaginatedResponse>(url);
   }
+
+  updateOrderAtention(orderAtention: OrdenAtencionRequest): Observable<OrdenAtencionResponse> {
+    const url = `${this.baseUrl}/ordenAtencion/update`;
+    return this.http.put<OrdenAtencionResponse>(url, orderAtention);
+  }
 }
