@@ -46,8 +46,8 @@ export class PacientesComponent implements OnInit {
   columnas: string[] = ['turno', 'nombre', 'numeroDocumento', 'llamadas'];
 
   orderAtentionList: OrdenAtencion[] = [];
-  nextOrderAtention?: OrdenAtencion;
   orderAtentionInCall?: OrdenAtencion;
+  namePacienteInCall: string = '';
 
   asesorId = 3; // ID del asesor (ejemplo estático)
 
@@ -60,13 +60,18 @@ export class PacientesComponent implements OnInit {
     this.getOrdersAtentionNormal();
   }
 
-  getOrdersAtentionNormal() {
+  getDateFormatted(date: Date): string {
     const hoy = new Date();
     const fechaFormateada = hoy.toLocaleDateString('es-PE', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
     });
+    return fechaFormateada;
+  }
+
+  getOrdersAtentionNormal() {
+    const fechaFormateada = this.getDateFormatted(new Date());
 
     this.orderAtentionService
       .getNormalPaginatedOrders(0, 10, fechaFormateada)
@@ -74,64 +79,42 @@ export class PacientesComponent implements OnInit {
         next: (response) => {
           console.log('Órdenes de atención normales obtenidas:', response.data);
           this.orderAtentionList = response.data;
-          this.nextOrderAtention = this.orderAtentionList[0];
         },
       });
   }
 
   callPacient() {
-    if (this.orderAtentionInCall) {
-      if (this.orderAtentionInCall.numLlamadas < 3) {
-        const orderAtention: OrdenAtencionRequest = {
-          ordenAtencionId: this.orderAtentionInCall.ordenAtencionId,
-          personaId: this.orderAtentionInCall.persona.personaId,
-          receptorId: this.orderAtentionInCall.receptor.usuarioId,
-          asesorId: this.asesorId,
-          codPrioridad: this.orderAtentionInCall
-            .codPrioridad as TablaMaestraPrioridades,
-          codEstadoAtencion:
-            TablaMaestraEstadosOrdenAtencion.EN_LLAMADA as TablaMaestraEstadosOrdenAtencion,
-          numLlamadas: this.orderAtentionInCall.numLlamadas + 1,
-          estado: 1,
-          codVentanilla: TablaMaestraVentanillas.VENTANILLA_1,
-        };
+    const fechaFormateada = this.getDateFormatted(new Date());
 
-        this.orderAtentionService.updateOrderAtention(orderAtention).subscribe({
-          next: (response) => {
-            console.log('Orden de atención actualizada:', response);
-            this.orderAtentionInCall = response.data;
-          },
-          error: (error) => {
-            console.error('Error al actualizar la orden de atención:', error);
-          },
-        });
+    this.orderAtentionService.getNextOrderAtention(fechaFormateada, TablaMaestraPrioridades.NORMAL, TablaMaestraVentanillas.VENTANILLA_1, this.asesorId).subscribe({
+      next: (response) => {
+        console.log('Siguiente orden de atención obtenida:', response);
+        this.orderAtentionInCall = response.data;
+        this.namePacienteInCall = this.orderAtentionInCall.persona.nombre + ' ' + this.orderAtentionInCall.persona.apellidoPaterno + this.orderAtentionInCall.persona.apellidoMaterno;
+        this.llamarTurno();
+        this.getOrdersAtentionNormal();
+      },
+      error: (error) => {
+        console.error('Error al obtener la siguiente orden de atención:', error);
+        this.orderAtentionInCall = undefined;
+        this.namePacienteInCall = '';
       }
-    } else if (this.nextOrderAtention) {
-      const orderAtention: OrdenAtencionRequest = {
-        ordenAtencionId: this.nextOrderAtention.ordenAtencionId,
-        personaId: this.nextOrderAtention.persona.personaId,
-        receptorId: this.nextOrderAtention.receptor.usuarioId,
-        asesorId: this.asesorId,
-        codPrioridad: this.nextOrderAtention
-          .codPrioridad as TablaMaestraPrioridades,
-        codEstadoAtencion:
-          TablaMaestraEstadosOrdenAtencion.EN_LLAMADA as TablaMaestraEstadosOrdenAtencion,
-        numLlamadas: this.nextOrderAtention.numLlamadas + 1,
-        estado: 1,
-        codVentanilla: TablaMaestraVentanillas.VENTANILLA_1,
-      };
+    });  
+  }
 
-      this.orderAtentionService.updateOrderAtention(orderAtention).subscribe({
-        next: (response) => {
-          console.log('Orden de atención actualizada:', response);
-          this.orderAtentionInCall = response.data;
-          this.getOrdersAtentionNormal(); // Recargar la lista de órdenes de atención
-        },
-        error: (error) => {
-          console.error('Error al actualizar la orden de atención:', error);
-        },
-      });
-    }
+  llamarTurno() {
+      const texto = "Turno de " + this.namePacienteInCall +", acerquese a ventanilla 1.";
+
+      const mensaje = new SpeechSynthesisUtterance(texto);
+      mensaje.lang = 'es-ES'; // idioma español
+      mensaje.rate = 0.75; // velocidad normal
+      mensaje.pitch = 1; // tono normal
+
+      // Opcional: elegir una voz específica si la conocés
+      // const voces = speechSynthesis.getVoices();
+      // mensaje.voice = voces.find(v => v.name.includes("Sabina"));
+
+      window.speechSynthesis.speak(mensaje);
   }
 
   llamar(p: Paciente) {

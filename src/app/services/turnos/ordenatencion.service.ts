@@ -27,6 +27,11 @@ export class OrdenatencionService {
     return this.http.get<OrdenAtencionPaginatedResponse>(url);
   }
 
+  getNextOrderAtention(date: string, codePriority: string, codeVentanilla: string, asesorId: number): Observable<OrdenAtencionResponse> {
+    const url = `${this.baseUrl}/ordenAtencion/getNextOrderAtention?date=${date}&codePriority=${codePriority}&codeVentanilla=${codeVentanilla}&asesorId=${asesorId}`;
+    return this.http.get<OrdenAtencionResponse>(url);
+  }
+
   updateOrderAtention(orderAtention: OrdenAtencionRequest): Observable<OrdenAtencionResponse> {
     const url = `${this.baseUrl}/ordenAtencion/update`;
     return this.http.put<OrdenAtencionResponse>(url, orderAtention);
