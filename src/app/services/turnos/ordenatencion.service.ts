@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
-import { OrdenAtencion, OrdenAtencionPaginatedResponse, OrdenAtencionRequest, OrdenAtencionResponse } from '../../models/turnos/ordenatencion.model';
+import { OrdenAtencion, OrdenAtencionPaginatedResponse, OrdenAtencionRequest, OrdenAtencionResponse, OrdenAtencionListResponse } from '../../models/turnos/ordenatencion.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -35,5 +35,15 @@ export class OrdenatencionService {
   updateOrderAtention(orderAtention: OrdenAtencionRequest): Observable<OrdenAtencionResponse> {
     const url = `${this.baseUrl}/ordenAtencion/update`;
     return this.http.put<OrdenAtencionResponse>(url, orderAtention);
+  }
+
+  getListOrderAtentionInCall(date : string) : Observable<OrdenAtencionListResponse> {
+    const url = `${this.baseUrl}/ordenAtencion/getAttentionOrderInCallsStatus?date=${date}`;
+    return this.http.get<OrdenAtencionListResponse>(url);
+  }
+
+  getOrderAtentionInCallByVentanilla(date : string, codeVentanilla : string) : Observable<OrdenAtencionResponse> {
+    const url = `${this.baseUrl}/ordenAtencion/getAttentionOrderInCallStatusByDateAndVentanilla?date=${date}&codeVentanilla=${codeVentanilla}`;
+    return this.http.get<OrdenAtencionResponse>(url);
   }
 }

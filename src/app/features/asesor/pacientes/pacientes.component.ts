@@ -57,6 +57,7 @@ export class PacientesComponent implements OnInit {
   pacientesService = inject(PacientesService);
 
   ngOnInit(): void {
+    this.getOrderAtentionInCall();
     this.getOrdersAtentionNormal();
   }
 
@@ -83,53 +84,78 @@ export class PacientesComponent implements OnInit {
       });
   }
 
+  getOrderAtentionInCall() {
+    const fechaFormateada = this.getDateFormatted(new Date());
+
+    this.orderAtentionService
+      .getOrderAtentionInCallByVentanilla(
+        fechaFormateada,
+        TablaMaestraVentanillas.VENTANILLA_1
+      )
+      .subscribe({
+        next: (response) => {
+          this.orderAtentionInCall = response.data;
+        },
+        error: (error) => {
+          console.error(
+            'Error al obtener la siguiente orden de atención:',
+            error
+          );
+          this.orderAtentionInCall = undefined;
+        },
+      });
+  }
+
   callPacient() {
     const fechaFormateada = this.getDateFormatted(new Date());
 
-    this.orderAtentionService.getNextOrderAtention(fechaFormateada, TablaMaestraPrioridades.NORMAL, TablaMaestraVentanillas.VENTANILLA_1, this.asesorId).subscribe({
-      next: (response) => {
-        console.log('Siguiente orden de atención obtenida:', response);
-        this.orderAtentionInCall = response.data;
-        this.namePacienteInCall = this.orderAtentionInCall.persona.nombre + ' ' + this.orderAtentionInCall.persona.apellidoPaterno + this.orderAtentionInCall.persona.apellidoMaterno;
-        this.llamarTurno();
-        this.getOrdersAtentionNormal();
-      },
-      error: (error) => {
-        console.error('Error al obtener la siguiente orden de atención:', error);
-        this.orderAtentionInCall = undefined;
-        this.namePacienteInCall = '';
-      }
-    });  
+    this.orderAtentionService
+      .getNextOrderAtention(
+        fechaFormateada,
+        TablaMaestraPrioridades.NORMAL,
+        TablaMaestraVentanillas.VENTANILLA_1,
+        this.asesorId
+      )
+      .subscribe({
+        next: (response) => {
+          this.orderAtentionInCall = response.data;
+
+          this.namePacienteInCall = `${response.data.persona.nombre} ${response.data.persona.apellidoPaterno} ${response.data.persona.apellidoMaterno}`;
+
+          this.llamarTurno();
+          this.getOrdersAtentionNormal();
+        },
+        error: () => {
+          this.orderAtentionInCall = undefined;
+          this.namePacienteInCall = '';
+        },
+        complete: () => {
+          // 👇 Aquí recursión controlada: espera 10s y vuelves a ejecutar
+          setTimeout(() => this.callPacient(), 10000);
+        },
+      });
   }
 
   llamarTurno() {
-      const texto = "Turno de " + this.namePacienteInCall +", acerquese a ventanilla 1.";
+    const texto =
+      'Turno de ' + this.namePacienteInCall + ', acerquese a ventanilla 1.';
 
-      const mensaje = new SpeechSynthesisUtterance(texto);
-      mensaje.lang = 'es-ES'; // idioma español
-      mensaje.rate = 0.75; // velocidad normal
-      mensaje.pitch = 1; // tono normal
+    const mensaje = new SpeechSynthesisUtterance(texto);
+    mensaje.lang = 'es-ES'; // idioma español
+    mensaje.rate = 0.75; // velocidad normal
+    mensaje.pitch = 1; // tono normal
 
-      // Opcional: elegir una voz específica si la conocés
-      // const voces = speechSynthesis.getVoices();
-      // mensaje.voice = voces.find(v => v.name.includes("Sabina"));
+    // Opcional: elegir una voz específica si la conocés
+    // const voces = speechSynthesis.getVoices();
+    // mensaje.voice = voces.find(v => v.name.includes("Sabina"));
 
-      window.speechSynthesis.speak(mensaje);
-  }
-
-  llamar(p: Paciente) {
-    this.pacientesService.llamarPaciente(p);
-    // Síntesis de voz
-    const msg = new SpeechSynthesisUtterance(
-      `Paciente ${p.nombre}, pase por favor`
-    );
-    speechSynthesis.speak(msg);
-    this.currentUtterance = msg;
+    window.speechSynthesis.speak(mensaje);
   }
 
   finalizar(paciente: Paciente) {
     this.pacientesService.finalizarPaciente(paciente);
   }
+
   // 🔹 Botón de ausente
   ausente(p: Paciente) {
     this.pacientesService.marcarAusente(p);

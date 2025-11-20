@@ -33,3 +33,4 @@ export interface OrdenAtencionRequest {
 
 export type OrdenAtencionResponse = ResponseDTO<OrdenAtencion>;
 export type OrdenAtencionPaginatedResponse = ConsultaResponseDTO<OrdenAtencion[]>;
+export type OrdenAtencionListResponse = ResponseDTO<OrdenAtencion[]>;

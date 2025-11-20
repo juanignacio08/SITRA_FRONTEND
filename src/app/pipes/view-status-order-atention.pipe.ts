@@ -11,7 +11,7 @@ export class ViewStatusOrderAtentionPipe implements PipeTransform {
       case TablaMaestraEstadosOrdenAtencion.PENDIENTE:
         return 'Pendiente';
       case TablaMaestraEstadosOrdenAtencion.EN_LLAMADA:
-        return "Llamando";
+        return "Llamando...";
       case TablaMaestraEstadosOrdenAtencion.ATENDIDO:
         return "Atendido";
       case TablaMaestraEstadosOrdenAtencion.AUSENTE:

@@ -3,6 +3,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OrdenatencionService } from '../../services/turnos/ordenatencion.service';
 import { OrdenAtencion } from '../../models/turnos/ordenatencion.model';
 import { ViewStatusOrderAtentionPipe } from '../../pipes/view-status-order-atention.pipe';
+import { TablaMaestraEstadosOrdenAtencion, TablaMaestraVentanillas } from '../../models/maestros/tablaMaestra.model';
+import { ViewIconStatusOrdenAtentionPipe } from '../../pipes/view-icon-status-orden-atention.pipe';
 
 interface Paciente {
   codigo: string;
@@ -13,21 +15,20 @@ interface Paciente {
 @Component({
   selector: 'app-pantalla',
   imports: [
-    CommonModule, ViewStatusOrderAtentionPipe
+    CommonModule, ViewStatusOrderAtentionPipe, ViewIconStatusOrdenAtentionPipe
   ],
   templateUrl: './pantalla.component.html',
   styleUrls: ['./pantalla.component.css']
 })
 export class PantallaComponent implements OnInit, OnDestroy {
-
-  // Pacientes actualmente en ventanillas
-  ventanilla1: Paciente = { codigo: 'A001', nombre: 'Pedro Martínez',estado:"atendiendo" };
-  ventanilla2: Paciente = { codigo: 'A002', nombre: 'Ana Torres',estado:"atendiendo" };
-
-  // Próximos pacientes
   
   ordersAtentionPreferentialList: OrdenAtencion[] = [];
   ordersAtentionNormalList: OrdenAtencion[] = [];
+
+  orderAtentionNormalInCall ?: OrdenAtencion;
+  orderAtentionPreferentialInCall ?: OrdenAtencion;
+
+  codStatusOrderAtentionInCall : string = TablaMaestraEstadosOrdenAtencion.EN_LLAMADA;
 
   constructor(
     private ordenAtencionService: OrdenatencionService
@@ -44,6 +45,19 @@ export class PantallaComponent implements OnInit, OnDestroy {
       year: 'numeric'
     });
     
+    this.ordenAtencionService.getListOrderAtentionInCall(fechaFormateada).subscribe({
+      next: (response) => {
+        console.log("Ordenes de atencion en llamada", response.data);
+        for (let index = 0; index < response.data.length; index++) {
+          if (response.data[index].codVentanilla === TablaMaestraVentanillas.VENTANILLA_1) {
+            this.orderAtentionNormalInCall = response.data[index];
+          } else {
+            this.orderAtentionPreferentialInCall = response.data[index];
+          }
+        }
+      }
+    })
+
     this.ordenAtencionService.getNormalPaginatedOrders(0, 10, fechaFormateada).subscribe({
       next: (response) => {
         console.log('Órdenes de atención normales obtenidas:', response.data);

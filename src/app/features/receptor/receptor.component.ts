@@ -298,7 +298,7 @@ export class ReceptorComponent implements OnInit {
 
   private resetAfterRegister() {
     this.registroForm.reset({
-      tipo_doc: '001001', // Vuelve a seleccionar DNI por defecto
+      tipo_doc: TablaMaestraTypeDocument.DNI, // Vuelve a seleccionar DNI por defecto
       num_doc: '',
       nombres: '',
       apellido_paterno: '',

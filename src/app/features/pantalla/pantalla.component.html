@@ -11,12 +11,22 @@
             <div class="col-12 col-lg-6">
                 <div class="ventanilla text-center rounded rounded-3 text-light py-4 ms-1 mb-3">
                     <h2 class="fs-2">Ventanilla 1</h2>
-                    <p class="fs-4 fw-bold">{{ ventanilla1.nombre }}</p>
-                    <p class="fs-5">Turno: {{ ventanilla1.codigo }}</p>
+                    <hr>
+                    @if (orderAtentionNormalInCall) {
+                    <p class="fs-4 fw-bold">{{ orderAtentionNormalInCall.persona.nombre + " " + orderAtentionNormalInCall.persona.apellidoPaterno + " " + orderAtentionNormalInCall.persona.apellidoMaterno }}</p>
+                    <p class="fs-5">
+                        <i class="{{ orderAtentionNormalInCall.codEstadoAtencion | viewIconStatusOrdenAtention}}"></i>
+                        {{ orderAtentionNormalInCall.codEstadoAtencion | viewStatusOrderAtention }}</p>
+                    @if (orderAtentionNormalInCall.codEstadoAtencion === codStatusOrderAtentionInCall) {
+                        <p class="fs-5"># Llamadas: {{ orderAtentionNormalInCall.numLlamadas }}</p>
+                    }
+                    } @else {
+                    <p class="fs-4 fw-bold">- - - - -</p>
+                    }    
                 </div>
 
                 <h3>Próximos Pacientes</h3>
-                <table class="tabla-pacientes">
+                <table class="tabla-pacientes mb-3">
                     <thead>
                         <tr>
                             <th>Turno</th>
@@ -36,14 +46,24 @@
             </div>
 
             <div class="col-12 col-lg-6">
-                <div class="ventanilla text-center rounded rounded-3 text-light py-4 me-1 mb-3">
+                <div class="ventanilla text-center rounded rounded-3 text-light py-4 ms-1 mb-3">
                     <h2 class="fs-2">Ventanilla 2</h2>
-                    <p class="fs-4 fw-bold">{{ ventanilla2.nombre }}</p>
-                    <p class="fs-5">Turno: {{ ventanilla2.codigo }}</p>
+                    <hr>
+                    @if (orderAtentionPreferentialInCall) {
+                    <p class="fs-4 fw-bold">{{ orderAtentionPreferentialInCall.persona.nombre + " " + orderAtentionPreferentialInCall.persona.apellidoPaterno + " " + orderAtentionPreferentialInCall.persona.apellidoMaterno }}</p>
+                    <p class="fs-5">
+                        <i class="{{ orderAtentionPreferentialInCall.codEstadoAtencion | viewIconStatusOrdenAtention}}"></i>
+                        {{ orderAtentionPreferentialInCall.codEstadoAtencion | viewStatusOrderAtention }}</p>
+                    @if (orderAtentionPreferentialInCall.codEstadoAtencion === codStatusOrderAtentionInCall) {
+                        <p class="fs-5"># Llamadas: {{ orderAtentionPreferentialInCall.numLlamadas }}</p>
+                    }
+                    } @else {
+                    <p class="fs-4 fw-bold">- - - - -</p>
+                    }    
                 </div>
 
                 <h3>Pacientes Preferenciales</h3>
-                <table class="tabla-pacientes">
+                <table class="tabla-pacientes mb-3">
                     <thead>
                         <tr>
                             <th>Turno</th>
