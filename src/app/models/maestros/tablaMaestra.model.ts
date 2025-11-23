@@ -24,9 +24,9 @@ export enum TablaMaestraPrioridades {
 export enum TablaMaestraEstadosOrdenAtencion {
     PENDIENTE = '002001',
     EN_LLAMADA = '002002',
-    ATENDIDO = '002003',
+    ATENDIENDO = '002003',
     AUSENTE = '002004',
-    ATENDIENDO = '002005'
+    ATENDIDO = '002005'
 }
 
 export enum TablaMaestraTypeDocument {
@@ -37,4 +37,11 @@ export enum TablaMaestraTypeDocument {
 export enum TablaMaestraVentanillas {
     VENTANILLA_1 = '003001',
     VENTANILLA_2 = '003002'
+}
+
+export enum TablaMaestraResultadoAtencion {
+    PENDIENTE_LLAMADA = '005001',
+    SE_PRESENTO = '005002',
+    NO_RESPONDIO = '005003',
+    ATENDIDO_LLAMADA = '005004'
 }

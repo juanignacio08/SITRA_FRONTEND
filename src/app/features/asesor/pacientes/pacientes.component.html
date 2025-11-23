@@ -6,10 +6,13 @@
 
   <mat-card-content>
     <div class="text-center rounded rounded-3 text-dark py-4 mb-3 bordered-card bg-pantalla">
-      @if (orderAtentionInCall) {
-        <p class="fs-4 fw-bold">{{orderAtentionInCall.persona.nombre + " " + orderAtentionInCall.persona.apellidoPaterno + " " + orderAtentionInCall.persona.apellidoMaterno}}</p>
-        <p class="fs-5">Turno: {{orderAtentionInCall.turno}}</p>
-        <p class="fs-5">Numero de Llamadas: {{orderAtentionInCall.numLlamadas}}</p>
+      @if (screenNormal) {
+        <p class="fs-4 fw-bold">{{screenNormal.paciente.nombre + " " + screenNormal.paciente.apellidoPaterno + " " + screenNormal.paciente.apellidoMaterno}}</p>
+        <p class="fs-5">Turno: {{screenNormal.turno}}</p>
+        <p class="fs-5">{{screenNormal.codEstadoAtencion | viewStatusOrderAtention}}</p>
+        @if (screenNormal.codEstadoAtencion === codeOrderStatusInCall) {
+          <p class="fs-5">Numero de Llamadas: {{screenNormal.numLlamada}}</p>
+        }
       } @else {
         <p class="fs-4">No hay paciente en atención...</p>
       }
@@ -17,16 +20,16 @@
     </div>
 
     <div class="div text-end mb-3">
-      <button type="button" class="btn btn-primary me-1 btn-lg" aria-label="Llamar al paciente" (click)="callPacient()">
+      <button type="button" class="btn btn-primary me-1 btn-lg" aria-label="Llamar al paciente" [disabled]="disabledCall" (click)="call()">
         <i class="bi bi-telephone-plus-fill"></i> Llamar
       </button>
-      <button type="button" class="btn btn-secondary me-1 btn-lg" aria-label="Iniciar atencion">
+      <button type="button" class="btn btn-secondary me-1 btn-lg" aria-label="Iniciar atencion" [disabled]="disabledStart" (click)="startAtention()">
         <i class="bi bi-play-circle"></i> Iniciar
       </button>
-      <button type="button" class="btn btn-success me-3 btn-lg" aria-label="Finalizar atencion">
+      <button type="button" class="btn btn-success me-3 btn-lg" aria-label="Finalizar atencion" [disabled]="disabledFinish" (click)="finishAtention()">
         <i class="bi bi-stop-circle"></i> Finalizar
       </button>
-      <button type="button" class="btn btn-danger btn-lg" aria-label="Marcar Ausente">
+      <button type="button" class="btn btn-danger btn-lg" aria-label="Marcar Ausente" [disabled]="disabledAbsent" (click)="absent()">
         <i class="bi bi-x-circle"></i> Ausente
       </button>
     </div>
@@ -49,12 +52,6 @@
       <ng-container matColumnDef="numeroDocumento">
         <th mat-header-cell *matHeaderCellDef class="center">N° Documento</th>
         <td mat-cell *matCellDef="let p" class="center" data-label="Documento">{{ p.persona.numeroDocumentoIdentidad }}</td>
-      </ng-container>
-
-      <!-- Llamadas -->
-      <ng-container matColumnDef="llamadas">
-        <th mat-header-cell *matHeaderCellDef class="center">Llamadas</th>
-        <td mat-cell *matCellDef="let p" class="center" data-label="Llamadas">{{ p.numLlamadas }}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columnas"></tr>

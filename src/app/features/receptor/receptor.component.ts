@@ -175,7 +175,6 @@ export class ReceptorComponent implements OnInit {
               receptorId: this.usuarioId,
               codPrioridad: priority,
               codEstadoAtencion: TablaMaestraEstadosOrdenAtencion.PENDIENTE,
-              numLlamadas: 0,
               estado: 1,
             };
 
@@ -212,7 +211,6 @@ export class ReceptorComponent implements OnInit {
       receptorId: usuarioId,
       codPrioridad: codPrioridad,
       codEstadoAtencion: codEstadoAtencion,
-      numLlamadas: numLlamadas,
       estado: estado,
     };
     return orderAtencionRequest;

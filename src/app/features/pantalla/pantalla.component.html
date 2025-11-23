@@ -12,13 +12,13 @@
                 <div class="ventanilla text-center rounded rounded-3 text-light py-4 ms-1 mb-3">
                     <h2 class="fs-2">Ventanilla 1</h2>
                     <hr>
-                    @if (orderAtentionNormalInCall) {
-                    <p class="fs-4 fw-bold">{{ orderAtentionNormalInCall.persona.nombre + " " + orderAtentionNormalInCall.persona.apellidoPaterno + " " + orderAtentionNormalInCall.persona.apellidoMaterno }}</p>
+                    @if (screenNormal) {
+                    <p class="fs-4 fw-bold">{{ screenNormal.paciente.nombre + " " + screenNormal.paciente.apellidoPaterno + " " + screenNormal.paciente.apellidoMaterno }}</p>
                     <p class="fs-5">
-                        <i class="{{ orderAtentionNormalInCall.codEstadoAtencion | viewIconStatusOrdenAtention}}"></i>
-                        {{ orderAtentionNormalInCall.codEstadoAtencion | viewStatusOrderAtention }}</p>
-                    @if (orderAtentionNormalInCall.codEstadoAtencion === codStatusOrderAtentionInCall) {
-                        <p class="fs-5"># Llamadas: {{ orderAtentionNormalInCall.numLlamadas }}</p>
+                        <i class="{{ screenNormal.codEstadoAtencion | viewIconStatusOrdenAtention}}"></i>
+                        {{ screenNormal.codEstadoAtencion | viewStatusOrderAtention }}</p>
+                    @if (screenNormal.codEstadoAtencion === codStatusOrderAtentionInCall) {
+                        <p class="fs-5"># Llamadas: {{ screenNormal.numLlamada }}</p>
                     }
                     } @else {
                     <p class="fs-4 fw-bold">- - - - -</p>
@@ -49,13 +49,13 @@
                 <div class="ventanilla text-center rounded rounded-3 text-light py-4 ms-1 mb-3">
                     <h2 class="fs-2">Ventanilla 2</h2>
                     <hr>
-                    @if (orderAtentionPreferentialInCall) {
-                    <p class="fs-4 fw-bold">{{ orderAtentionPreferentialInCall.persona.nombre + " " + orderAtentionPreferentialInCall.persona.apellidoPaterno + " " + orderAtentionPreferentialInCall.persona.apellidoMaterno }}</p>
+                    @if (screenPreferential) {
+                    <p class="fs-4 fw-bold">{{ screenPreferential.paciente.nombre + " " + screenPreferential.paciente.apellidoPaterno + " " + screenPreferential.paciente.apellidoMaterno }}</p>
                     <p class="fs-5">
-                        <i class="{{ orderAtentionPreferentialInCall.codEstadoAtencion | viewIconStatusOrdenAtention}}"></i>
-                        {{ orderAtentionPreferentialInCall.codEstadoAtencion | viewStatusOrderAtention }}</p>
-                    @if (orderAtentionPreferentialInCall.codEstadoAtencion === codStatusOrderAtentionInCall) {
-                        <p class="fs-5"># Llamadas: {{ orderAtentionPreferentialInCall.numLlamadas }}</p>
+                        <i class="{{ screenPreferential.codEstadoAtencion | viewIconStatusOrdenAtention}}"></i>
+                        {{ screenPreferential.codEstadoAtencion | viewStatusOrderAtention }}</p>
+                    @if (screenPreferential.codEstadoAtencion === codStatusOrderAtentionInCall) {
+                        <p class="fs-5"># Llamadas: {{ screenPreferential.numLlamada }}</p>
                     }
                     } @else {
                     <p class="fs-4 fw-bold">- - - - -</p>

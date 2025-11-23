@@ -8,14 +8,11 @@ export interface OrdenAtencion {
   ordenAtencionId: number
   persona: Persona
   receptor: Usuario
-  asesor: Usuario
   fecha: string
   hora: string
   codPrioridad: string
   turno: number
   codEstadoAtencion: string
-  numLlamadas: number
-  codVentanilla: string
   estado: number
 }
 
@@ -23,12 +20,9 @@ export interface OrdenAtencionRequest {
   ordenAtencionId: number
   personaId: number
   receptorId: number
-  asesorId?: number
   codPrioridad: TablaMaestraPrioridades,
   codEstadoAtencion: TablaMaestraEstadosOrdenAtencion,
-  numLlamadas: number
   estado: number
-  codVentanilla?: TablaMaestraVentanillas
 }
 
 export type OrdenAtencionResponse = ResponseDTO<OrdenAtencion>;

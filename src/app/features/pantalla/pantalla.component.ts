@@ -5,6 +5,8 @@ import { OrdenAtencion } from '../../models/turnos/ordenatencion.model';
 import { ViewStatusOrderAtentionPipe } from '../../pipes/view-status-order-atention.pipe';
 import { TablaMaestraEstadosOrdenAtencion, TablaMaestraVentanillas } from '../../models/maestros/tablaMaestra.model';
 import { ViewIconStatusOrdenAtentionPipe } from '../../pipes/view-icon-status-orden-atention.pipe';
+import { Pantalla } from '../../models/turnos/pantalla.model';
+import { AtencionService } from '../../services/turnos/atencion.service';
 
 interface Paciente {
   codigo: string;
@@ -25,13 +27,15 @@ export class PantallaComponent implements OnInit, OnDestroy {
   ordersAtentionPreferentialList: OrdenAtencion[] = [];
   ordersAtentionNormalList: OrdenAtencion[] = [];
 
-  orderAtentionNormalInCall ?: OrdenAtencion;
-  orderAtentionPreferentialInCall ?: OrdenAtencion;
+  screenNormal ?: Pantalla;
+  screenPreferential ?: Pantalla;
 
   codStatusOrderAtentionInCall : string = TablaMaestraEstadosOrdenAtencion.EN_LLAMADA;
+  codStatusOrderAtencionInAtention : string = TablaMaestraEstadosOrdenAtencion.ATENDIENDO;
 
   constructor(
-    private ordenAtencionService: OrdenatencionService
+    private ordenAtencionService: OrdenatencionService,
+    private atencionService: AtencionService
   ) {}
 
   horaActual: Date = new Date();
@@ -45,19 +49,24 @@ export class PantallaComponent implements OnInit, OnDestroy {
       year: 'numeric'
     });
     
-    this.ordenAtencionService.getListOrderAtentionInCall(fechaFormateada).subscribe({
+    this.atencionService.getScreen(fechaFormateada, TablaMaestraVentanillas.VENTANILLA_1).subscribe({
       next: (response) => {
-        console.log("Ordenes de atencion en llamada", response.data);
-        for (let index = 0; index < response.data.length; index++) {
-          if (response.data[index].codVentanilla === TablaMaestraVentanillas.VENTANILLA_1) {
-            this.orderAtentionNormalInCall = response.data[index];
-          } else {
-            this.orderAtentionPreferentialInCall = response.data[index];
-          }
-        }
+        this.screenNormal = response.data;
+      }, error: (error) => {
+        this.screenNormal = undefined;
+        console.error(error);
       }
     })
 
+    this.atencionService.getScreen(fechaFormateada, TablaMaestraVentanillas.VENTANILLA_2).subscribe({
+      next: (response) => {
+        this.screenPreferential = response.data;
+      }, error: (error) => {
+        this.screenPreferential = undefined;
+        console.error(error);
+      }
+    })
+    
     this.ordenAtencionService.getNormalPaginatedOrders(0, 10, fechaFormateada).subscribe({
       next: (response) => {
         console.log('Órdenes de atención normales obtenidas:', response.data);
