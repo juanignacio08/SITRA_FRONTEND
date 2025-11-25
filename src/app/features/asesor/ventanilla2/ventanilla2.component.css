@@ -1,0 +1,92 @@
+/* contenedor del mat-card (clase .tabla usada en tu HTML) */
+.tabla {
+  margin: 24px;
+  max-width: 100%;
+  background-color: #69bbd3 !important;
+  border-radius: 8px;
+  
+}
+
+.bordered-card {
+  border: 2px solid #422066;
+  border-radius: 8px;
+}
+
+.bg-pantalla {
+ background: radial-gradient(
+  circle,
+  #ffffff 0%,       /* Color del centro */
+  rgba(230, 250, 239, 1) 10%,      /* Centro grande */
+  #a0d8ef 100%      /* Color de los bordes (celeste pastel ejemplo) */
+);
+
+}
+
+/* utilitario centrado (usado en th/td) */
+.center {
+  text-align: center;
+}
+
+/* tabla principal */
+.tabla-espera {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  table-layout: fixed; /* importante para respetar anchos */
+}
+
+/* encabezados y celdas */
+th.mat-header-cell {
+  background-color: #e3f2fd;
+  font-weight: 400;
+  text-align: center;
+  padding: 8px;
+}
+
+td.mat-cell {
+  text-align: center;
+  padding: 8px;
+}
+
+/* título del mat-card */
+.center-title {
+  font-size: 20px;
+  font-weight: bold;
+  font-family: 'Helvetica', Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* estilos usados por la lógica (estado/llamando) */
+.boton-llamando {
+  background-color: green !important;
+  color: #fff !important;
+}
+
+.estado-llamando {
+  color: green;
+  font-weight: bold;
+}
+
+/* contenedor de botones dentro de la celda de "Acción" */
+.acciones-btns {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+
+/* separación entre botones (no aplica al último) */
+.acciones-btns button:not(:last-child) {
+  margin-right: 5%;
+}
+
+/* anchos por columna (coinciden con tus matColumnDef) */
+.mat-column-turno { width: 15%; }
+.mat-column-nombre { width: 40%; }
+.mat-column-numeroDocumento { width: 30%; }
+.mat-column-llamadas { width: 15%; }

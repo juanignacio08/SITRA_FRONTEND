@@ -18,7 +18,7 @@ mat-sidenav-content {
 }
 
 .main-content {
-  background-color: #eaeaf5;
+  background-color: #F5F5F5;
 }
 
 /* ====== SIDENAV ====== */
@@ -75,7 +75,7 @@ a.mat-list-item span {
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  background-color: #69bbd3;
+  background-color: #0096C7;
 }
 
 .menu-btn {

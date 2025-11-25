@@ -6,6 +6,7 @@ import { PacientesComponent } from './features/asesor/pacientes/pacientes.compon
 import { HistorialComponent } from './features/asesor/historial/historial.component';
 import { ReceptorComponent } from './features/receptor/receptor.component';
 import { PantallaComponent } from './features/pantalla/pantalla.component';
+import { Ventanilla2Component } from './features/asesor/ventanilla2/ventanilla2.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'sig-in', pathMatch: 'full' },
@@ -17,7 +18,9 @@ export const routes: Routes = [
     title: 'Asesor',
     children: [
       { path: '', redirectTo: 'pacientes', pathMatch: 'full' },
+      
       { path: 'pacientes', component: PacientesComponent },
+      { path: 'ventanilla2', component: Ventanilla2Component },
       { path: 'historial', component: HistorialComponent }
     ]
   },
