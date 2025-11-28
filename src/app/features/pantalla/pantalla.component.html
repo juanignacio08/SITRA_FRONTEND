@@ -13,36 +13,19 @@
                     <h2 class="fs-2">Ventanilla 1</h2>
                     <hr>
                     @if (screenNormal) {
-                    <p class="fs-4 fw-bold">{{ screenNormal.paciente.nombre + " " + screenNormal.paciente.apellidoPaterno + " " + screenNormal.paciente.apellidoMaterno }}</p>
+                    <p class="fs-4 fw-bold">{{ screenNormal.paciente.nombre + " " +
+                        screenNormal.paciente.apellidoPaterno + " " + screenNormal.paciente.apellidoMaterno }}</p>
                     <p class="fs-5">
                         <i class="{{ screenNormal.codEstadoAtencion | viewIconStatusOrdenAtention}}"></i>
-                        {{ screenNormal.codEstadoAtencion | viewStatusOrderAtention }}</p>
+                        {{ screenNormal.codEstadoAtencion | viewStatusOrderAtention }}
+                    </p>
                     @if (screenNormal.codEstadoAtencion === codStatusOrderAtentionInCall) {
-                        <p class="fs-5"># Llamadas: {{ screenNormal.numLlamada }}</p>
+                    <p class="fs-5"># Llamadas: {{ screenNormal.numLlamada }}</p>
                     }
                     } @else {
                     <p class="fs-4 fw-bold">- - - - -</p>
-                    }    
+                    }
                 </div>
-
-                <h3>Próximos Pacientes</h3>
-                <table class="tabla-pacientes mb-3">
-                    <thead>
-                        <tr>
-                            <th>Turno</th>
-                            <th>Nombre Completo</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let paciente of ordersAtentionNormalList">
-                            <td class="text-center">{{ paciente.turno }}</td>
-                            <td class="text-center">{{ paciente.persona.nombre + ' ' + paciente.persona.apellidoPaterno + ' ' +
-                                paciente.persona.apellidoMaterno}}</td>
-                            <td class="text-center">{{ paciente.codEstadoAtencion | viewStatusOrderAtention}}</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
 
             <div class="col-12 col-lg-6">
@@ -50,36 +33,49 @@
                     <h2 class="fs-2">Ventanilla 2</h2>
                     <hr>
                     @if (screenPreferential) {
-                    <p class="fs-4 fw-bold">{{ screenPreferential.paciente.nombre + " " + screenPreferential.paciente.apellidoPaterno + " " + screenPreferential.paciente.apellidoMaterno }}</p>
+                    <p class="fs-4 fw-bold">{{ screenPreferential.paciente.nombre + " " +
+                        screenPreferential.paciente.apellidoPaterno + " " + screenPreferential.paciente.apellidoMaterno
+                        }}</p>
                     <p class="fs-5">
                         <i class="{{ screenPreferential.codEstadoAtencion | viewIconStatusOrdenAtention}}"></i>
-                        {{ screenPreferential.codEstadoAtencion | viewStatusOrderAtention }}</p>
+                        {{ screenPreferential.codEstadoAtencion | viewStatusOrderAtention }}
+                    </p>
                     @if (screenPreferential.codEstadoAtencion === codStatusOrderAtentionInCall) {
-                        <p class="fs-5"># Llamadas: {{ screenPreferential.numLlamada }}</p>
+                    <p class="fs-5"># Llamadas: {{ screenPreferential.numLlamada }}</p>
                     }
                     } @else {
                     <p class="fs-4 fw-bold">- - - - -</p>
-                    }    
+                    }
                 </div>
+            </div>
 
-                <h3>Pacientes Preferenciales</h3>
-                <table class="tabla-pacientes mb-3">
-                    <thead>
-                        <tr>
-                            <th>Turno</th>
-                            <th>Nombre Completo</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let paciente of ordersAtentionPreferentialList">
-                            <td class="text-center">{{ paciente.turno }}</td>
-                            <td class="text-center">{{ paciente.persona.nombre + ' ' + paciente.persona.apellidoPaterno + ' ' +
-                                paciente.persona.apellidoMaterno}}</td>
-                            <td class="text-center">{{ paciente.codEstadoAtencion | viewStatusOrderAtention}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-12 col-lg-2"></div>
+                    <div class="col-12 col-lg-8 p-2">
+                        <h3>Próximos Pacientes</h3>
+                        <table class="tabla-pacientes mb-3">
+                            <thead>
+                                <tr>
+                                    <th>Turno</th>
+                                    <th>Nombre Completo</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let paciente of ordersAtentionNormalList">
+                                    <td class="text-center">{{ paciente.turno }}</td>
+                                    <td class="text-center">{{ paciente.persona.nombre + ' ' +
+                                        paciente.persona.apellidoPaterno + ' ' +
+                                        paciente.persona.apellidoMaterno}}</td>
+                                    <td class="text-center">{{ paciente.codEstadoAtencion | viewStatusOrderAtention}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-12 col-lg-2"></div>
+                </div>
             </div>
         </div>
     </div>

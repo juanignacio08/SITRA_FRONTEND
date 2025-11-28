@@ -102,7 +102,7 @@
                                         <mat-label>Número de Documento</mat-label>
                                         <input matInput type="text" formControlName="num_doc"
                                              maxlength="8" placeholder="Ej: 842531126" required aria-label="'Número de Documento'"
-                                            class="rounded-5"  (input)="onDniInput()">
+                                            lass="rounded-5" (input)="onDniInput()" autofocus>
                                 
                                     </mat-form-field>
 
@@ -141,10 +141,6 @@
                                 <button mat-raised-button  class="boton-cita" type="button" (click)="registrarCita(Prioridades.NORMAL)">
                                     <mat-icon>check_circle</mat-icon>
                                     Registrar Cita
-                                </button>
-                                <button mat-raised-button class="boton-preferencial" type="button" (click)="registrarCita(Prioridades.PREFERENCIAL)">
-                                    <mat-icon>check_circle</mat-icon>
-                                    Registrar Preferencial
                                 </button>
                             </div>
                         </form>
