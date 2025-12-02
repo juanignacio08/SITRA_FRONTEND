@@ -67,6 +67,7 @@ export class Ventanilla2Component implements OnInit {
   disabledAbsentB2: boolean = true;
 
   codeOrderStatusInCall = TablaMaestraEstadosOrdenAtencion.EN_LLAMADA;
+  codeStatusOrderAtencionInAtention = TablaMaestraEstadosOrdenAtencion.ATENDIENDO;
 
   currentUtterance: SpeechSynthesisUtterance | null = null;
 

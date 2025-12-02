@@ -6,19 +6,31 @@
 
     <mat-card-content>
         <div class="text-center rounded rounded-3 text-dark py-4 mb-3 bordered-card bg-pantalla">
-            @if (screenNormal) {
-            <p class="fs-4 fw-bold">{{screenNormal.paciente.nombre + " " +
-                screenNormal.paciente.apellidoPaterno
-                + " " + screenNormal.paciente.apellidoMaterno}}</p>
-            <p class="fs-5">Turno: {{screenNormal.turno}}</p>
-            <p class="fs-5">{{screenNormal.codEstadoAtencion | viewStatusOrderAtention}}</p>
-            @if (screenNormal.codEstadoAtencion === codeOrderStatusInCall) {
-            <p class="fs-5">Numero de Llamadas: {{screenNormal.numLlamada}}</p>
-            }
-            } @else {
-            <p class="fs-4">No hay paciente en atención...</p>
-            }
-
+            <div class="row">
+                <div class="col-4">
+                    @if (screenNormal) {
+                    <p class="fs-1 badge text-bg-primary">{{screenNormal.turno}}</p>
+                    }
+                </div>
+                <div class="col-8">
+                    @if (screenNormal) {
+                    <p class="fs-2 fw-bold">{{screenNormal.paciente.nombre + " " +
+                        screenNormal.paciente.apellidoPaterno
+                        + " " + screenNormal.paciente.apellidoMaterno}}</p>
+                    <p class="fs-5">
+                        {{screenNormal.codEstadoAtencion | viewStatusOrderAtention}}
+                        @if (screenNormal.codEstadoAtencion === codeOrderStatusInCall) {
+                        <span class="badge text-bg-light">{{ screenPreferential?.numLlamada }}</span>
+                        } 
+                        @if (screenNormal.codEstadoAtencion === codeStatusOrderAtencionInAtention) {
+                        <div class="spinner-grow" role="status">
+                            <span class="visually-hidden">Loading...</span>    
+                        </div>
+                        }
+                    </p>
+                    }
+                </div>
+            </div>
         </div>
 
         <div class="div text-end mb-3">

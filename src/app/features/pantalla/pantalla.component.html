@@ -33,18 +33,23 @@
                     <h2 class="fs-2">Ventanilla 2</h2>
                     <hr>
                     @if (screenPreferential) {
-                    <p class="fs-4 fw-bold">{{ screenPreferential.paciente.nombre + " " +
+                    <p class="fs-1 fw-bold">{{ screenPreferential.paciente.nombre + " " +
                         screenPreferential.paciente.apellidoPaterno + " " + screenPreferential.paciente.apellidoMaterno
-                        }}</p>
-                    <p class="fs-5">
+                        }}
+                    </p>
+                    <p class="fs-2">
                         <i class="{{ screenPreferential.codEstadoAtencion | viewIconStatusOrdenAtention}}"></i>
                         {{ screenPreferential.codEstadoAtencion | viewStatusOrderAtention }}
+
+                        @if (screenPreferential.codEstadoAtencion === codStatusOrderAtentionInCall) {
+                        <span class="badge text-bg-light">{{ screenPreferential.numLlamada }}</span>
+                        } 
+                        @if (screenPreferential.codEstadoAtencion === codStatusOrderAtencionInAtention) {
+                        <div class="spinner-grow" role="status">
+                            <span class="visually-hidden">Loading...</span>    
+                        </div>
+                        }
                     </p>
-                    @if (screenPreferential.codEstadoAtencion === codStatusOrderAtentionInCall) {
-                    <p class="fs-5"># Llamadas: {{ screenPreferential.numLlamada }}</p>
-                    }
-                    } @else {
-                    <p class="fs-4 fw-bold">- - - - -</p>
                     }
                 </div>
             </div>
