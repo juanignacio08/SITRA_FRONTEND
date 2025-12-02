@@ -23,8 +23,8 @@ export class LlamadaService {
     return this.http.get<PantallaResponse>(url);
   }
 
-  markAsAbsent(llamadaId: number): Observable<PantallaResponse> {
-    const url = `${this.baseUrl}/llamada/markAsAbsent?llamadaId=${llamadaId}`;
+  markAsAbsent(llamadaId: number, codeVentanilla: string): Observable<PantallaResponse> {
+    const url = `${this.baseUrl}/llamada/markAsAbsent?llamadaId=${llamadaId}&codeVentanilla=${codeVentanilla}`;
     return this.http.put<PantallaResponse>(url, null, {
       responseType: 'json'
     });

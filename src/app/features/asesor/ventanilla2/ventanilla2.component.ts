@@ -45,18 +45,29 @@ import { ViewStatusOrderAtentionPipe } from '../../../pipes/view-status-order-at
 export class Ventanilla2Component implements OnInit {
   columnas: string[] = ['turno', 'nombre', 'numeroDocumento'];
 
-  orderAtentionList: OrdenAtencion[] = [];
+  orderAtentionNormalList: OrdenAtencion[] = [];
+  orderAtentionPreferentialList: OrdenAtencion[] = [];
+
   screenNormal?: Pantalla;
-  namePacienteInVentanilla: string = '';
+  namePacienteNormalInVentanilla: string = '';
+
+  screenPreferential?: Pantalla;
+  namePacientePreferentialInVentanilla: string = '';
 
   asesorId = 3; // ID del asesor (ejemplo estático)
 
-  disabledCall: boolean = false;
-  disabledStart: boolean = true;
-  disabledFinish: boolean = true;
-  disabledAbsent: boolean = true;
+  disabledCallB1: boolean = false;
+  disabledStartB1: boolean = true;
+  disabledFinishB1: boolean = true;
+  disabledAbsentB1: boolean = true;
+
+  disabledCallB2: boolean = false;
+  disabledStartB2: boolean = true;
+  disabledFinishB2: boolean = true;
+  disabledAbsentB2: boolean = true;
 
   codeOrderStatusInCall = TablaMaestraEstadosOrdenAtencion.EN_LLAMADA;
+  codeStatusOrderAtencionInAtention = TablaMaestraEstadosOrdenAtencion.ATENDIENDO;
 
   currentUtterance: SpeechSynthesisUtterance | null = null;
 
@@ -65,7 +76,8 @@ export class Ventanilla2Component implements OnInit {
   atencionService = inject(AtencionService);
 
   ngOnInit(): void {
-    this.getOrderAtentionInVentanilla();
+    this.getOrderNormalAtentionInVentanilla();
+    this.getOrderPreferentialAtentionInVentanilla();
     this.getOrdersAtentionNormal();
   }
 
@@ -87,21 +99,35 @@ export class Ventanilla2Component implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Órdenes de atención normales obtenidas:', response.data);
-          this.orderAtentionList = response.data;
-          this.disabledButtons();
+          this.orderAtentionNormalList = response.data;
+          this.disabledButtonsB1();
         },
       });
   }
 
-  getOrderAtentionInVentanilla() {
+  getOrdersAtentionPreferential() {
+    const fechaFormateada = this.getDateFormatted(new Date());
+
+    this.orderAtentionService
+      .getPreferentialPaginatedOrders(0, 10, fechaFormateada)
+      .subscribe({
+        next: (response) => {
+          console.log('Órdenes de atención normales obtenidas:', response.data);
+          this.orderAtentionPreferentialList = response.data;
+          this.disabledButtonsB1();
+        },
+      });
+  }
+
+  getOrderPreferentialAtentionInVentanilla() {
     const fechaFormateada = this.getDateFormatted(new Date());
 
     this.atencionService
-      .getScreen(fechaFormateada, TablaMaestraVentanillas.VENTANILLA_1)
+      .getScreen(fechaFormateada, TablaMaestraVentanillas.VENTANILLA_2)
       .subscribe({
         next: (response) => {
           this.screenNormal = response.data;
-          this.disabledButtons();
+          this.disabledButtonsB1();
         },
         error: (error) => {
           console.error(
@@ -109,49 +135,70 @@ export class Ventanilla2Component implements OnInit {
             error
           );
           this.screenNormal = undefined;
-          this.disabledButtons();
+          this.disabledButtonsB1();
         },
       });
   }
 
-  disabledButtons() {
-    this.disabledCall = false;
-    this.disabledStart = true;
-    this.disabledFinish = true;
-    this.disabledAbsent = true;
+  getOrderNormalAtentionInVentanilla() {
+    const fechaFormateada = this.getDateFormatted(new Date());
+
+    this.atencionService
+      .getScreen(fechaFormateada, TablaMaestraVentanillas.VENTANILLA_2)
+      .subscribe({
+        next: (response) => {
+          this.screenNormal = response.data;
+          this.disabledButtonsB1();
+        },
+        error: (error) => {
+          console.error(
+            'Error al obtener la siguiente orden de atención:',
+            error
+          );
+          this.screenNormal = undefined;
+          this.disabledButtonsB1();
+        },
+      });
+  }
+
+  disabledButtonsB1() {
+    this.disabledCallB1 = false;
+    this.disabledStartB1 = true;
+    this.disabledFinishB1 = true;
+    this.disabledAbsentB1 = true;
 
     if (this.screenNormal) {
       if (
         this.screenNormal.codEstadoAtencion ===
         TablaMaestraEstadosOrdenAtencion.EN_LLAMADA
       ) {
-        this.disabledCall = false;
-        this.disabledStart = false;
+        this.disabledCallB1 = false;
+        this.disabledStartB1 = false;
         if (this.screenNormal.numLlamada === 3) {
-          this.disabledAbsent = false;
-          this.disabledCall = true;
+          this.disabledAbsentB1 = false;
+          this.disabledCallB1 = true;
         }
       } else if (
         this.screenNormal.codEstadoAtencion ===
         TablaMaestraEstadosOrdenAtencion.ATENDIENDO
       ) {
-        this.disabledFinish = false;
-        this.disabledCall = true;
+        this.disabledFinishB1 = false;
+        this.disabledCallB1 = true;
       } else {
         console.log('Caso no contemplado');
       }
     } else {
-      this.disabledCall = false;
+      this.disabledCallB1 = false;
     }    
 
-    if (this.orderAtentionList.length === 0 && (this.screenNormal === undefined || this.screenNormal === null)) {
-      this.disabledCall = true;
+    if (this.orderAtentionNormalList.length === 0 && (this.screenNormal === undefined || this.screenNormal === null)) {
+      this.disabledCallB1 = true;
     }
   }
 
   call() {
     if (
-      (this.orderAtentionList.length != 0 || this.screenNormal) && (
+      (this.orderAtentionNormalList.length != 0 || this.screenNormal) && (
         this.screenNormal == undefined ||
         (this.screenNormal &&
           this.screenNormal.codEstadoAtencion ===
@@ -166,7 +213,7 @@ export class Ventanilla2Component implements OnInit {
         .callNext(
           fechaFormateada,
           TablaMaestraPrioridades.NORMAL,
-          TablaMaestraVentanillas.VENTANILLA_1,
+          TablaMaestraVentanillas.VENTANILLA_2,
           this.asesorId
         )
         .subscribe({
@@ -176,14 +223,14 @@ export class Ventanilla2Component implements OnInit {
             }
             this.screenNormal = response.data;
 
-            this.namePacienteInVentanilla =
+            this.namePacienteNormalInVentanilla =
               this.screenNormal.paciente.nombre +
               ' ' +
               this.screenNormal.paciente.apellidoPaterno +
               ' ' +
               this.screenNormal.paciente.apellidoMaterno;
             
-            this.disabledButtons();
+            this.disabledButtonsB1();
             
             this.llamarTurno();
 
@@ -199,7 +246,7 @@ export class Ventanilla2Component implements OnInit {
             } else {
               this.screenNormal = undefined;
             }
-            this.disabledButtons();
+            this.disabledButtonsB1();
           },
         });
     }
@@ -208,7 +255,7 @@ export class Ventanilla2Component implements OnInit {
   llamarTurno() {
     const texto =
       'Turno de ' +
-      this.namePacienteInVentanilla +
+      this.namePacienteNormalInVentanilla +
       ', acerquese a ventanilla 1.';
 
     const mensaje = new SpeechSynthesisUtterance(texto);
@@ -238,13 +285,13 @@ export class Ventanilla2Component implements OnInit {
 
   getFullName() : string {
     if (this.screenNormal) {
-      this.namePacienteInVentanilla =
+      this.namePacienteNormalInVentanilla =
               this.screenNormal.paciente.nombre +
               ' ' +
               this.screenNormal.paciente.apellidoPaterno +
               ' ' +
               this.screenNormal.paciente.apellidoMaterno;
-      return this.namePacienteInVentanilla;
+      return this.namePacienteNormalInVentanilla;
     }
     
     return "No hay paciente en ventanilla";
@@ -257,7 +304,7 @@ export class Ventanilla2Component implements OnInit {
         asesorId: this.asesorId,
         ordenAtencionId: this.screenNormal.orderAtencionId,
         fecha: this.getDateFormatted(new Date()),
-        codVentanilla: TablaMaestraVentanillas.VENTANILLA_1,
+        codVentanilla: TablaMaestraVentanillas.VENTANILLA_2,
         estado: 1,
       };
       console.log(atention);
@@ -267,12 +314,12 @@ export class Ventanilla2Component implements OnInit {
           this.screenNormal = response.data;
           const message = "Iniciando atención a " + this.getFullName();
           this.talk(message)
-          this.disabledButtons();
+          this.disabledButtonsB1();
           this.getOrdersAtentionNormal();
         },
         error: (error) => {
           console.error('Ocurrio un error en iniciar atention. ', error);
-          this.disabledButtons();
+          this.disabledButtonsB1();
         },
       });
     }
@@ -289,7 +336,7 @@ export class Ventanilla2Component implements OnInit {
         asesorId: this.asesorId,
         ordenAtencionId: this.screenNormal.orderAtencionId,
         fecha: this.getDateFormatted(new Date()),
-        codVentanilla: TablaMaestraVentanillas.VENTANILLA_1,
+        codVentanilla: TablaMaestraVentanillas.VENTANILLA_2,
         estado: 1,
       };
 
@@ -300,13 +347,13 @@ export class Ventanilla2Component implements OnInit {
           this.talk(message);
 
           this.screenNormal = undefined;
-          this.disabledButtons();
+          this.disabledButtonsB1();
 
           this.getOrdersAtentionNormal();
         },
         error: (error) => {
           console.error('Ocurrio un error en finalizar atention. ', error);
-          this.disabledButtons();
+          this.disabledButtonsB1();
         },
       });
     }
@@ -319,19 +366,19 @@ export class Ventanilla2Component implements OnInit {
         TablaMaestraEstadosOrdenAtencion.EN_LLAMADA &&
       this.screenNormal.numLlamada === 3
     ) {
-      this.llamadaService.markAsAbsent(this.screenNormal.llamadaId).subscribe({
+      this.llamadaService.markAsAbsent(this.screenNormal.llamadaId, TablaMaestraVentanillas.VENTANILLA_2).subscribe({
         next: (response) => {
           this.screenNormal = response.data;
           const message = "Marcando como ausente a " + this.getFullName();
           this.talk(message);
 
           this.screenNormal = undefined;
-          this.disabledButtons();
+          this.disabledButtonsB1();
           this.getOrdersAtentionNormal();
         },
         error: (error) => {
           console.error('Ocurrio un error en finalizar atention. ', error);
-          this.disabledButtons();
+          this.disabledButtonsB1();
         },
       });
     }

@@ -318,7 +318,7 @@ export class PacientesComponent implements OnInit {
         TablaMaestraEstadosOrdenAtencion.EN_LLAMADA &&
       this.screenNormal.numLlamada === 3
     ) {
-      this.llamadaService.markAsAbsent(this.screenNormal.llamadaId).subscribe({
+      this.llamadaService.markAsAbsent(this.screenNormal.llamadaId, TablaMaestraVentanillas.VENTANILLA_1).subscribe({
         next: (response) => {
           this.screenNormal = response.data;
           const message = "Marcando como ausente a " + this.getFullName();
