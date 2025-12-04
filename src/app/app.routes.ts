@@ -26,6 +26,7 @@ export const routes: Routes = [
     ]
   },
   {path:'pantalla', component:PantallaComponent,title:'Pantalla'},
+  
   { path: 'admin', component: AdminComponent, title: 'Admin',
     children: [
       { path: '', redirectTo: 'usuario', pathMatch: 'full' },
