@@ -1,0 +1,34 @@
+.usuario-container {
+  max-width: 900px;     /* ancho del contenido */
+  margin: 0 auto;       /* centrar horizontal */
+  padding: 24px;        /* espacio interno */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between; /* título izquierda, botón derecha */
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.full-table {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+mat-header-cell {
+  font-weight: bold;
+}
+
+.titulo-centrado {
+  text-align: center;
+  width: 100%;
+  margin: 0 auto 20px auto; /* centrado + espacio inferior */
+  font-size: 24px;
+  font-weight: 600;
+}

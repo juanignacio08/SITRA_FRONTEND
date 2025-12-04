@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,26 +8,37 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
+  standalone: true,
   imports: [
-    CommonModule, 
-    MatCardModule, 
-    MatTableModule, 
-    MatIconModule, 
-    MatTableModule, 
+    CommonModule,
+    MatCardModule,
+    MatTableModule,
+    MatIconModule,
+    MatTableModule,
     MatToolbarModule,
-    MatListModule, 
-    MatSidenavModule, 
+    MatListModule,
+    MatSidenavModule,
     MatButtonModule,
     MatMenuModule,
+    RouterModule
   ],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
 })
 export class AdminComponent {
+  isDesktop = window.innerWidth > 992; // breakpoint como Bootstrap lg
+
+  @HostListener('window:resize') //Escucha eventos del navegador
+  onResize() {
+    this.isDesktop = window.innerWidth > 992;
+  }
+
+
+
   columnas: string[] = ['hora', 'nombre', 'documento', 'estado'];
   pacientes = [
     { hora: '09:00 AM', nombre: 'Ana García', documento: '101567890', estado: 'Pendiente' },
@@ -37,22 +48,22 @@ export class AdminComponent {
   ];
 
   constructor(
-  private router: Router,
-  ) {}
+    private router: Router,
+  ) { }
 
   verPerfil() {
-  console.log('Ver perfil');
-  // Aquí puedes navegar, por ejemplo:
-  // this.router.navigate(['/perfil']);
-}
+    console.log('Ver perfil');
+    // Aquí puedes navegar, por ejemplo:
+    // this.router.navigate(['/perfil']);
+  }
 
-cerrarSesion() {
-  console.log('Cerrar sesión');
-  // Ejemplo: cerrar sesión y redirigir al login
-  // this.authService.logout();
-  // this.router.navigate(['/login']);
-  this.router.navigate(['/sig-in']);
-}
+  cerrarSesion() {
+    console.log('Cerrar sesión');
+    // Ejemplo: cerrar sesión y redirigir al login
+    // this.authService.logout();
+    // this.router.navigate(['/login']);
+    this.router.navigate(['/sig-in']);
+  }
 
 }
 

@@ -1,0 +1,77 @@
+<h2 mat-dialog-title>Registro de Usuario</h2>
+
+<div mat-dialog-content>
+  
+  <form [formGroup]="form" class="form-container">
+
+    <!-- Nombres -->
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Nombres</mat-label>
+      <input matInput formControlName="nombres" />
+    </mat-form-field>
+
+    <!-- Apellido Paterno -->
+    <mat-form-field appearance="outline" class="half">
+      <mat-label>Apellido Paterno</mat-label>
+      <input matInput formControlName="apellidoPaterno" />
+    </mat-form-field>
+
+    <!-- Apellido Materno -->
+    <mat-form-field appearance="outline" class="half">
+      <mat-label>Apellido Materno</mat-label>
+      <input matInput formControlName="apellidoMaterno" />
+    </mat-form-field>
+
+    <!-- DNI -->
+    <mat-form-field appearance="outline" class="half">
+      <mat-label>DNI</mat-label>
+      <input matInput formControlName="dni" maxlength="8" />
+    </mat-form-field>
+
+    <!-- Rol -->
+    <mat-form-field appearance="outline" class="half">
+      <mat-label>Rol</mat-label>
+      <mat-select formControlName="rol">
+        <mat-option *ngFor="let r of roles" [value]="r.id">
+          {{ r.nombre }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Ventanilla -->
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Ventanilla</mat-label>
+      <mat-select formControlName="ventanilla">
+        <mat-option *ngFor="let v of ventanillas" [value]="v.id">
+          {{ v.nombre }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Usuario -->
+    <mat-form-field appearance="outline" class="half">
+      <mat-label>Usuario</mat-label>
+      <input matInput formControlName="usuario" />
+    </mat-form-field>
+
+    <!-- Contraseña -->
+    <mat-form-field appearance="outline" class="half">
+      <mat-label>Contraseña</mat-label>
+      <input matInput type="password" formControlName="contraseña" />
+    </mat-form-field>
+
+  </form>
+
+</div>
+
+<div mat-dialog-actions align="end">
+
+  <button mat-raised-button color="warn" (click)="cerrar()">
+    Cancelar
+  </button>
+
+  <button mat-raised-button color="primary" (click)="guardar()" [disabled]="form.invalid">
+    Guardar
+  </button>
+
+</div>

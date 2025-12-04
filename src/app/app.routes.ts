@@ -7,6 +7,7 @@ import { HistorialComponent } from './features/asesor/historial/historial.compon
 import { ReceptorComponent } from './features/receptor/receptor.component';
 import { PantallaComponent } from './features/pantalla/pantalla.component';
 import { Ventanilla2Component } from './features/asesor/ventanilla2/ventanilla2.component';
+import { UsuarioComponent } from './features/admin/usuario/usuario.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'sig-in', pathMatch: 'full' },
@@ -25,5 +26,10 @@ export const routes: Routes = [
     ]
   },
   {path:'pantalla', component:PantallaComponent,title:'Pantalla'},
-  { path: 'admin', component: AdminComponent, title: 'Admin' }
+  { path: 'admin', component: AdminComponent, title: 'Admin',
+    children: [
+      { path: '', redirectTo: 'usuario', pathMatch: 'full' },
+      { path: 'usuario', component: UsuarioComponent }
+    ]
+   }
 ];

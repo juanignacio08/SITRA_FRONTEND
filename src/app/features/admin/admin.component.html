@@ -1,157 +1,75 @@
-<mat-sidenav-container class="sidenav-container ">
+<mat-sidenav-container class="sidenav-container">
+  <!-- 🌐 Menú lateral -->
+  <mat-sidenav #sidenav 
+             [mode]="isDesktop ? 'side' : 'over'" 
+             [opened]="isDesktop" 
+             class="sidenav">
+    <mat-toolbar class="sidenav-header login-logo-container">
+      <img
+        src="https://www.gob.pe/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjI4OSwicHVyIjoiYmxvYl9pZCJ9fQ==--870ca7e046354e769c8b91e9c70061374fd26123/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemVfdG9fbGltaXQiOltudWxsLDQ4XX0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--830247c4bafe7cadca50817d8559bf1a09e3aa28/essalud%20341x86%202019.png"
+        alt="Logo"
+        class="login-logo"
+      />
+    </mat-toolbar>
 
-    <!-- 🌐 Menú lateral -->
-    <mat-sidenav #sidenav mode="side" opened class="sidenav ">
-        <mat-toolbar class="sidenav-header login-logo-container ">
-            <img src="https://www.gob.pe/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjI4OSwicHVyIjoiYmxvYl9pZCJ9fQ==--870ca7e046354e769c8b91e9c70061374fd26123/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemVfdG9fbGltaXQiOltudWxsLDQ4XX0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--830247c4bafe7cadca50817d8559bf1a09e3aa28/essalud%20341x86%202019.png"
-                alt="Logo" class="login-logo">
-        </mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="reporteReceptor" routerLinkActive="active">
+        <mat-icon class="icon-menu">history</mat-icon>
+        <span>Reporte Receptor</span>
+      </a>
 
-        <mat-nav-list>
-            <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
-                <mat-icon class="icon-menu">dashboard</mat-icon>
-                <span>Reporte receptor</span>
-            </a>
+      <a mat-list-item routerLink="reporteAsesor" routerLinkActive="active">
+        <mat-icon class="icon-menu">history</mat-icon>
+        <span>Reporte Asesor</span>
+      </a>
 
+      <a mat-list-item routerLink="usuario" routerLinkActive="active">
+        <mat-icon class="icon-menu">groups</mat-icon>
+        <span>Gestion de Usuarios</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
 
-            <a mat-list-item routerLink="/pacientes" routerLinkActive="active">
-                <mat-icon class="icon-menu">groups</mat-icon>
-                <span>Reporte asesor</span>
-            </a>
+  <!-- 🧩 Contenido principal -->
+  <mat-sidenav-content class="main-content">
+    <mat-toolbar color="primary"  class="toolbar">
+      <button mat-icon-button (click)="sidenav.toggle()" class="menu-btn">
+        <mat-icon>menu</mat-icon>
+      </button>
 
-            <a mat-list-item routerLink="/citas" routerLinkActive="active">
-                <mat-icon class="icon-menu">event</mat-icon>
-                <span>Usuarios</span>
-            </a>
-        </mat-nav-list>
-    </mat-sidenav>
+      <span class="titulo-toolbar">Panel del Administrador</span>
 
-    <!-- 🧩 Contenido principal -->
-    <mat-sidenav-content class="main-content">
-        <mat-toolbar color="primary" class="toolbar">
-            <!-- Botón de menú -->
-            <button mat-icon-button (click)="sidenav.toggle()" class="menu-btn">
-                <mat-icon>menu</mat-icon>
-            </button>
+      <span class="spacer"></span>
 
-            <!-- Título -->
-            <span class="titulo-toolbar">Panel Administrador</span>
+      <div class="usuario-info">
 
-            <!-- Espaciador flexible -->
-            <span class="spacer"></span>
-
-            <!-- Información del usuario -->
-            <div class="usuario-info">
-
-                <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Foto de perfil del usuario"
-                    class="foto-perfil" />
-                <div class="datos-usuario">
-                    <span class="nombre-usuario">Berrocal Cerda Creifer</span>
-                    <span class="rol-usuario">Administrador</span>
-                </div>
-                <!-- 🔽 Botón con menú desplegable -->
-                <button mat-icon-button [matMenuTriggerFor]="menuUsuario" class="btn-flecha">
-                    <mat-icon>expand_more</mat-icon>
-                </button>
-
-                <mat-menu #menuUsuario="matMenu">
-                    <button mat-menu-item (click)="verPerfil()">
-                        <mat-icon>person</mat-icon>
-                        <span>Ver perfil</span>
-                    </button>
-                    <button mat-menu-item (click)="cerrarSesion()">
-                        <mat-icon>logout</mat-icon>
-                        <span>Cerrar sesión</span>
-                    </button>
-                </mat-menu>
-            </div>
-        </mat-toolbar>
-
-
-        <div class="dashboard-admin">
-
-            <div class="dashboard-container">
-                <header class="page-header">
-                    <h1>Información para Hoy</h1>
-                </header>
-
-                <div class="row widget-row">
-
-                    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-                        <div class="card widget-card blue-card">
-                            <div class="card-body">
-                                <h5 class="card-title">Citas Registradas</h5>
-                                <p class="metric-number">15</p>
-                                <p class="metric-total">Total</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-                        <div class="card widget-card green-card">
-                            <div class="card-body">
-                                <h5 class="card-title">Atendiendo</h5>
-                                <p class="metric-number">8</p>
-                                <p class="metric-total">Total</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-                        <div class="card widget-card gray-card">
-                            <div class="card-body">
-                                <h5 class="card-title">Finalizadas</h5>
-                                <p class="metric-number">20</p>
-                                <p class="metric-total">Total</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row chart-row">
-
-                    <div class="col-lg-5 col-md-12 mb-3">
-                        <div class="card chart-card">
-                            <div class="card-header">
-                                <h5 class="card-title">Estado de los Servicios</h5>
-                            </div>
-                            <div class="card-body donut-chart-body">
-                                <div class="chart-legend">
-                                    <p><span class="legend-box yellow"></span> Asignados</p>
-                                    <p><span class="legend-box blue-light"></span> Sin asignar</p>
-                                    <p><span class="legend-box blue-dark"></span> En proceso</p>
-                                    <p><span class="legend-box red"></span> Finalizados</p>
-                                    <p><span class="legend-box purple"></span> Cancelados</p>
-                                    <p><span class="legend-box grey"></span> Otros</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-7 col-md-12 mb-3">
-                        <div class="card chart-card">
-                            <div class="card-header">
-                                <h5 class="card-title">Servicios agregados este mes</h5>
-                            </div>
-                            <div class="card-body line-chart-body">
-                                <p class="chart-subtitle">Último agregado: 19 mar. 2020 - 15:25:13</p>
-
-                                <div class="chart-footer">
-                                    <div class="footer-metric">
-                                        <span class="metric-value">48</span>
-                                        <span class="metric-label">Total del mes</span>
-                                    </div>
-                                    <div class="footer-metric">
-                                        <span class="metric-value">0,00 %</span>
-                                        <span class="metric-label">Hoy / Servicio del mes</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+          alt="Foto de perfil"
+          class="foto-perfil"
+        />
+        <div class="datos-usuario">
+          <span class="nombre-usuario">Berrocal Cerda Creifer</span>
+          <span class="rol-usuario">Asesor</span>
         </div>
 
-    </mat-sidenav-content>
+        <button mat-icon-button [matMenuTriggerFor]="menuUsuario" class="btn-flecha">
+          <mat-icon>expand_more</mat-icon>
+        </button>
 
+        <mat-menu #menuUsuario="matMenu">
+          <button mat-menu-item (click)="verPerfil()">
+            <mat-icon>person</mat-icon>
+            <span>Ver perfil</span>
+          </button>
+          <button mat-menu-item (click)="cerrarSesion()">
+            <mat-icon>logout</mat-icon>
+            <span>Cerrar sesión</span>
+          </button>
+        </mat-menu>
+      </div>
+    </mat-toolbar>
+    <!-- 🧭 Aquí se cargan los componentes hijos -->
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
 </mat-sidenav-container>
