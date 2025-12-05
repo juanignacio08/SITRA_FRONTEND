@@ -25,6 +25,38 @@ export interface OrdenAtencionRequest {
   estado: number
 }
 
+export interface OrdenATencionProjection {
+  ordenatencionid: number
+  receptorid: number
+  fecha: string
+  hora: string
+  codestadoatencion: string
+  codventanillaOa: string
+
+  personaid: number
+  nombres: string
+  apellidopaterno: string
+  apellidomaterno: string
+  numerodocumentoidentidad: string
+
+  llamadaid: number
+  asesoridLl: number
+  codventanillaLl: string
+  fechallamada: string
+  horallamada: string
+  numllamada: number
+  codresultado: string
+  
+  atencionid: number
+  fechaatencion: string
+  horainicio: string
+  horafin: string
+  turno: number
+  codventanillaAte: string
+  asesoridAte: number
+}
+
 export type OrdenAtencionResponse = ResponseDTO<OrdenAtencion>;
 export type OrdenAtencionPaginatedResponse = ConsultaResponseDTO<OrdenAtencion[]>;
 export type OrdenAtencionListResponse = ResponseDTO<OrdenAtencion[]>;
+export type OrdenAtencionListProjectionResponse = ResponseDTO<OrdenATencionProjection[]>;
