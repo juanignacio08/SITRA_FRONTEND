@@ -5,35 +5,40 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatOptionModule } from '@angular/material/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-usuario-registro',
   standalone: true,
   imports: [
+     CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatButtonModule
+    MatButtonModule,
+    MatCardModule,
+    MatIconModule,
+    MatOptionModule,
+    
+    
   ],
   templateUrl: './registro.component.html',
-  styleUrl: './registro.component.css'
+  styleUrls: ['./registro.component.css']
 })
 export class RegistroComponent {
 
   form: FormGroup;
 
   roles = [
-    { id: 1, nombre: 'Administrador' },
-    { id: 2, nombre: 'Receptor' },
-    { id: 3, nombre: 'Asesor' }
-  ];
-
-  ventanillas = [
-    { id: 1, nombre: 'Ventanilla 1' },
-    { id: 2, nombre: 'Ventanilla 2' },
-    { id: 3, nombre: 'Ventanilla 3' }
+    
+    { id: 1, nombre: 'Receptor' },
+    { id: 2, nombre: 'Asesor' },
+    { id: 3, nombre: 'Administrador' },
   ];
 
   constructor(
@@ -48,7 +53,6 @@ export class RegistroComponent {
       dni: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
 
       rol: ['', Validators.required],
-      ventanilla: ['', Validators.required],
 
       usuario: ['', Validators.required],
       contraseña: ['', Validators.required]

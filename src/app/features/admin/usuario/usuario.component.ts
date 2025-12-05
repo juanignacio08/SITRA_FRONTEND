@@ -5,6 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { RegistroComponent } from './modal/registro/registro.component';
+import { MatCardModule } from '@angular/material/card';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-usuario',
@@ -14,7 +16,10 @@ import { RegistroComponent } from './modal/registro/registro.component';
     MatTableModule,
     MatButtonModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    MatCardModule,
+    ReactiveFormsModule
+
   ],
   templateUrl: './usuario.component.html',
   styleUrl: './usuario.component.css'
@@ -23,7 +28,7 @@ export class UsuarioComponent {
 
   dialog = inject(MatDialog);
 
-  columnas = ["nombreCompleto", "dni", "rol", "ventanilla", "acciones"];
+  columnas = ["nombreCompleto", "dni", "rol", "contrasena","acciones"];
 
   usuarios: any[] = [];
 

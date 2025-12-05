@@ -1,77 +1,75 @@
-<h2 mat-dialog-title>Registro de Usuario</h2>
+<mat-card>
+  <mat-card-header class="center-title">
+    <mat-card-title>Registro de Usuario</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div mat-dialog-content>
 
-<div mat-dialog-content>
-  
-  <form [formGroup]="form" class="form-container">
+      <form [formGroup]="form" class="form-container">
 
-    <!-- Nombres -->
-    <mat-form-field appearance="outline" class="full">
-      <mat-label>Nombres</mat-label>
-      <input matInput formControlName="nombres" />
-    </mat-form-field>
+        <!-- Nombres -->
+        <mat-form-field appearance="outline"  class="w-100" color="primary">
+          <mat-label>Nombres</mat-label>
+          <input matInput formControlName="nombres"   aria-label="Nombre"/>
+        </mat-form-field>
+    
 
-    <!-- Apellido Paterno -->
-    <mat-form-field appearance="outline" class="half">
-      <mat-label>Apellido Paterno</mat-label>
-      <input matInput formControlName="apellidoPaterno" />
-    </mat-form-field>
+        <!-- Apellido Paterno -->
+        <mat-form-field appearance="outline" class="half">
+          <mat-label>Apellido Paterno</mat-label>
+          <input matInput formControlName="apellidoPaterno" />
+        </mat-form-field>
 
-    <!-- Apellido Materno -->
-    <mat-form-field appearance="outline" class="half">
-      <mat-label>Apellido Materno</mat-label>
-      <input matInput formControlName="apellidoMaterno" />
-    </mat-form-field>
+        <!-- Apellido Materno -->
+        <mat-form-field appearance="outline" class="half">
+          <mat-label>Apellido Materno</mat-label>
+          <input matInput formControlName="apellidoMaterno" />
+        </mat-form-field>
 
-    <!-- DNI -->
-    <mat-form-field appearance="outline" class="half">
-      <mat-label>DNI</mat-label>
-      <input matInput formControlName="dni" maxlength="8" />
-    </mat-form-field>
+        <!-- DNI -->
+        <mat-form-field appearance="outline" class="half">
+          <mat-label>DNI</mat-label>
+          <input matInput formControlName="dni" maxlength="8" />
+        </mat-form-field>
 
-    <!-- Rol -->
-    <mat-form-field appearance="outline" class="half">
-      <mat-label>Rol</mat-label>
-      <mat-select formControlName="rol">
-        <mat-option *ngFor="let r of roles" [value]="r.id">
-          {{ r.nombre }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+        <!-- Rol -->
+        <mat-form-field appearance="outline" class="half">
+          <mat-label>Rol</mat-label>
+          <mat-select formControlName="rol">
+            <mat-option *ngFor="let r of roles" [value]="r.id">
+              {{ r.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-    <!-- Ventanilla -->
-    <mat-form-field appearance="outline" class="full">
-      <mat-label>Ventanilla</mat-label>
-      <mat-select formControlName="ventanilla">
-        <mat-option *ngFor="let v of ventanillas" [value]="v.id">
-          {{ v.nombre }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+        <!-- Usuario -->
+        <mat-form-field appearance="outline" class="half">
+          <mat-label>Usuario</mat-label>
+          <input matInput formControlName="usuario" />
+        </mat-form-field>
 
-    <!-- Usuario -->
-    <mat-form-field appearance="outline" class="half">
-      <mat-label>Usuario</mat-label>
-      <input matInput formControlName="usuario" />
-    </mat-form-field>
+        <!-- Contraseña -->
+        <mat-form-field appearance="outline" class="half">
+          <mat-label>Contraseña</mat-label>
+          <input matInput type="password" formControlName="contraseña" />
+        </mat-form-field>
 
-    <!-- Contraseña -->
-    <mat-form-field appearance="outline" class="half">
-      <mat-label>Contraseña</mat-label>
-      <input matInput type="password" formControlName="contraseña" />
-    </mat-form-field>
+      </form>
 
-  </form>
+    </div>
 
-</div>
+    <div mat-dialog-actions align="end">
 
-<div mat-dialog-actions align="end">
+      <button mat-raised-button color="warn" (click)="cerrar()">
+        Cancelar
+      </button>
 
-  <button mat-raised-button color="warn" (click)="cerrar()">
-    Cancelar
-  </button>
+      <button mat-raised-button color="primary" (click)="guardar()" [disabled]="form.invalid">
+        Guardar
+      </button>
 
-  <button mat-raised-button color="primary" (click)="guardar()" [disabled]="form.invalid">
-    Guardar
-  </button>
+    </div>
+  </mat-card-content>
 
-</div>
+
+</mat-card>

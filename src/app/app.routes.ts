@@ -8,11 +8,18 @@ import { ReceptorComponent } from './features/receptor/receptor.component';
 import { PantallaComponent } from './features/pantalla/pantalla.component';
 import { Ventanilla2Component } from './features/asesor/ventanilla2/ventanilla2.component';
 import { UsuarioComponent } from './features/admin/usuario/usuario.component';
+import { ReporteRecComponent } from './features/admin/reporte-rec/reporte-rec.component';
+import { ReporteAseComponent } from './features/admin/reporte-ase/reporte-ase.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'sig-in', pathMatch: 'full' },
   { path: 'sig-in', component: SigInComponent, title: 'SITRA' },
-  { path: 'receptor', component: ReceptorComponent, title: 'Receptor' },
+  { path: 'receptor', component: ReceptorComponent, title: 'Receptor',
+    children: [
+      { path: '', redirectTo: 'pacientes', pathMatch: 'full' },
+    ]
+   },
+
   { 
     path: 'asesor', 
     component: AsesorComponent, 
@@ -30,7 +37,9 @@ export const routes: Routes = [
   { path: 'admin', component: AdminComponent, title: 'Admin',
     children: [
       { path: '', redirectTo: 'usuario', pathMatch: 'full' },
-      { path: 'usuario', component: UsuarioComponent }
+      { path: 'usuario', component: UsuarioComponent },
+      { path: 'reporte-rec', component: ReporteRecComponent },
+      { path: 'reporte-ase', component: ReporteAseComponent }
     ]
    }
 ];
