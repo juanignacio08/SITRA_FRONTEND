@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule } from '@angular/router';
+import { UsuarioService } from '../../services/seguridad/usuario.service';
+import { Usuario } from '../../models/seguridad/usuario.model';
 
 @Component({
   selector: 'app-admin',
@@ -29,14 +31,15 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
 })
-export class AdminComponent {
+export class AdminComponent implements OnInit {
   isDesktop = window.innerWidth > 992; // breakpoint como Bootstrap lg
+
+  user ?: Usuario | null;
 
   @HostListener('window:resize') //Escucha eventos del navegador
   onResize() {
     this.isDesktop = window.innerWidth > 992;
   }
-
 
 
   columnas: string[] = ['hora', 'nombre', 'documento', 'estado'];
@@ -49,7 +52,15 @@ export class AdminComponent {
 
   constructor(
     private router: Router,
+    private usuarioService : UsuarioService
   ) { }
+
+  ngOnInit(): void {
+    this.user = this.usuarioService.getUserLoggedIn();
+    if (this.user === null) {
+      this.router.navigate(['/sig-in']);
+    }
+  }
 
   verPerfil() {
     console.log('Ver perfil');
@@ -59,9 +70,7 @@ export class AdminComponent {
 
   cerrarSesion() {
     console.log('Cerrar sesión');
-    // Ejemplo: cerrar sesión y redirigir al login
-    // this.authService.logout();
-    // this.router.navigate(['/login']);
+    this.usuarioService.logout();
     this.router.navigate(['/sig-in']);
   }
 

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
 import {
+  Usuario,
   UsuarioRequest,
   UsuarioResponse,
   UsuarioResponseList,
@@ -13,8 +14,16 @@ import { Observable } from 'rxjs';
 })
 export class UsuarioService {
   http = inject(HttpClient);
+  user : Usuario | null = null;
 
   private readonly baseUrl = environment.apiUrl + '/usuario';
+
+  constructor() {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      this.user = JSON.parse(savedUser);
+    }
+  }
 
   saveUser(user: UsuarioRequest): Observable<UsuarioResponse> {
     const url = `${this.baseUrl}/save`;
@@ -36,4 +45,33 @@ export class UsuarioService {
     return this.http.delete<UsuarioResponse>(url);
   }
   
-}
+  sigIn(user : string, password: string): Observable<UsuarioResponse> {
+    const url = `${this.baseUrl}/getUsuarioByUserAndPassword?user=${user}&password=${password}`;
+    return this.http.get<UsuarioResponse>(url);
+  }
+
+  getUserLoggedIn(): Usuario | null {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      this.user = JSON.parse(savedUser);
+    } else {
+      this.user = null;
+    }    
+    return this.user;
+  }
+
+  setUserLoggedIn(user: Usuario | null): void {
+    this.user = user;
+    if (user === null) {
+      localStorage.removeItem('user');
+      return;
+    }
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  logout(): void {
+    this.user = null;
+    localStorage.removeItem('user');
+  }
+  
+ }

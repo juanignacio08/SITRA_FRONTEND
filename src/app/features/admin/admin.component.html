@@ -49,8 +49,8 @@
           class="foto-perfil"
         />
         <div class="datos-usuario">
-          <span class="nombre-usuario">Berrocal Cerda Creifer</span>
-          <span class="rol-usuario">Asesor</span>
+          <span class="nombre-usuario">{{ user?.persona?.nombre + " " + user?.persona?.apellidoPaterno + " " + user?.persona?.apellidoMaterno}}</span>
+          <span class="rol-usuario">{{ user?.rol?.denominacion }}</span>
         </div>
 
         <button mat-icon-button [matMenuTriggerFor]="menuUsuario" class="btn-flecha">
