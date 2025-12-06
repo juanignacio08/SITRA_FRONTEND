@@ -2,9 +2,23 @@
   <mat-card-header class="center-title">
     <mat-card-title>HISTORIAL DE ATENCIONES DEL RECEPTOR</mat-card-title>
   </mat-card-header>
-  
+
   <mat-card-content>
-    <table mat-table  class="mat-elevation-z8 tabla-historial">
+    <form [formGroup]="form">
+      <div class="col-3 left m-b-20">
+        <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Fecha</mat-label>
+
+        <mat-form-field appearance="outline" class="w-100" color="primary">
+          <input matInput [matDatepicker]="picker" formControlName="fechaEng" placeholder="Seleccione"
+            (dateChange)="obtenerFechaFormateada($event.value)" [max]="today" />
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </form>
+
+    
+    <table mat-table class="mat-elevation-z8 tabla-historial">
 
       <!-- Turno -->
       <ng-container matColumnDef="ordenAtencion">
