@@ -10,13 +10,13 @@
         <div class="row m-0">
             <div class="col-12 col-lg-6">
                 <div class="ventanilla text-center rounded rounded-3 text-light py-4 ms-1 mb-3">
-                    <h2 class="fs-2">Ventanilla 1</h2>
+                    <h2 class="fs-2 nombre">Ventanilla 1</h2>
                     <hr>
                     @if (screenNormal) {
-                    <p class="fs-4 fw-bold">{{ screenNormal.paciente.nombre + " " +
+                    <p class="nombre fs-1    fw-bold">{{ screenNormal.paciente.nombre + " " +
                         screenNormal.paciente.apellidoPaterno + " " + screenNormal.paciente.apellidoMaterno }}</p>
                     <p class="fs-5">
-                        <i class="{{ screenNormal.codEstadoAtencion | viewIconStatusOrdenAtention}}"></i>
+                        <i class=" {{ screenNormal.codEstadoAtencion | viewIconStatusOrdenAtention}}"></i>
                         {{ screenNormal.codEstadoAtencion | viewStatusOrderAtention }}
                     </p>
                     @if (screenNormal.codEstadoAtencion === codStatusOrderAtentionInCall) {
@@ -30,10 +30,10 @@
 
             <div class="col-12 col-lg-6">
                 <div class="ventanilla text-center rounded rounded-3 text-light py-4 ms-1 mb-3">
-                    <h2 class="fs-2">Ventanilla 2</h2>
+                    <h2 class="fs-2 nombre">Ventanilla 2</h2>
                     <hr>
                     @if (screenPreferential) {
-                    <p class="fs-1 fw-bold">{{ screenPreferential.paciente.nombre + " " +
+                    <p class="fs-1 nombre fw-bold">{{ screenPreferential.paciente.nombre + " " +
                         screenPreferential.paciente.apellidoPaterno + " " + screenPreferential.paciente.apellidoMaterno
                         }}
                     </p>
@@ -42,13 +42,13 @@
                         {{ screenPreferential.codEstadoAtencion | viewStatusOrderAtention }}
 
                         @if (screenPreferential.codEstadoAtencion === codStatusOrderAtentionInCall) {
-                        <span class="badge text-bg-light">{{ screenPreferential.numLlamada }}</span>
-                        } 
-                        @if (screenPreferential.codEstadoAtencion === codStatusOrderAtencionInAtention) {
-                        <div class="spinner-grow" role="status">
-                            <span class="visually-hidden">Loading...</span>    
-                        </div>
+                        <span class="badge text-bg-light nombre">{{ screenPreferential.numLlamada }}</span>
                         }
+                        @if (screenPreferential.codEstadoAtencion === codStatusOrderAtencionInAtention) {
+                    <div class="spinner-grow " role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    }
                     </p>
                     }
                 </div>
@@ -88,8 +88,11 @@
 
     <!-- Footer -->
     <footer class="fixed-footer">
-        <p>Recuerde tener su documento de identidad en la mano
-        </p>
+        <div class="avisos-container">
+            <div class="avisos-text">
+                • Recuerde llevar su DNI • Mantenga la distancia • Use mascarilla si presenta síntomas •
+            </div>
+        </div>
         <span class="hora">{{ horaFormateada() }}</span>
     </footer>
 

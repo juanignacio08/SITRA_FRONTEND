@@ -1,4 +1,3 @@
-
 .btn-llamar {
   background-color: #ffc107;
   color: #000;
@@ -7,6 +6,7 @@
   border-radius: 5px;
   cursor: pointer;
 }
+
 .btn-llamar:hover {
   background-color: #e0a800;
 }
@@ -15,6 +15,7 @@
   font-size: 1.5rem;
   font-weight: bold;
 }
+
 .turno {
   font-size: 1.2rem;
 }
@@ -42,23 +43,37 @@
   align-items: center;
   justify-content: center;
 }
+.ventanilla{
+ background: linear-gradient(
+  to top,        /* De abajo hacia arriba */
+  #a0d8ef 50%,    /* Celeste en la base */
+  #ffffff 80%   /* Blanco arriba */
+);
+ border: 3px solid #1c7af5;  /* Borde negro de 3 */
+  border-radius: 8px;       /* Opcional: esquinas redondeadas */
 
-.ventanilla {
-  background: linear-gradient(135deg, #f97316, #ef4444);
-  height: 40vh;
 }
+
+.nombre {
+  color: #103565;
+  /* color del texto */
+  font-weight: bold;
+}
+
 
 /* Próximos pacientes ocupan 30% de la altura */
 .proximos {
   height: 50vh;
   margin-left: 10px;
   margin-right: 10px;
-  overflow-y: auto; /* permite scroll si hay muchos pacientes */
+  overflow-y: auto;
+  /* permite scroll si hay muchos pacientes */
   font-size: 2.2vh;
   margin-bottom: 10px;
   box-sizing: border-box;
   flex-direction: column;
 }
+
 .proximos h3 {
   font-size: 2.5vh;
   text-align: center;
@@ -72,7 +87,8 @@
   background-color: white;
 }
 
-.tabla-pacientes th, .tabla-pacientes td {
+.tabla-pacientes th,
+.tabla-pacientes td {
   border: 2px solid #ccc;
   text-align: left;
   padding: 10px;
@@ -102,12 +118,40 @@ footer {
 }
 
 .main-container {
-    min-height: 100vh; 
-    display: flex;
-    flex-direction: column;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .content-wrapper {
-    flex-grow: 1;
-    overflow-y: auto; 
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+
+/* aviso corrediso */
+.avisos-container {
+  width: 100%;
+  overflow: hidden;         /* Oculta el texto cuando sale por los lados */
+  background: #0075c5;      /* Fondo del aviso */
+  color: white;
+  padding: 10px 0;
+  position: relative;
+}
+
+.avisos-text {
+  display: inline-block;
+  white-space: nowrap;      /* No permite saltos de línea */
+  font-size: 1.5rem;
+  font-weight: 600;
+  animation: moverAviso 12s linear infinite;
+}
+
+@keyframes moverAviso {
+  0% {
+    transform: translateX(100%);   /* Empieza fuera de la pantalla a la derecha */
+  }
+  100% {
+    transform: translateX(-100%);  /* Termina fuera de la pantalla a la izquierda */
+  }
 }
