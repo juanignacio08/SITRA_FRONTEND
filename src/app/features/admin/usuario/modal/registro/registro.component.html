@@ -1,62 +1,87 @@
 <mat-card>
   <mat-card-header class="center-title">
-    <mat-card-title>Registro de Usuario</mat-card-title>
+    <mat-card-title>
+      @if (data.action === 'create') {
+      Registro de Usuario
+      } @else if (data.action === 'edit') {
+      Eitar Usuario
+      } @else if (data.action === 'delete') {
+      Eliminar Usuario
+      }
+    </mat-card-title>
   </mat-card-header>
   <mat-card-content>
+    @if (loadRol) {
+    <div class="d-flex justify-content-center">
+      <div class="spinner-grow m-5" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    } @else {
+    @if (data.action === 'create' || data.action == 'edit') {
     <div mat-dialog-content>
 
       <form [formGroup]="form" class="form-container">
 
-        <!-- Nombres -->
-        <mat-form-field appearance="outline"  class="w-100" color="primary">
-          <mat-label>Nombres</mat-label>
-          <input matInput formControlName="nombres"   aria-label="Nombre"/>
+        <!-- DNI -->
+        <mat-form-field appearance="outline" class="half">
+          <mat-label>DNI</mat-label>
+          <input matInput formControlName="dni" maxlength="8" aria-label="dni" (input)="onDniInput()" />
         </mat-form-field>
-    
+
+        <!-- Nombres -->
+        <mat-form-field appearance="outline" class="half" color="primary">
+          <mat-label>Nombres</mat-label>
+          <input matInput formControlName="nombres" aria-label="Nombre" />
+        </mat-form-field>
 
         <!-- Apellido Paterno -->
         <mat-form-field appearance="outline" class="half">
           <mat-label>Apellido Paterno</mat-label>
-          <input matInput formControlName="apellidoPaterno" />
+          <input matInput formControlName="apellidoPaterno" aria-label="apellidoPaterno" />
         </mat-form-field>
 
         <!-- Apellido Materno -->
         <mat-form-field appearance="outline" class="half">
           <mat-label>Apellido Materno</mat-label>
-          <input matInput formControlName="apellidoMaterno" />
-        </mat-form-field>
-
-        <!-- DNI -->
-        <mat-form-field appearance="outline" class="half">
-          <mat-label>DNI</mat-label>
-          <input matInput formControlName="dni" maxlength="8" />
+          <input matInput formControlName="apellidoMaterno" aria-label="apellidoMaterno" />
         </mat-form-field>
 
         <!-- Rol -->
-        <mat-form-field appearance="outline" class="half">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Rol</mat-label>
           <mat-select formControlName="rol">
-            <mat-option *ngFor="let r of roles" [value]="r.id">
-              {{ r.nombre }}
+            <mat-option *ngFor="let r of roles" [value]="r.rolId">
+              {{ r.denominacion }}
             </mat-option>
           </mat-select>
         </mat-form-field>
 
-        <!-- Usuario -->
-        <mat-form-field appearance="outline" class="half">
-          <mat-label>Usuario</mat-label>
-          <input matInput formControlName="usuario" />
+        <!-- Contraseña -->
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Contraseña</mat-label>
+          <input matInput type="password" formControlName="contraseña" aria-label="password" />
         </mat-form-field>
 
-        <!-- Contraseña -->
-        <mat-form-field appearance="outline" class="half">
-          <mat-label>Contraseña</mat-label>
-          <input matInput type="password" formControlName="contraseña" />
-        </mat-form-field>
+        @if (error) {
+        <div class="alert alert-danger w-100" role="alert">
+          <strong>Error!</strong> {{ errorMessage }}
+        </div>
+        }
 
       </form>
 
     </div>
+    } @else {
+    <div mat-dialog-content>
+      <p>{{ messageDelete }}</p>
+    </div>
+    @if (error) {
+    <div class="alert alert-danger w-100" role="alert">
+      <strong>Error!</strong> {{ errorMessage }}
+    </div>
+    }
+    }
 
     <div mat-dialog-actions align="end">
 
@@ -64,11 +89,37 @@
         Cancelar
       </button>
 
-      <button mat-raised-button color="primary" (click)="guardar()" [disabled]="form.invalid">
+      @if (data.action === 'create') {
+      <button mat-raised-button color="primary" (click)="guardar()" [disabled]="form.invalid || loadSave">
+        @if (loadSave) {
+        <div class="spinner-border spinner-border-sm" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        }
         Guardar
       </button>
+      } @else if (data.action === 'edit') {
+      <button mat-raised-button color="primary" (click)="editUser()" [disabled]="form.invalid || loadEdit">
+        @if (loadSave) {
+        <div class="spinner-border spinner-border-sm" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        }
+        Guardar Cambios
+      </button>
+      } @else {
+      <button mat-raised-button class="bg-danger text-light" (click)="deleteUser()" [disabled]="loadDelete">
+        @if (loadSave) {
+        <div class="spinner-border spinner-border-sm" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        }
+        Eliminar
+      </button>
+      }
 
     </div>
+    }
   </mat-card-content>
 
 

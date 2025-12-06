@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,6 +7,10 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { RegistroComponent } from './modal/registro/registro.component';
 import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormsModule } from '@angular/forms';
+import { UsuarioService } from '../../../services/seguridad/usuario.service';
+import { Usuario, UsuarioModal } from '../../../models/seguridad/usuario.model';
+import { ModalerrorComponent } from '../../../components/modalerror/modalerror.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-usuario',
@@ -24,29 +28,80 @@ import { ReactiveFormsModule } from '@angular/forms';
   templateUrl: './usuario.component.html',
   styleUrl: './usuario.component.css'
 })
-export class UsuarioComponent {
+export class UsuarioComponent implements OnInit {
 
   dialog = inject(MatDialog);
+  userService = inject(UsuarioService);
 
-  columnas = ["nombreCompleto", "dni", "rol", "contrasena","acciones"];
+  columnas = ["nombreCompleto", "dni", "rol","acciones"];
 
-  usuarios: any[] = [];
+  usuarios: Usuario[] = [];
 
-  abrirModal(usuario?: any) {
-    const dialogRef = this.dialog.open(RegistroComponent, {
+  loadUsers: boolean = true;
+
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    this.cargarUsuarios();
+  }
+
+  cargarUsuarios() {
+    this.loadUsers = true;
+    this.userService.getUsers().subscribe({
+      next: (response) => {
+        this.usuarios = response.data;
+        this.loadUsers = false;
+      }, error: (err) => {
+        console.log(err);
+        this.loadUsers = false;
+        this.openModalError(err)
+      }
+    })
+  }
+
+  openModalError(error : any) {
+    const dialogRef = this.dialog.open(ModalerrorComponent, {
       width: '500px',
-      data: usuario ?? null
+      data: error,
+      disableClose: true
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      
+      if (!result) return;
+      if (result === "usuario") {
+        this.cargarUsuarios();
+      }
+    })
+  }
+
+  abrirModal(usuario : Usuario | null, action : string) {
+    const userModal : UsuarioModal = {
+      user: usuario,
+      action: action
+    }
+
+    const dialogRef = this.dialog.open(RegistroComponent, {
+      width: '500px',
+      data: userModal,
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      
       if (!result) return;
 
-      if (usuario) {
-        // Editar usuario
-        Object.assign(usuario, result);
-      } else {
+      if (result === "deleted") {
+        this.cargarUsuarios();
+      } else if (result === "edited") {
+        this.cargarUsuarios();
+      } else if (result === "saved") {
         // Crear usuario nuevo
-        this.usuarios.push(result);
+        this.cargarUsuarios();
+      } else {
+        console.log("opcion no contemplada");
       }
     });
   }
