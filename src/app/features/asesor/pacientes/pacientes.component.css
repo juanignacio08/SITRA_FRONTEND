@@ -1,3 +1,27 @@
+.ventanilla-text{
+  color: #0c0d0f;       /* color del texto */
+  font-weight: bold;
+   font-size: 2rem !important;
+}
+.nombre { 
+  color: #103565;       /* color del texto */
+  font-weight: bold;
+}
+
+.paciente-turno{
+  background-color: #edf2f4 !important;
+  border: 5px solid #0259a3;
+  margin-left: 60px;
+  border-radius: 3%;
+  
+}
+.paciente-turno-numero{
+  color:#0259a3;
+  font-size: 5rem;
+  font-weight: 900; 
+
+}
+
 /* contenedor del mat-card (clase .tabla usada en tu HTML) */
 .tabla {
   margin: 24px;
@@ -10,11 +34,13 @@
   border: 2px solid #422066;
   border-radius: 8px;
 }
-
 .bg-pantalla {
-  background: #69BBD3;
-  background: linear-gradient(90deg, rgba(105, 187, 211, 1) 0%, rgba(230, 250, 239, 1) 50%, rgba(255, 245, 156, 1) 100%);
-
+ background: radial-gradient(
+  circle,
+  #ffffff -10%,       /* Color del centro */
+  
+  #a0d8ef 100%      /* Color de los bordes (celeste pastel ejemplo) */
+);
 
 }
 
