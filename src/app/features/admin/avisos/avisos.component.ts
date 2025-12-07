@@ -16,7 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
   ],
   templateUrl: './avisos.component.html',
-  styleUrls: ['./avisos.component.css']  // <- CORREGIDO: styleUrls (plural)
+  styleUrls: ['./avisos.component.css']  
 })
 export class AvisosComponent {
 
