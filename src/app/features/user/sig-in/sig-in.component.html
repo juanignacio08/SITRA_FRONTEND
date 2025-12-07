@@ -13,7 +13,7 @@
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                 <mat-form-field appearance="outline" class="full-width-input">
                     <mat-label>Correo Electrónico</mat-label>
-                    <input matInput formControlName="email" placeholder="ejemplo@correo.com">
+                    <input matInput formControlName="email" placeholder="ejemplo@correo.com" aria-label="email">
                     <mat-icon matSuffix>email</mat-icon>
                     <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
                         <span *ngIf="loginForm.get('email')?.errors?.['required']">El correo es obligatorio.</span>

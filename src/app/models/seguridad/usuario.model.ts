@@ -11,4 +11,24 @@ export interface Usuario {
   estado: number
 }
 
+export interface UsuarioRequest {
+  usuarioId: number
+  numeroDocumento: string
+  contrasena: string
+  rolId: number
+  estado: number
+
+  name?: string
+  lastName1?: string
+  lastName2?: string
+  documentTypeCode?: string
+}
+
+export interface UsuarioModal {
+  user : Usuario | null
+  action : string
+}
+
 export type UsuarioResponse = ResponseDTO<Usuario>;
+
+export type UsuarioResponseList = ResponseDTO<Usuario[]>;

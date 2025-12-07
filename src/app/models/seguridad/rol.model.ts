@@ -7,3 +7,5 @@ export interface Rol {
 }
 
 export type RolResponse = ResponseDTO<Rol>;
+
+export type RolResponseList = ResponseDTO<Rol[]>;
