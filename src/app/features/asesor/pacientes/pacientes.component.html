@@ -6,49 +6,84 @@
 
   <mat-card-content>
     <div class="text-center rounded rounded-3 text-dark py-4 mb-3 bordered-card bg-pantalla">
-        <div class="row">
-           <div class="paciente-turno bg-primary col-3">
-        @if (screenNormal) {
-        <p class="paciente-turno-numero">{{screenNormal.turno}}</p>
-        }
-      </div>
-      <div class="col-8">
-        @if (screenNormal) {
-        <p class="nombre fs-2">{{screenNormal.paciente.nombre + " " + screenNormal.paciente.apellidoPaterno + " " +
-          screenNormal.paciente.apellidoMaterno}}</p>
-        <p class="fs-5">{{screenNormal.codEstadoAtencion | viewStatusOrderAtention}}</p>
-        @if (screenNormal.codEstadoAtencion === codeOrderStatusInCall) {
-        <p class="fs-5">Numero de Llamadas: {{screenNormal.numLlamada}}</p>
-        }
+      <div class="row">
+        @if (loadScrean) {
+        <div class="d-flex justify-content-center">
+          <div class="spinner-grow m-5" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
         } @else {
-        <p class="fs-4">No hay paciente en atención...</p>
-        }
-
-      </div>
+        <div class="paciente-turno bg-primary col-3">
+          @if (screenNormal) {
+          <p class="paciente-turno-numero">{{screenNormal.turno}}</p>
+          }
+        </div>
+        <div class="col-8">
+          @if (screenNormal) {
+          <p class="nombre fs-2">{{screenNormal.paciente.nombre + " " + screenNormal.paciente.apellidoPaterno + " " +
+            screenNormal.paciente.apellidoMaterno}}</p>
+          <p class="fs-5">{{screenNormal.codEstadoAtencion | viewStatusOrderAtention}}</p>
+          @if (screenNormal.codEstadoAtencion === codeOrderStatusInCall) {
+          <p class="fs-5">Numero de Llamadas: {{screenNormal.numLlamada}}</p>
+          }
+          } @else {
+          <p class="fs-4">No hay paciente en atención...</p>
+          }
 
         </div>
+        }
+      </div>
     </div>
 
     <div class="div text-end mb-3">
       <button type="button" class="btn btn-primary me-1 btn-lg" aria-label="Llamar al paciente"
-        [disabled]="disabledCall" (click)="call()">
-        <i class="bi bi-telephone-plus-fill"></i> Llamar
+        [disabled]="disabledCall || loadCall===true" (click)="call()">
+        @if (loadCall) {
+          <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+        } @else {
+          <i class="bi bi-telephone-plus-fill"></i> 
+        }
+        Llamar
       </button>
       <button type="button" class="btn btn-secondary me-1 btn-lg" aria-label="Iniciar atencion"
-        [disabled]="disabledStart" (click)="startAtention()">
-        <i class="bi bi-play-circle"></i> Iniciar
+        [disabled]="disabledStart || loadStart===true" (click)="startAtention()">
+        @if (loadStart) {
+          <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+        } @else {
+          <i class="bi bi-play-circle"></i> 
+        }
+        Iniciar
       </button>
       <button type="button" class="btn btn-success me-3 btn-lg" aria-label="Finalizar atencion"
-        [disabled]="disabledFinish" (click)="finishAtention()">
-        <i class="bi bi-stop-circle"></i> Finalizar
+        [disabled]="disabledFinish || loadFinish===true" (click)="finishAtention()">
+        @if (loadFinish) {
+          <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+        } @else {
+          <i class="bi bi-stop-circle"></i>  
+        }
+        Finalizar
       </button>
-      <button type="button" class="btn btn-danger btn-lg" aria-label="Marcar Ausente" [disabled]="disabledAbsent"
+      <button type="button" class="btn btn-danger btn-lg" aria-label="Marcar Ausente" [disabled]="disabledAbsent || loadAbsent===true"
         (click)="absent()">
-        <i class="bi bi-x-circle"></i> Ausente
+        @if (loadAbsent) {
+          <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+        } @else {
+          <i class="bi bi-x-circle"></i>  
+        }
+        Ausente
       </button>
     </div>
 
-    <table mat-table [dataSource]="orderAtentionList" class="mat-elevation-z8 tabla-espera">
+    @if (loadOrders) {
+    <div class="d-flex justify-content-center">
+      <div class="spinner-grow m-5" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    } @else {
+    <div class="">
+      <table mat-table [dataSource]="orderAtentionList">
 
       <!-- Turno -->
       <ng-container matColumnDef="turno">
@@ -73,5 +108,7 @@
       <tr mat-header-row *matHeaderRowDef="columnas"></tr>
       <tr mat-row *matRowDef="let row; columns: columnas"></tr>
     </table>
+    </div>
+    }
   </mat-card-content>
 </mat-card>

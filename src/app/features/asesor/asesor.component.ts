@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
@@ -8,6 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule, Router } from '@angular/router';
 import { PacientesService } from '../../shared/pacientes.service';
+import { Usuario } from '../../models/seguridad/usuario.model';
+import { UsuarioService } from '../../services/seguridad/usuario.service';
 interface Paciente {
   ordenAtencion: string;
   nombre: string;
@@ -35,35 +37,32 @@ interface Paciente {
   templateUrl: './asesor.component.html',
   styleUrls: ['./asesor.component.css']
 })
-export class AsesorComponent {
-   isDesktop = window.innerWidth > 992; // breakpoint como Bootstrap lg
+export class AsesorComponent implements OnInit {
+  isDesktop = window.innerWidth > 992; // breakpoint como Bootstrap lg
+
+  userCurrent?: Usuario | null;
 
   @HostListener('window:resize') //Escucha eventos del navegador
   onResize() {
     this.isDesktop = window.innerWidth > 992;
   }
-  
-
-  currentUtterance: SpeechSynthesisUtterance | null = null;
-
-  pacientes: Paciente[] = [
-    { ordenAtencion: '1', nombre: 'Ana García', numeroDocumento: '70569696', estado: 'Pendiente', llamando: false },
-    { ordenAtencion: '2', nombre: 'Luis Pérez', numeroDocumento: '80569696', estado: 'Pendiente', llamando: false },
-    { ordenAtencion: '3', nombre: 'María López', numeroDocumento: '10569696', estado: 'Pendiente', llamando: false },
-  ];
-
-  historial: Paciente[] = [
-    { ordenAtencion: '1', nombre: 'Carlos Ramírez', numeroDocumento: '50123456', horaInicio: '09:00:00', horaFin: '09:15:00', ventanilla: '1', estado: 'Completado', llamando: false },
-    { ordenAtencion: '2', nombre: 'Elena Ruiz', numeroDocumento: '60123456', horaInicio: '09:20:00', horaFin: '09:35:00', ventanilla: '2', estado: 'Completado', llamando: false }
-  ];
-
 
   @ViewChild('sidenav') sidenav!: MatSidenav;
   isFullScreen = false;
 
-  constructor(private router: Router,public pacientesService: PacientesService) { }
+  constructor(private router: Router,
+    public usuarioService: UsuarioService) { }
   
-
+  ngOnInit(): void {
+    this.userCurrent = this.usuarioService.getUserLoggedIn();
+    if (
+      this.userCurrent === null ||
+      this.userCurrent === undefined ||
+      this.userCurrent.rol.denominacion === 'Receptor'
+    ) {
+      this.router.navigate(['/sig-in']);
+    }
+  }
 
   verPerfil() {
     console.log('Ver perfil');

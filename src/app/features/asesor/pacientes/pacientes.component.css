@@ -28,6 +28,7 @@
   max-width: 100%;
   background-color: #69bbd3 !important;
   border-radius: 8px;
+  max-height: 80vh;
 }
 
 .bordered-card {

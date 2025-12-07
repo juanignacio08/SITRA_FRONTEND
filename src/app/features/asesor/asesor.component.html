@@ -1,15 +1,10 @@
 <mat-sidenav-container class="sidenav-container">
   <!-- 🌐 Menú lateral -->
-  <mat-sidenav #sidenav 
-             [mode]="isDesktop ? 'side' : 'over'" 
-             [opened]="isDesktop" 
-             class="sidenav">
+  <mat-sidenav #sidenav [mode]="isDesktop ? 'side' : 'over'" [opened]="isDesktop" class="sidenav">
     <mat-toolbar class="sidenav-header login-logo-container">
       <img
         src="https://www.gob.pe/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjI4OSwicHVyIjoiYmxvYl9pZCJ9fQ==--870ca7e046354e769c8b91e9c70061374fd26123/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemVfdG9fbGltaXQiOltudWxsLDQ4XX0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--830247c4bafe7cadca50817d8559bf1a09e3aa28/essalud%20341x86%202019.png"
-        alt="Logo"
-        class="login-logo"
-      />
+        alt="Logo" class="login-logo" />
     </mat-toolbar>
 
     <mat-nav-list>
@@ -33,7 +28,7 @@
   <!-- 🧩 Contenido principal -->
   <mat-sidenav-content class="main-content">
     <!-- HEADER -->
-    <mat-toolbar color="primary"  class="toolbar">
+    <mat-toolbar color="primary" class="toolbar">
       <button mat-icon-button (click)="sidenav.toggle()" class="menu-btn">
         <mat-icon>menu</mat-icon>
       </button>
@@ -42,16 +37,13 @@
 
       <span class="spacer"></span>
 
-      <div class="usuario-info">
+      <div class="usuario-info py-3">
 
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-          alt="Foto de perfil"
-          class="foto-perfil"
-        />
+        <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Foto de perfil" class="foto-perfil" />
         <div class="datos-usuario">
-          <span class="nombre-usuario">Berrocal Cerda Creifer</span>
-          <span class="rol-usuario">Asesor</span>
+          <span class="nombre-usuario">{{ userCurrent?.persona?.nombre + " " +
+            userCurrent?.persona?.apellidoPaterno + " " + userCurrent?.persona?.apellidoMaterno}}</span>
+          <span class="rol-usuario">{{ userCurrent?.rol?.denominacion }}</span>
         </div>
 
         <button mat-icon-button [matMenuTriggerFor]="menuUsuario" class="btn-flecha">
@@ -70,7 +62,7 @@
         </mat-menu>
       </div>
     </mat-toolbar>
-    
+
     <!-- 🧭 Aquí se cargan los componentes hijos -->
     <router-outlet></router-outlet>
   </mat-sidenav-content>
