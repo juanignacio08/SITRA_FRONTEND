@@ -8,15 +8,15 @@
 }
 
 .bordered-card {
-  border: 2px solid #422066;
+  border: 5px solid #0259a3;
   border-radius: 8px;
 }
 
 .bg-pantalla {
  background: radial-gradient(
   circle,
-  #ffffff 0%,       /* Color del centro */
-  rgba(230, 250, 239, 1) 10%,      /* Centro grande */
+  #ffffff -10%,       /* Color del centro */
+  
   #a0d8ef 100%      /* Color de los bordes (celeste pastel ejemplo) */
 );
 
@@ -25,6 +25,31 @@
 /* utilitario centrado (usado en th/td) */
 .center {
   text-align: center;
+}
+
+.ventanilla-text{
+  color: #0c0d0f;       /* color del texto */
+  font-weight: bold;
+   font-size: 2rem !important;
+}
+
+.nombre { 
+  color: #103565;       /* color del texto */
+  font-weight: bold;
+}
+
+.paciente-turno{
+  background-color: #edf2f4 !important;
+  border: 5px solid #0259a3;
+  margin-left: 60px;
+  border-radius: 3%;
+  
+}
+.paciente-turno-numero{
+  color:#0259a3;
+  font-size: 5rem;
+  font-weight: 900; 
+
 }
 
 /* tabla principal */

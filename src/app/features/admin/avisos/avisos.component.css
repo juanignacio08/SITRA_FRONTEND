@@ -1,0 +1,62 @@
+.tabla {
+ margin: 24px auto;
+  max-width: 1200px;
+  background-color: #69bbd3 !important;
+}
+
+/* Centrado de texto general */
+.center-title {
+  text-align: center;
+  margin: 10px 5px 5px;
+  background-color: beige;
+}
+
+/* Celdas */
+td.mat-cell {
+  text-align: center;
+  padding: 8px;
+}
+
+
+.input-row{
+    
+    padding: 5px 50px 20px 15px  ;
+}
+
+.input-aviso {
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  resize: vertical; /* para que pueda agrandarse hacia abajo */
+  white-space: pre-wrap; /* mantiene saltos de línea */
+}
+
+
+.tabla-avisos {
+    width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tabla-avisos thead th {
+  background: #f8f9fa;
+  padding: 10px;
+}
+
+.tabla-avisos tbody tr {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tabla-avisos tbody td {
+  padding: 12px;
+  vertical-align: middle;
+}
+
+/* Evita el desborde en avisos largos */
+.texto-aviso {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 1px; /* truco para que respete el break-word */
+}

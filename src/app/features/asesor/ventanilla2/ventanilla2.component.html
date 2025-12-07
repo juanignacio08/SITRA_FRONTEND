@@ -1,20 +1,20 @@
 <mat-card class="tabla">
 
     <mat-card-header class="center-title">
-        <mat-card-title class="fw-bold">VENTANILLA 2</mat-card-title>
+        <mat-card-title class="ventanilla-text">VENTANILLA 2</mat-card-title>
     </mat-card-header>
 
     <mat-card-content>
         <div class="text-center rounded rounded-3 text-dark py-4 mb-3 bordered-card bg-pantalla">
             <div class="row">
-                <div class="col-4">
+                <div class="paciente-turno bg-primary col-3">
                     @if (screenNormal) {
-                    <p class="fs-1 badge text-bg-primary">{{screenNormal.turno}}</p>
+                    <p class="paciente-turno-numero">{{screenNormal.turno}}</p>
                     }
                 </div>
                 <div class="col-8">
                     @if (screenNormal) {
-                    <p class="fs-2 fw-bold">{{screenNormal.paciente.nombre + " " +
+                    <p class="nombre fs-2 ">{{screenNormal.paciente.nombre + " " +
                         screenNormal.paciente.apellidoPaterno
                         + " " + screenNormal.paciente.apellidoMaterno}}</p>
                     <p class="fs-5">

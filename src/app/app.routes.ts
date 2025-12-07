@@ -10,6 +10,7 @@ import { Ventanilla2Component } from './features/asesor/ventanilla2/ventanilla2.
 import { UsuarioComponent } from './features/admin/usuario/usuario.component';
 import { ReporteRecComponent } from './features/admin/reporte-rec/reporte-rec.component';
 import { ReporteAseComponent } from './features/admin/reporte-ase/reporte-ase.component';
+import { AvisosComponent } from './features/admin/avisos/avisos.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'sig-in', pathMatch: 'full' },
@@ -39,7 +40,8 @@ export const routes: Routes = [
       { path: '', redirectTo: 'usuario', pathMatch: 'full' },
       { path: 'usuario', component: UsuarioComponent },
       { path: 'reporte-rec', component: ReporteRecComponent },
-      { path: 'reporte-ase', component: ReporteAseComponent }
+      { path: 'reporte-ase', component: ReporteAseComponent },
+      { path: 'avisos', component: AvisosComponent }
     ]
    }
 ];
