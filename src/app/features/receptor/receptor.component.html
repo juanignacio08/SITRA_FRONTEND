@@ -41,8 +41,9 @@
                 <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Foto de perfil del usuario"
                     class="foto-perfil" />
                 <div class="datos-usuario">
-                    <span class="nombre-usuario">Berrocal Creifer</span>
-                    <span class="rol-usuario">Receptor</span>
+                    <span class="nombre-usuario">{{ userCurrent?.persona?.nombre + " " +
+                        userCurrent?.persona?.apellidoPaterno + " " + userCurrent?.persona?.apellidoMaterno}}</span>
+                    <span class="rol-usuario">{{ userCurrent?.rol?.denominacion }}</span>
                 </div>
                 <!-- 🔽 Botón con menú desplegable -->
                 <button mat-icon-button [matMenuTriggerFor]="menuUsuario" class="btn-flecha">
@@ -64,7 +65,92 @@
         <!-- 🧭 Aquí se cargan los componentes hijos -->
             <router-outlet></router-outlet>
         <!-- MAIN -->
-        
+        <div class="row p-2 mt-4">
+            <div class="col-12 col-lg-3">
+
+            </div>
+            <div class="col-12 col-lg-6 p-2">
+                @if (loadTypeDocument) {
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-grow m-5" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                } @else {
+                <mat-card class="panel-registro">
+                    <mat-card-header class="center-title ">
+                        <mat-card-title> REGISTRO DE PACIENTE</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <form [formGroup]="registroForm">
+                            <mat-form-field appearance="outline" class="w-100 rounded-5" color="primary">
+                                <mat-label class="f-s-14 f-w-600 m-b-8 d-block">
+                                    Tipo de documento
+                                </mat-label>
+                                <mat-select formControlName="tipo_doc" required>
+                                    @for (typeDocument of typeDocumentOptions; track $index) {
+                                    <mat-option [value]="typeDocument.codigo">{{typeDocument.denominacion}}</mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+
+
+                            <div class="row p-0 m-0">
+                                <div class="col-12 m-0 p-0">
+                                    <mat-form-field appearance="outline" class="campo-doc w-100">
+                                        <mat-label>Número de Documento</mat-label>
+                                        <input matInput type="text" formControlName="num_doc" maxlength="8"
+                                            placeholder="Ej: 842531126" required aria-label="'Número de Documento'"
+                                            lass="rounded-5" (input)="onDniInput()" autofocus>
+
+                                    </mat-form-field>
+
+                                </div>
+
+                                @if (!existsPerson && clickedSearch) {
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Error!</strong> Persono no registrada.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+                                }
+                            </div>
+
+                            <mat-form-field appearance="outline" class="w-100" color="primary">
+                                <mat-label>Nombres Completos</mat-label>
+                                <input matInput formControlName="nombres" required aria-label="Nombre">
+                            </mat-form-field>
+
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <mat-form-field appearance="outline" class="w-100" color="primary">
+                                        <mat-label>Apellidos Completos</mat-label>
+                                        <input matInput formControlName="apellido_paterno" aria-label="Apellidos">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <mat-form-field appearance="outline" class="w-100" color="primary">
+                                        <mat-label>Apellidos Completos</mat-label>
+                                        <input matInput formControlName="apellido_materno" aria-label="Apellidos">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="botones-form">
+                                <button mat-raised-button class="boton-cita" type="button"
+                                    (click)="registrarCita(Prioridades.NORMAL)">
+                                    <mat-icon>check_circle</mat-icon>
+                                    Registrar Cita
+                                </button>
+                            </div>
+                        </form>
+                    </mat-card-content>
+                </mat-card>
+                }
+            </div>
+
+        </div>
+
     </mat-sidenav-content>
 
 </mat-sidenav-container>
