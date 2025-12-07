@@ -57,7 +57,7 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.usuarioService.getUserLoggedIn();
-    if (this.user === null) {
+    if (this.user === null || this.user === undefined || this.user.rol.denominacion !== 'Administrador') {
       this.router.navigate(['/sig-in']);
     }
   }

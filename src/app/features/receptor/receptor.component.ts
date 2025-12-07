@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -35,6 +35,10 @@ import {
 } from '../../models/turnos/ordenatencion.model';
 import { TablaMaestra } from '../../models/maestros/tablaMaestra.model';
 import { TablamaestraService } from '../../services/maestro/tablamaestra.service';
+import { UsuarioService } from '../../services/seguridad/usuario.service';
+import { Usuario } from '../../models/seguridad/usuario.model';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalerrorComponent } from '../../components/modalerror/modalerror.component';
 
 @Component({
   selector: 'app-receptor',
@@ -70,7 +74,6 @@ export class ReceptorComponent implements OnInit {
   registroForm!: FormGroup;
 
   person?: Persona;
-  usuarioId: number = 2;
 
   existsPerson: boolean = false;
   personFound: boolean = false;
@@ -78,16 +81,22 @@ export class ReceptorComponent implements OnInit {
 
   typeDocumentOptions: TablaMaestra[] = [];
 
+  userCurrent?: Usuario | null;
+
   public Prioridades = TablaMaestraPrioridades;
+
+  loadTypeDocument: boolean = false;
+
+  dialog = inject(MatDialog);
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private pacientesService: PacientesService,
     private personaService: PersonaService,
     private ordenAtencionService: OrdenatencionService,
     private tablamaestraService: TablamaestraService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private usuarioService: UsuarioService
   ) {
     this.registroForm = this.fb.group({
       // Puedes usar valores nulos o vacíos temporales, pero deben coincidir con la estructura
@@ -100,6 +109,20 @@ export class ReceptorComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userCurrent = this.usuarioService.getUserLoggedIn();
+    if (
+      this.userCurrent === null ||
+      this.userCurrent === undefined ||
+      this.userCurrent.rol.denominacion === 'Asesor'
+    ) {
+      this.router.navigate(['/sig-in']);
+    }
+
+    this.loadTypeDocuments();
+  }
+
+  loadTypeDocuments() {
+    this.loadTypeDocument = true;
     this.tablamaestraService
       .getItemsTable(this.tablamaestraService.codeTableDocumentType)
       .subscribe({
@@ -110,12 +133,32 @@ export class ReceptorComponent implements OnInit {
               ? this.typeDocumentOptions[0].codigo
               : TablaMaestraTypeDocument.DNI;
           this.initForm(firstOption);
+          this.loadTypeDocument = false;
         },
         error: (err) => {
           this.initForm(TablaMaestraTypeDocument.DNI);
-          console.error('Error al cargar los tipos de documento', err);
+          this.loadTypeDocument = false;
+          this.openModalError(err);
         },
       });
+  }
+
+  openModalError(error: any) {
+    const dialogRef = this.dialog.open(ModalerrorComponent, {
+      width: '500px',
+      data: error,
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
+
+      if (!result) return;
+
+      if (result === 'usuario') {
+        this.loadTypeDocuments();
+      }
+    });
   }
 
   initForm(typeDocument: string) {
@@ -131,7 +174,7 @@ export class ReceptorComponent implements OnInit {
 
   // Método que se ejecuta al registrar la cita
   registrarCita(priority: TablaMaestraPrioridades) {
-    if (this.registroForm.valid) {
+    if (this.registroForm.valid && this.userCurrent) {
       const form = this.registroForm.value;
       const name = this.capitalize(form.nombres);
       const apellidoPaterno = this.capitalize(form.apellido_paterno);
@@ -143,7 +186,7 @@ export class ReceptorComponent implements OnInit {
         const orderAtencionRequest = this.createOrderAtentionRequest(
           1,
           this.person != undefined ? this.person.personaId : 0,
-          this.usuarioId,
+          this.userCurrent?.usuarioId,
           priority,
           TablaMaestraEstadosOrdenAtencion.PENDIENTE,
           0,
@@ -151,39 +194,40 @@ export class ReceptorComponent implements OnInit {
         );
 
         this.saveOrderAtention(orderAtencionRequest);
-
       } else {
-        const newPerson: Persona = {
-          personaId: 1,
-          nombre: name,
-          apellidoPaterno: apellidoPaterno,
-          apellidoMaterno: apellidoMaterno,
-          tipoDocumentoIdentidad: documentType,
-          numeroDocumentoIdentidad: numeroDocumento,
-          estado: 1,
-        };
+        if (this.userCurrent) {
+          const newPerson: Persona = {
+            personaId: 1,
+            nombre: name,
+            apellidoPaterno: apellidoPaterno,
+            apellidoMaterno: apellidoMaterno,
+            tipoDocumentoIdentidad: documentType,
+            numeroDocumentoIdentidad: numeroDocumento,
+            estado: 1,
+          };
 
-        this.personaService.savePerson(newPerson).subscribe({
-          next: (response) => {
-            const person: Persona = response.data;
-            console.log('Persona registrada:', person);
+          this.personaService.savePerson(newPerson).subscribe({
+            next: (response) => {
+              const person: Persona = response.data;
+              console.log('Persona registrada:', person);
 
-            //Create Order Atention
-            const orderAtencionRequest: OrdenAtencionRequest = {
-              ordenAtencionId: 1,
-              personaId: person.personaId,
-              receptorId: this.usuarioId,
-              codPrioridad: priority,
-              codEstadoAtencion: TablaMaestraEstadosOrdenAtencion.PENDIENTE,
-              estado: 1,
-            };
+              //Create Order Atention
+              const orderAtencionRequest: OrdenAtencionRequest = {
+                ordenAtencionId: 1,
+                personaId: person.personaId,
+                receptorId: this.userCurrent?.usuarioId || 0,
+                codPrioridad: priority,
+                codEstadoAtencion: TablaMaestraEstadosOrdenAtencion.PENDIENTE,
+                estado: 1,
+              };
 
-            this.saveOrderAtention(orderAtencionRequest);
-          },
-          error: (err) => {
-            this.messageSnackBar('Error al registrar persona ⚠️');
-          },
-        });
+              this.saveOrderAtention(orderAtencionRequest);
+            },
+            error: (err) => {
+              this.messageSnackBar('Error al registrar persona ⚠️');
+            },
+          });
+        }
       }
     } else {
       this.messageSnackBar('Completa todos los campos obligatorios ⚠️');
@@ -241,11 +285,14 @@ export class ReceptorComponent implements OnInit {
     /* ... */
   }
   cerrarSesion() {
+    this.usuarioService.logout();
     this.router.navigate(['/sig-in']);
   }
 
   searchPerson() {
-    if (this.registroForm.get('tipo_doc')?.value !== TablaMaestraTypeDocument.DNI) {
+    if (
+      this.registroForm.get('tipo_doc')?.value !== TablaMaestraTypeDocument.DNI
+    ) {
       return;
     }
 
