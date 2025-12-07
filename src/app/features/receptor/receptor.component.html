@@ -9,12 +9,12 @@
 
         <mat-nav-list>
 
-            <a mat-list-item routerLink="/pacientes" routerLinkActive="active">
+            <a mat-list-item routerLink="pacientes-rec" routerLinkActive="active">
                 <mat-icon class="icon-menu">groups</mat-icon>
                 <span>Pacientes</span>
             </a>
 
-            <a mat-list-item routerLink="/historial" routerLinkActive="active">
+            <a mat-list-item routerLink="historial-rec" routerLinkActive="active">
                 <mat-icon class="icon-menu">history</mat-icon>
                 <span>Historial de pacientes</span>
             </a>
@@ -62,7 +62,8 @@
                 </mat-menu>
             </div>
         </mat-toolbar>
-
+        <!-- 🧭 Aquí se cargan los componentes hijos -->
+            <router-outlet></router-outlet>
         <!-- MAIN -->
         <div class="row p-2 mt-4">
             <div class="col-12 col-lg-3">
