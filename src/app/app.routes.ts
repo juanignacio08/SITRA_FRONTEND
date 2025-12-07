@@ -11,13 +11,17 @@ import { UsuarioComponent } from './features/admin/usuario/usuario.component';
 import { ReporteRecComponent } from './features/admin/reporte-rec/reporte-rec.component';
 import { ReporteAseComponent } from './features/admin/reporte-ase/reporte-ase.component';
 import { AvisosComponent } from './features/admin/avisos/avisos.component';
+import { HistorialRecComponent } from './features/receptor/historial-rec/historial-rec.component';
+import { PacientesRecComponent } from './features/receptor/pacientes-rec/pacientes-rec.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'sig-in', pathMatch: 'full' },
   { path: 'sig-in', component: SigInComponent, title: 'SITRA' },
   { path: 'receptor', component: ReceptorComponent, title: 'Receptor',
     children: [
-      { path: '', redirectTo: 'pacientes', pathMatch: 'full' },
+      { path: '', redirectTo: 'pacientes-rec', pathMatch: 'full' },
+      { path: 'pacientes-rec', component: PacientesRecComponent },
+      { path: 'historial-rec', component: HistorialRecComponent },
     ]
    },
 

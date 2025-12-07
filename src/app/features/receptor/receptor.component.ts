@@ -6,7 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { PacientesService } from '../../shared/pacientes.service';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -54,6 +54,7 @@ import { TablamaestraService } from '../../services/maestro/tablamaestra.service
     MatListModule,
     MatSidenavModule,
     MatSnackBarModule,
+    RouterModule
   ],
 
   templateUrl: './receptor.component.html',
