@@ -1,28 +1,61 @@
 <mat-card class="tabla">
   <mat-card-title class="center-title">Avisos</mat-card-title>
 
-  <div class="input-row" style="display:flex; gap:8px; margin:12px 0;">
-    <input
-      type="text"
-      [(ngModel)]="nuevoAviso"
-      placeholder="Escribe un aviso"
-      class="input-aviso"
-      style="flex:1; padding:8px;"
-    />
+  <div class="input-row">
+    <p class="fw-bold mb-1">
+      @if (clickedEdit) {
+        Editar
+      } @else {
+        Agregar
+      }
+    </p>
+    <form [formGroup]="form" (ngSubmit)="sendForm()">
+      <div class="form-floating">
+        <input type="text" class="form-control" placeholder="Escribe una noticia o aviso" id="noticia"
+          formControlName="contenido">
+        <label for="noticia">Noticia</label>
 
-    <button mat-raised-button color="primary" (click)="agregarAviso()">
-      Agregar
-    </button>
+        <div *ngIf="f['contenido'].invalid && (f['contenido'].dirty || f['contenido'].touched)"
+          class="error-message text-danger fw-bold">
+          <div *ngIf="f['contenido'].errors?.['required']">
+            El contenido es obligatorio.
+          </div>
+          <div *ngIf="f['contenido'].errors?.['minlength']">
+            El contenido debe tener al menos 5 caracteres.
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
 
-  <table mat-table [dataSource]="avisos" class="mat-elevation-z8 tabla-aviso">
+  <table mat-table [dataSource]="noticesList" class="mat-elevation-z8 tabla-aviso">
+    <!-- Índice -->
+    <ng-container matColumnDef="orden">
+      <th mat-header-cell *matHeaderCellDef>N°</th>
+      <td mat-cell *matCellDef="let row; let i = index">
+        {{ i + 1 }}
+      </td>
+    </ng-container>
 
     <!-- Aviso -->
     <ng-container matColumnDef="aviso">
       <th mat-header-cell *matHeaderCellDef>Aviso</th>
       <td mat-cell *matCellDef="let a">
         <!-- muestra a.mensaje y permite salto de línea -->
-        <div style="white-space:normal; word-wrap:break-word;">{{ a.mensaje }}</div>
+        <div style="white-space:normal; word-wrap:break-word;">{{ a.contenido }}</div>
+      </td>
+    </ng-container>
+
+    <!-- Aviso -->
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef>Estado</th>
+      <td mat-cell *matCellDef="let a">
+        @if (a.estado === 1) {
+          <div>Activo</div>
+        } @else {
+          <div>Inactivo</div>
+        }
+        
       </td>
     </ng-container>
 
@@ -31,11 +64,17 @@
       <th mat-header-cell *matHeaderCellDef class="text-end">Acciones</th>
 
       <td mat-cell *matCellDef="let aviso; let i = index" class="text-end">
-        <button class="btn btn-primary btn-sm me-2" (click)="mostrarAviso(aviso.mensaje)">
+        <button class="btn btn-primary btn-sm me-2" (click)="edit(aviso)">
+          Editar
+        </button>
+        <button class="btn btn-info btn-sm me-2" (click)="mostrar(aviso)" [disabled]="aviso.estado === 1">
           Mostrar
         </button>
-        <button class="btn btn-danger btn-sm" (click)="eliminarAviso(i)">
-          Quitar
+        <button class="btn btn-secondary btn-sm me-2" (click)="desactive(aviso)" [disabled]="aviso.estado == 0">
+          Desactivar
+        </button>
+        <button class="btn btn-danger btn-sm" (click)="delete(aviso)">
+          Eliminar
         </button>
       </td>
     </ng-container>

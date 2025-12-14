@@ -65,7 +65,7 @@ export class RegistroComponent implements OnInit {
   error: boolean = false;
   errorMessage: string = '';
 
-  messageDelete ?: string;
+  messageDelete?: string;
 
   roles: Rol[] = [];
 
@@ -105,7 +105,10 @@ export class RegistroComponent implements OnInit {
         if (this.data.user) {
           const user = this.data.user;
           this.form = this.fb.group({
-            nombres: [{ value: user.persona.nombre, disabled: true }, Validators.required],
+            nombres: [
+              { value: user.persona.nombre, disabled: true },
+              Validators.required,
+            ],
             apellidoPaterno: [
               { value: user.persona.apellidoPaterno, disabled: true },
               Validators.required,
@@ -115,7 +118,7 @@ export class RegistroComponent implements OnInit {
               Validators.required,
             ],
             dni: [
-              { value: user.persona.numeroDocumentoIdentidad, disabled : true},
+              { value: user.persona.numeroDocumentoIdentidad, disabled: true },
               [
                 Validators.required,
                 Validators.minLength(8),
@@ -317,13 +320,13 @@ export class RegistroComponent implements OnInit {
   editUser() {
     if (this.form.valid && this.data.user && this.data.action === 'edit') {
       this.loadEdit = true;
-      const userRequest : UsuarioRequest = {
+      const userRequest: UsuarioRequest = {
         usuarioId: this.data.user.usuarioId,
         numeroDocumento: this.data.user.usuario,
         contrasena: this.form.get('contraseña')?.value,
         rolId: this.form.get('rol')?.value,
-        estado: 1
-      }
+        estado: 1,
+      };
 
       this.usuarioService.editUser(userRequest).subscribe({
         next: (response) => {
@@ -332,36 +335,46 @@ export class RegistroComponent implements OnInit {
           this.error = false;
           this.errorMessage = '';
           this.dialogRef.close('edited');
-        }, error: (err) => {
+        },
+        error: (err) => {
           console.error(err);
           this.error = true;
           this.errorMessage =
             err.error?.detail || 'Ocurrió un error al editar el usuario.';
           this.loadEdit = false;
-        }
-      })
+        },
+      });
     }
   }
 
   deleteUser() {
-    if (this.data.user && this.data.action === 'delete') {
-      this.loadDelete = true;
-      console.log("Eliminando usuario: ", this.data.user);
-      this.usuarioService.deleteUser(this.data.user.usuarioId).subscribe({
-        next: (response) => {
-          console.log(response.message);
-          this.loadDelete = false;
-          this.error = false;
-          this.errorMessage = '';
-          this.dialogRef.close('deleted');
-        }, error: (err) => {
-          console.error(err);
-          this.error = true;
-          this.errorMessage =
-            err.error?.detail || 'Ocurrió un error al eliminar el usuario.';
-          this.loadDelete = false;
-        }
-      });
+    const userAux = this.usuarioService.getUserLoggedIn();
+
+    if (userAux && this.data.user && this.data.action === 'delete') {
+      if (this.data.user.usuarioId === userAux.usuarioId) {
+        this.error = true;
+        this.errorMessage =
+          'No se puede eliminar a este usuario porque tiene la sesion activa.';
+      } else {
+        this.loadDelete = true;
+        console.log('Eliminando usuario: ', this.data.user);
+        this.usuarioService.deleteUser(this.data.user.usuarioId).subscribe({
+          next: (response) => {
+            console.log(response.message);
+            this.loadDelete = false;
+            this.error = false;
+            this.errorMessage = '';
+            this.dialogRef.close('deleted');
+          },
+          error: (err) => {
+            console.error(err);
+            this.error = true;
+            this.errorMessage =
+              err.error?.detail || 'Ocurrió un error al eliminar el usuario.';
+            this.loadDelete = false;
+          },
+        });
+      }
     }
   }
   cerrar() {

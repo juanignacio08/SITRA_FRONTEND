@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
@@ -7,6 +7,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
+import { OrdenAtencion } from '../../../models/turnos/ordenatencion.model';
+import { MatDialog } from '@angular/material/dialog';
+import { UsuarioService } from '../../../services/seguridad/usuario.service';
+import { OrdenatencionService } from '../../../services/turnos/ordenatencion.service';
+import { ModalerrorComponent } from '../../../components/modalerror/modalerror.component';
+import { ViewStatusOrderAtentionPipe } from '../../../pipes/view-status-order-atention.pipe';
 
 // Formatos personalizados para MatDatepicker
 export const CUSTOM_DATE_FORMATS = {
@@ -33,21 +39,34 @@ export const CUSTOM_DATE_FORMATS = {
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    ViewStatusOrderAtentionPipe,
   ],
   templateUrl: './reporte-rec.component.html',
-  styleUrls: ['./reporte-rec.component.css']
+  styleUrls: ['./reporte-rec.component.css'],
 })
-export class ReporteRecComponent {
+export class ReporteRecComponent implements OnInit {
   columnas: string[] = [
-    'ordenAtencion', 'nombre', 'numeroDocumento',
-    'horaInicio', 'horaFin', 'estado'
+    'index',
+    'paciente',
+    'numeroDocumento',
+    'turno',
+    'hora',
+    'estado',
   ];
 
   today: Date = new Date();
   form: FormGroup;
 
+  orderAtentionList: OrdenAtencion[] = [];
+
+  loadList: boolean = false;
+
+  dialog = inject(MatDialog);
+
   constructor(
     private fb: FormBuilder,
+    private usuarioService: UsuarioService,
+    private orderAtentionService: OrdenatencionService,
     private dateAdapter: DateAdapter<Date>
   ) {
     // Forzar locale a español
@@ -56,8 +75,45 @@ export class ReporteRecComponent {
     // Inicializar formulario
     this.form = this.fb.group({
       fechaEng: [null as Date | null], // Para el datepicker
-      fecha: [''],                     // Para mostrar DD/MM/YYYY
-      diaSemana: [null]                // Día de la semana
+      fecha: [''], // Para mostrar DD/MM/YYYY
+      diaSemana: [null], // Día de la semana
+    });
+  }
+
+  ngOnInit(): void {
+    const date = this.formatOrdenFecha(this.today);
+    const user = this.usuarioService.getUserLoggedIn();
+
+    if (user) {
+      this.reloadOrderAtentions(date);
+    }
+  }
+
+  reloadOrderAtentions(date: string) {
+    this.loadList = true;
+    this.orderAtentionService.getLisByDate(date).subscribe({
+      next: (response) => {
+        this.orderAtentionList = response.data;
+        this.loadList = false;
+      },
+      error: (error) => {
+        this.openModalError(error);
+        this.loadList = false;
+      },
+    });
+  }
+
+  openModalError(error: any) {
+    const dialogRef = this.dialog.open(ModalerrorComponent, {
+      width: '500px',
+      data: error,
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
+
+      if (!result) return;
     });
   }
 
@@ -83,8 +139,7 @@ export class ReporteRecComponent {
     const diaSemana = fecha.getDay();
     this.form.patchValue({ diaSemana });
 
-    // Guardar en localStorage
-    localStorage.setItem('fechaRedDist', fechaFormateada);
-    localStorage.setItem('diaSemanaRedDist', diaSemana.toString());
+    this.reloadOrderAtentions(fechaFormateada);
+    
   }
 }

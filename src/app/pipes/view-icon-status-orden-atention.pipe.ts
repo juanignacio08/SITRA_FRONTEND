@@ -17,7 +17,7 @@ export class ViewIconStatusOrdenAtentionPipe implements PipeTransform {
         case TablaMaestraEstadosOrdenAtencion.AUSENTE:
           return "Ausente";
         case TablaMaestraEstadosOrdenAtencion.ATENDIENDO:
-          return "Atendiendo";
+          return "bi bi-person-vcard-fill";
         default:
           return "Desconocido";
       }

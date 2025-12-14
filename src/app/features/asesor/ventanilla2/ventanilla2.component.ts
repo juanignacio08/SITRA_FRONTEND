@@ -5,11 +5,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { PacientesService } from '../../../shared/pacientes.service';
 import { OrdenatencionService } from '../../../services/turnos/ordenatencion.service';
 import {
   OrdenAtencion,
-  OrdenAtencionRequest,
 } from '../../../models/turnos/ordenatencion.model';
 import {
   TablaMaestraEstadosOrdenAtencion,
@@ -22,10 +20,14 @@ import {
   Atencion,
   AtencionRequest,
 } from '../../../models/turnos/atencion.model';
-import { Persona } from '../../../models/seguridad/persona.model';
 import { Pantalla } from '../../../models/turnos/pantalla.model';
 import { LlamadaService } from '../../../services/turnos/llamada.service';
 import { ViewStatusOrderAtentionPipe } from '../../../pipes/view-status-order-atention.pipe';
+import { Usuario } from '../../../models/seguridad/usuario.model';
+import { UsuarioService } from '../../../services/seguridad/usuario.service';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalerrorComponent } from '../../../components/modalerror/modalerror.component';
 
 @Component({
   selector: 'app-ventanilla2',
@@ -45,39 +47,46 @@ import { ViewStatusOrderAtentionPipe } from '../../../pipes/view-status-order-at
 export class Ventanilla2Component implements OnInit {
   columnas: string[] = ['turno', 'nombre', 'numeroDocumento'];
 
-  orderAtentionNormalList: OrdenAtencion[] = [];
-  orderAtentionPreferentialList: OrdenAtencion[] = [];
-
+  orderAtentionList: OrdenAtencion[] = [];
   screenNormal?: Pantalla;
-  namePacienteNormalInVentanilla: string = '';
+  namePacienteInVentanilla: string = '';
 
-  screenPreferential?: Pantalla;
-  namePacientePreferentialInVentanilla: string = '';
+  userCurrent?: Usuario | null;
 
-  asesorId = 3; // ID del asesor (ejemplo estático)
+  disabledCall: boolean = false;
+  disabledStart: boolean = true;
+  disabledFinish: boolean = true;
+  disabledAbsent: boolean = true;
 
-  disabledCallB1: boolean = false;
-  disabledStartB1: boolean = true;
-  disabledFinishB1: boolean = true;
-  disabledAbsentB1: boolean = true;
+  loadScrean: boolean = false;
+  loadOrders: boolean = false;
 
-  disabledCallB2: boolean = false;
-  disabledStartB2: boolean = true;
-  disabledFinishB2: boolean = true;
-  disabledAbsentB2: boolean = true;
+  loadCall: boolean = false;
+  loadStart: boolean = false;
+  loadFinish: boolean = false;
+  loadAbsent: boolean = false;
 
   codeOrderStatusInCall = TablaMaestraEstadosOrdenAtencion.EN_LLAMADA;
-  codeStatusOrderAtencionInAtention = TablaMaestraEstadosOrdenAtencion.ATENDIENDO;
 
   currentUtterance: SpeechSynthesisUtterance | null = null;
 
   orderAtentionService = inject(OrdenatencionService);
   llamadaService = inject(LlamadaService);
   atencionService = inject(AtencionService);
+  usuarioService = inject(UsuarioService);
+  router = inject(Router);
+  dialog = inject(MatDialog);
 
   ngOnInit(): void {
-    this.getOrderNormalAtentionInVentanilla();
-    this.getOrderPreferentialAtentionInVentanilla();
+    this.userCurrent = this.usuarioService.getUserLoggedIn();
+    if (
+      this.userCurrent === null ||
+      this.userCurrent === undefined ||
+      this.userCurrent.rol.denominacion === 'Receptor'
+    ) {
+      this.router.navigate(['/sig-in']);
+    }
+    this.getOrderAtentionInVentanilla();
     this.getOrdersAtentionNormal();
   }
 
@@ -92,34 +101,39 @@ export class Ventanilla2Component implements OnInit {
   }
 
   getOrdersAtentionNormal() {
+    this.loadOrders = true;
     const fechaFormateada = this.getDateFormatted(new Date());
 
     this.orderAtentionService
-      .getNormalPaginatedOrders(0, 10, fechaFormateada)
+      .getNormalPaginatedOrders(0, 100, fechaFormateada)
       .subscribe({
         next: (response) => {
-          console.log('Órdenes de atención normales obtenidas:', response.data);
-          this.orderAtentionNormalList = response.data;
-          this.disabledButtonsB1();
-        },
+          this.orderAtentionList = response.data;
+          this.disabledButtons();
+          this.loadOrders = false;
+        }, error: (err) => {
+          this.openModalError(err);
+          this.loadOrders = false;
+        }
       });
   }
 
-  getOrdersAtentionPreferential() {
-    const fechaFormateada = this.getDateFormatted(new Date());
-
-    this.orderAtentionService
-      .getPreferentialPaginatedOrders(0, 10, fechaFormateada)
-      .subscribe({
-        next: (response) => {
-          console.log('Órdenes de atención normales obtenidas:', response.data);
-          this.orderAtentionPreferentialList = response.data;
-          this.disabledButtonsB1();
-        },
+  openModalError(error: any) {
+      const dialogRef = this.dialog.open(ModalerrorComponent, {
+        width: '500px',
+        data: error,
+        disableClose: true,
       });
-  }
+  
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log(result);
+  
+        if (!result) return;
+      });
+    }
 
-  getOrderPreferentialAtentionInVentanilla() {
+  getOrderAtentionInVentanilla() {
+    this.loadScrean = true;
     const fechaFormateada = this.getDateFormatted(new Date());
 
     this.atencionService
@@ -127,78 +141,56 @@ export class Ventanilla2Component implements OnInit {
       .subscribe({
         next: (response) => {
           this.screenNormal = response.data;
-          this.disabledButtonsB1();
+          this.disabledButtons();
+          this.loadScrean = false;
         },
         error: (error) => {
-          console.error(
-            'Error al obtener la siguiente orden de atención:',
-            error
-          );
+          this.openModalError(error);
           this.screenNormal = undefined;
-          this.disabledButtonsB1();
+          this.disabledButtons();
+          this.loadScrean = false;
         },
       });
   }
 
-  getOrderNormalAtentionInVentanilla() {
-    const fechaFormateada = this.getDateFormatted(new Date());
-
-    this.atencionService
-      .getScreen(fechaFormateada, TablaMaestraVentanillas.VENTANILLA_2)
-      .subscribe({
-        next: (response) => {
-          this.screenNormal = response.data;
-          this.disabledButtonsB1();
-        },
-        error: (error) => {
-          console.error(
-            'Error al obtener la siguiente orden de atención:',
-            error
-          );
-          this.screenNormal = undefined;
-          this.disabledButtonsB1();
-        },
-      });
-  }
-
-  disabledButtonsB1() {
-    this.disabledCallB1 = false;
-    this.disabledStartB1 = true;
-    this.disabledFinishB1 = true;
-    this.disabledAbsentB1 = true;
+  disabledButtons() {
+    this.disabledCall = false;
+    this.disabledStart = true;
+    this.disabledFinish = true;
+    this.disabledAbsent = true;
 
     if (this.screenNormal) {
       if (
         this.screenNormal.codEstadoAtencion ===
         TablaMaestraEstadosOrdenAtencion.EN_LLAMADA
       ) {
-        this.disabledCallB1 = false;
-        this.disabledStartB1 = false;
+        this.disabledCall = false;
+        this.disabledStart = false;
         if (this.screenNormal.numLlamada === 3) {
-          this.disabledAbsentB1 = false;
-          this.disabledCallB1 = true;
+          this.disabledAbsent = false;
+          this.disabledCall = true;
         }
       } else if (
         this.screenNormal.codEstadoAtencion ===
         TablaMaestraEstadosOrdenAtencion.ATENDIENDO
       ) {
-        this.disabledFinishB1 = false;
-        this.disabledCallB1 = true;
+        this.disabledFinish = false;
+        this.disabledCall = true;
       } else {
         console.log('Caso no contemplado');
       }
     } else {
-      this.disabledCallB1 = false;
+      this.disabledCall = false;
     }    
 
-    if (this.orderAtentionNormalList.length === 0 && (this.screenNormal === undefined || this.screenNormal === null)) {
-      this.disabledCallB1 = true;
+    if (this.orderAtentionList.length === 0 && (this.screenNormal === undefined || this.screenNormal === null)) {
+      this.disabledCall = true;
     }
   }
 
   call() {
     if (
-      (this.orderAtentionNormalList.length != 0 || this.screenNormal) && (
+      (this.orderAtentionList.length != 0 || this.screenNormal) && (
         this.screenNormal == undefined ||
         (this.screenNormal &&
           this.screenNormal.codEstadoAtencion ===
@@ -208,45 +200,42 @@ export class Ventanilla2Component implements OnInit {
       )
     ) {
       const fechaFormateada = this.getDateFormatted(new Date());
-
+      this.loadCall = true;
       this.llamadaService
         .callNext(
           fechaFormateada,
           TablaMaestraPrioridades.NORMAL,
           TablaMaestraVentanillas.VENTANILLA_2,
-          this.asesorId
+          this.userCurrent?.usuarioId || 0
         )
         .subscribe({
           next: (response) => {
             if (response.data == null) {
               this.screenNormal = undefined;
+              return;
             }
             this.screenNormal = response.data;
 
-            this.namePacienteNormalInVentanilla =
+            this.namePacienteInVentanilla =
               this.screenNormal.paciente.nombre +
               ' ' +
               this.screenNormal.paciente.apellidoPaterno +
               ' ' +
               this.screenNormal.paciente.apellidoMaterno;
             
-            this.disabledButtonsB1();
+            this.disabledButtons();
             
             this.llamarTurno();
 
             this.getOrdersAtentionNormal();
+            this.loadCall = false;
           },
           error: (error) => {
             console.error('Ocurrio un problema ', error);
-            if (
-              error.error.detail ===
-              'No se puede llamar cuando se tiene un paciente en atencion'
-            ) {
-              alert(error.error.detail);
-            } else {
-              this.screenNormal = undefined;
-            }
-            this.disabledButtonsB1();
+            this.screenNormal = undefined;
+            this.openModalError(error);
+            this.disabledButtons();
+            this.loadCall = false;
           },
         });
     }
@@ -255,7 +244,7 @@ export class Ventanilla2Component implements OnInit {
   llamarTurno() {
     const texto =
       'Turno de ' +
-      this.namePacienteNormalInVentanilla +
+      this.namePacienteInVentanilla +
       ', acerquese a ventanilla 1.';
 
     const mensaje = new SpeechSynthesisUtterance(texto);
@@ -285,13 +274,13 @@ export class Ventanilla2Component implements OnInit {
 
   getFullName() : string {
     if (this.screenNormal) {
-      this.namePacienteNormalInVentanilla =
+      this.namePacienteInVentanilla =
               this.screenNormal.paciente.nombre +
               ' ' +
               this.screenNormal.paciente.apellidoPaterno +
               ' ' +
               this.screenNormal.paciente.apellidoMaterno;
-      return this.namePacienteNormalInVentanilla;
+      return this.namePacienteInVentanilla;
     }
     
     return "No hay paciente en ventanilla";
@@ -299,27 +288,30 @@ export class Ventanilla2Component implements OnInit {
 
   startAtention() {
     if (this.screenNormal && this.screenNormal.codEstadoAtencion === TablaMaestraEstadosOrdenAtencion.EN_LLAMADA) {
+      this.loadStart = true;
       const atention: AtencionRequest = {
         atencionId: 1,
-        asesorId: this.asesorId,
+        asesorId: this.userCurrent?.usuarioId || 0,
         ordenAtencionId: this.screenNormal.orderAtencionId,
         fecha: this.getDateFormatted(new Date()),
         codVentanilla: TablaMaestraVentanillas.VENTANILLA_2,
         estado: 1,
       };
-      console.log(atention);
-
+      
       this.atencionService.saveAtention(atention).subscribe({
         next: (response) => {
           this.screenNormal = response.data;
           const message = "Iniciando atención a " + this.getFullName();
           this.talk(message)
-          this.disabledButtonsB1();
+          this.disabledButtons();
           this.getOrdersAtentionNormal();
+          this.loadStart = false;
         },
         error: (error) => {
           console.error('Ocurrio un error en iniciar atention. ', error);
-          this.disabledButtonsB1();
+          this.openModalError(error);
+          this.disabledButtons();
+          this.loadStart = false;
         },
       });
     }
@@ -331,9 +323,10 @@ export class Ventanilla2Component implements OnInit {
       this.screenNormal.codEstadoAtencion ===
         TablaMaestraEstadosOrdenAtencion.ATENDIENDO
     ) {
+      this.loadFinish = true;
       const atention: AtencionRequest = {
         atencionId: this.screenNormal.atencionId,
-        asesorId: this.asesorId,
+        asesorId: this.userCurrent?.usuarioId || 0,
         ordenAtencionId: this.screenNormal.orderAtencionId,
         fecha: this.getDateFormatted(new Date()),
         codVentanilla: TablaMaestraVentanillas.VENTANILLA_2,
@@ -347,13 +340,16 @@ export class Ventanilla2Component implements OnInit {
           this.talk(message);
 
           this.screenNormal = undefined;
-          this.disabledButtonsB1();
+          this.disabledButtons();
 
           this.getOrdersAtentionNormal();
+          this.loadFinish = false;
         },
         error: (error) => {
           console.error('Ocurrio un error en finalizar atention. ', error);
-          this.disabledButtonsB1();
+          this.openModalError(error);
+          this.disabledButtons();
+          this.loadFinish = false;
         },
       });
     }
@@ -366,6 +362,7 @@ export class Ventanilla2Component implements OnInit {
         TablaMaestraEstadosOrdenAtencion.EN_LLAMADA &&
       this.screenNormal.numLlamada === 3
     ) {
+      this.loadAbsent = true;
       this.llamadaService.markAsAbsent(this.screenNormal.llamadaId, TablaMaestraVentanillas.VENTANILLA_2).subscribe({
         next: (response) => {
           this.screenNormal = response.data;
@@ -373,12 +370,15 @@ export class Ventanilla2Component implements OnInit {
           this.talk(message);
 
           this.screenNormal = undefined;
-          this.disabledButtonsB1();
+          this.disabledButtons();
           this.getOrdersAtentionNormal();
+          this.loadAbsent = false;
         },
         error: (error) => {
           console.error('Ocurrio un error en finalizar atention. ', error);
-          this.disabledButtonsB1();
+          this.openModalError(error);
+          this.disabledButtons();
+          this.loadAbsent = false;
         },
       });
     }

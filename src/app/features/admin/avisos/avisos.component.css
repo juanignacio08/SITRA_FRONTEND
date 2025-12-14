@@ -7,8 +7,7 @@
 /* Centrado de texto general */
 .center-title {
   text-align: center;
-  margin: 10px 5px 5px;
-  background-color: beige;
+  margin: 20px 5px;
 }
 
 /* Celdas */

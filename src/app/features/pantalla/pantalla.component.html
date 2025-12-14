@@ -12,16 +12,23 @@
                 <div class="ventanilla text-center rounded rounded-3 text-light py-4 ms-1 mb-3">
                     <h2 class="fs-2 nombre">Ventanilla 1</h2>
                     <hr>
-                    @if (screenNormal) {
-                    <p class="nombre fs-1    fw-bold">{{ screenNormal.paciente.nombre + " " +
-                        screenNormal.paciente.apellidoPaterno + " " + screenNormal.paciente.apellidoMaterno }}</p>
-                    <p class="fs-5">
-                        <i class=" {{ screenNormal.codEstadoAtencion | viewIconStatusOrdenAtention}}"></i>
-                        {{ screenNormal.codEstadoAtencion | viewStatusOrderAtention }}
-                    </p>
-                    @if (screenNormal.codEstadoAtencion === codStatusOrderAtentionInCall) {
-                    <p class="fs-5"># Llamadas: {{ screenNormal.numLlamada }}</p>
-                    }
+                    @if (screenV1) {
+                    <p class="nombre fs-1    fw-bold">{{ screenV1.paciente.nombre + " " +
+                        screenV1.paciente.apellidoPaterno + " " + screenV1.paciente.apellidoMaterno }}
+                    <p>
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="fs-4 text-dark fw-bold">
+                                <i class=" {{ screenV1.codEstadoAtencion | viewIconStatusOrdenAtention}}"></i>
+                                {{ screenV1.codEstadoAtencion | viewStatusOrderAtention }}
+                            </p>
+                        </div>
+                        <div class="col-6">
+                            @if (screenV1.codEstadoAtencion === codStatusOrderAtentionInCall) {
+                            <p class="fs-4 text-dark fw-bold"># Llamadas: {{ screenV1.numLlamada }}</p>
+                            }
+                        </div>
+                    </div>
                     } @else {
                     <p class="fs-4 fw-bold">- - - - -</p>
                     }
@@ -32,54 +39,41 @@
                 <div class="ventanilla text-center rounded rounded-3 text-light py-4 ms-1 mb-3">
                     <h2 class="fs-2 nombre">Ventanilla 2</h2>
                     <hr>
-                    @if (screenPreferential) {
-                    <p class="fs-1 nombre fw-bold">{{ screenPreferential.paciente.nombre + " " +
-                        screenPreferential.paciente.apellidoPaterno + " " + screenPreferential.paciente.apellidoMaterno
-                        }}
-                    </p>
-                    <p class="fs-2">
-                        <i class="{{ screenPreferential.codEstadoAtencion | viewIconStatusOrdenAtention}}"></i>
-                        {{ screenPreferential.codEstadoAtencion | viewStatusOrderAtention }}
-
-                        @if (screenPreferential.codEstadoAtencion === codStatusOrderAtentionInCall) {
-                        <span class="badge text-bg-light nombre">{{ screenPreferential.numLlamada }}</span>
-                        }
-                        @if (screenPreferential.codEstadoAtencion === codStatusOrderAtencionInAtention) {
-                    <div class="spinner-grow " role="status">
-                        <span class="visually-hidden">Loading...</span>
+                    @if (screenV2) {
+                    <p class="nombre fs-1    fw-bold">{{ screenV2.paciente.nombre + " " +
+                        screenV2.paciente.apellidoPaterno + " " + screenV2.paciente.apellidoMaterno }}</p>
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="fs-4 text-dark fw-bold">
+                                <i class=" {{ screenV2.codEstadoAtencion | viewIconStatusOrdenAtention}}"></i>
+                                {{ screenV2.codEstadoAtencion | viewStatusOrderAtention }}
+                            </p>
+                        </div>
+                        <div class="col-6">
+                            @if (screenV2.codEstadoAtencion === codStatusOrderAtentionInCall) {
+                            <p class="fs-4 text-dark fw-bold"># Llamadas: {{ screenV2.numLlamada }}</p>
+                            }
+                        </div>
                     </div>
-                    }
-                    </p>
+                    } @else {
+                    <p class="fs-4 fw-bold">- - - - -</p>
                     }
                 </div>
             </div>
 
             <div class="col-12">
-                <div class="row">
-                    <div class="col-12 col-lg-2"></div>
-                    <div class="col-12 col-lg-8 p-2">
-                        <h3>Próximos Pacientes</h3>
-                        <table class="tabla-pacientes mb-3">
-                            <thead>
-                                <tr>
-                                    <th>Turno</th>
-                                    <th>Nombre Completo</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let paciente of ordersAtentionNormalList">
-                                    <td class="text-center">{{ paciente.turno }}</td>
-                                    <td class="text-center">{{ paciente.persona.nombre + ' ' +
-                                        paciente.persona.apellidoPaterno + ' ' +
-                                        paciente.persona.apellidoMaterno}}</td>
-                                    <td class="text-center">{{ paciente.codEstadoAtencion | viewStatusOrderAtention}}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="row p-2">
+                    @for (item of orderAtentionListTruncate; track item.ordenAtencionId) {
+                    @if (item.turno % 2 == 0) {
+                    <div class="col-2 p-1 mb-2">
+                        <app-user-card [patient]="item" [color]="'bg-info'"></app-user-card>
                     </div>
-                    <div class="col-12 col-lg-2"></div>
+                    } @else {
+                    <div class="col-2 p-1 mb-2">
+                        <app-user-card [patient]="item" [color]="'bg-light'"></app-user-card>
+                    </div>
+                    }
+                    }
                 </div>
             </div>
         </div>
@@ -90,7 +84,12 @@
     <footer class="fixed-footer">
         <div class="avisos-container">
             <div class="avisos-text">
-                • Recuerde llevar su DNI • Mantenga la distancia • Use mascarilla si presenta síntomas •
+                @for (item of noticesList; track item.noticiasId; let last = $last) {
+                {{ item.contenido }}
+                @if (!last) {
+                •
+                }
+                }
             </div>
         </div>
         <span class="hora">{{ horaFormateada() }}</span>

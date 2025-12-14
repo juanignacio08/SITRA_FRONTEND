@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
-import { OrdenAtencionListProjectionResponse, OrdenAtencionPaginatedResponse, OrdenAtencionRequest, OrdenAtencionResponse } from '../../models/turnos/ordenatencion.model';
+import { OrdenAtencionListProjectionResponse, OrdenAtencionListResponse, OrdenAtencionPaginatedResponse, OrdenAtencionRequest, OrdenAtencionResponse } from '../../models/turnos/ordenatencion.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -35,6 +35,16 @@ export class OrdenatencionService {
   getRecordByDate(date: string): Observable<OrdenAtencionListProjectionResponse> {
     const url = `${this.baseUrl}/ordenAtencion/getRecordByDate?date=${date}`;
     return this.http.get<OrdenAtencionListProjectionResponse>(url);
+  }
+
+  getLisByDateAndReceptor(date: string, receptor: number): Observable<OrdenAtencionListResponse> {
+    const url = `${this.baseUrl}/ordenAtencion/getByDateAndReceptor?date=${date}&receptor=${receptor}`;
+    return this.http.get<OrdenAtencionListResponse>(url);
+  }
+
+  getLisByDate(date: string): Observable<OrdenAtencionListResponse> {
+    const url = `${this.baseUrl}/ordenAtencion/getByDate?date=${date}`;
+    return this.http.get<OrdenAtencionListResponse>(url);
   }
   
 }

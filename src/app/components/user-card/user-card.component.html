@@ -1,0 +1,11 @@
+<div class="card text-{{color}}">
+    @if (patient) {
+    <div class="card-header">
+        {{patient.persona.nombre + " " + patient.persona.apellidoPaterno + " " + patient.persona.apellidoMaterno | truncate:20}}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{patient.turno}}</h5>
+        <p class="card-text">{{patient.codEstadoAtencion | viewStatusOrderAtention}}</p>
+    </div>
+    }
+</div>

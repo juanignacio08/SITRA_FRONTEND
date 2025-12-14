@@ -7,35 +7,35 @@ import { TablaMaestraEstadosOrdenAtencion, TablaMaestraVentanillas } from '../..
 import { ViewIconStatusOrdenAtentionPipe } from '../../pipes/view-icon-status-orden-atention.pipe';
 import { Pantalla } from '../../models/turnos/pantalla.model';
 import { AtencionService } from '../../services/turnos/atencion.service';
-
-interface Paciente {
-  codigo: string;
-  nombre: string;
-  estado:string;
-}
+import { UserCardComponent } from '../../components/user-card/user-card.component';
+import { NoticiasService } from '../../services/reportes/noticias.service';
+import { Noticias } from '../../models/reportes/noticias.model';
 
 @Component({
   selector: 'app-pantalla',
   imports: [
-    CommonModule, ViewStatusOrderAtentionPipe, ViewIconStatusOrdenAtentionPipe
+    CommonModule, ViewStatusOrderAtentionPipe, ViewIconStatusOrdenAtentionPipe, UserCardComponent
   ],
   templateUrl: './pantalla.component.html',
   styleUrls: ['./pantalla.component.css']
 })
 export class PantallaComponent implements OnInit, OnDestroy {
   
-  ordersAtentionPreferentialList: OrdenAtencion[] = [];
   ordersAtentionNormalList: OrdenAtencion[] = [];
+  orderAtentionListTruncate : OrdenAtencion[] = [];
 
-  screenNormal ?: Pantalla;
-  screenPreferential ?: Pantalla;
+  noticesList : Noticias[] = [];
+
+  screenV1 ?: Pantalla;
+  screenV2 ?: Pantalla;
 
   codStatusOrderAtentionInCall : string = TablaMaestraEstadosOrdenAtencion.EN_LLAMADA;
   codStatusOrderAtencionInAtention : string = TablaMaestraEstadosOrdenAtencion.ATENDIENDO;
 
   constructor(
     private ordenAtencionService: OrdenatencionService,
-    private atencionService: AtencionService
+    private atencionService: AtencionService,
+    private noticiaService: NoticiasService
   ) {}
 
   horaActual: Date = new Date();
@@ -51,33 +51,32 @@ export class PantallaComponent implements OnInit, OnDestroy {
     
     this.atencionService.getScreen(fechaFormateada, TablaMaestraVentanillas.VENTANILLA_1).subscribe({
       next: (response) => {
-        this.screenNormal = response.data;
+        this.screenV1 = response.data;
       }, error: (error) => {
-        this.screenNormal = undefined;
+        this.screenV1 = undefined;
         console.error(error);
       }
     })
 
     this.atencionService.getScreen(fechaFormateada, TablaMaestraVentanillas.VENTANILLA_2).subscribe({
       next: (response) => {
-        this.screenPreferential = response.data;
+        this.screenV2 = response.data;
       }, error: (error) => {
-        this.screenPreferential = undefined;
+        this.screenV2 = undefined;
         console.error(error);
       }
     })
     
-    this.ordenAtencionService.getNormalPaginatedOrders(0, 10, fechaFormateada).subscribe({
+    this.ordenAtencionService.getNormalPaginatedOrders(0, 1000, fechaFormateada).subscribe({
       next: (response) => {
-        console.log('Órdenes de atención normales obtenidas:', response.data);
         this.ordersAtentionNormalList = response.data;
+        this.setListTruncate();
       }
     })
-
-    this.ordenAtencionService.getPreferentialPaginatedOrders(0, 10, fechaFormateada).subscribe({
+    
+    this.noticiaService.getAllActives().subscribe({
       next: (response) => {
-        console.log('Órdenes de atención preferenciales obtenidas:', response.data);
-        this.ordersAtentionPreferentialList = response.data;
+        this.noticesList = response.data;
       }
     })
 
@@ -90,6 +89,10 @@ export class PantallaComponent implements OnInit, OnDestroy {
 
   horaFormateada(): string {
     return this.horaActual.toLocaleTimeString('es-PE', { hour12: false });
+  }
+
+  setListTruncate() {
+    this.orderAtentionListTruncate = this.ordersAtentionNormalList.slice(0, 6);
   }
 
 }
