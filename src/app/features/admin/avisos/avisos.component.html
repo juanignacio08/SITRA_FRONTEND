@@ -2,13 +2,7 @@
   <mat-card-title class="center-title">Avisos</mat-card-title>
 
   <div class="input-row">
-    <p class="fw-bold mb-1">
-      @if (clickedEdit) {
-        Editar
-      } @else {
-        Agregar
-      }
-    </p>
+    
     <form [formGroup]="form" (ngSubmit)="sendForm()">
       <div class="form-floating">
         <input type="text" class="form-control" placeholder="Escribe una noticia o aviso" id="noticia"
@@ -17,12 +11,6 @@
 
         <div *ngIf="f['contenido'].invalid && (f['contenido'].dirty || f['contenido'].touched)"
           class="error-message text-danger fw-bold">
-          <div *ngIf="f['contenido'].errors?.['required']">
-            El contenido es obligatorio.
-          </div>
-          <div *ngIf="f['contenido'].errors?.['minlength']">
-            El contenido debe tener al menos 5 caracteres.
-          </div>
         </div>
       </div>
     </form>
@@ -61,7 +49,7 @@
 
     <!-- Acciones -->
     <ng-container matColumnDef="acciones">
-      <th mat-header-cell *matHeaderCellDef class="text-end">Acciones</th>
+      <th mat-header-cell *matHeaderCellDef class="text-center">Acciones</th>
 
       <td mat-cell *matCellDef="let aviso; let i = index" class="text-end">
         <button class="btn btn-primary btn-sm me-2" (click)="edit(aviso)">

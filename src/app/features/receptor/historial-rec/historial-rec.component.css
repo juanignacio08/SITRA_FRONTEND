@@ -1,0 +1,63 @@
+.tabla {
+  margin: 24px auto;
+  max-width: 1200px;
+  background-color: #69bbd3 !important;
+}
+
+/* Centrado de texto general */
+.center {
+  text-align: center;
+}
+
+/* Estilo de la tabla principal */
+.tabla-historial {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Encabezado de la tabla */
+th.mat-header-cell {
+  background-color: #e3f2fd;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Celdas */
+td.mat-cell {
+  text-align: center;
+  padding: 8px;
+}
+
+/* Título centrado del mat-card */
+.center-title {
+  font-size: 20px;
+  font-weight: bold;
+  font-family: 'Helvetica', Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Ajuste de ancho por columna */
+.mat-column-ordenAtencion { width: 8%; }
+.mat-column-nombre { width: 25%; }
+.mat-column-numeroDocumento { width: 15%; }
+.mat-column-horaInicio { width: 10%; }
+.mat-column-horaFin { width: 10%; }
+.mat-column-llamadas { width: 8%; }
+.mat-column-ventanilla { width: 10%; }
+.mat-column-estado { width: 14%; }
+
+/* Colores según estado (si los usas) */
+.estado-pendiente {
+  color: #f57c00;
+  font-weight: 600;
+}
+
+.estado-confirmado {
+  color: #388e3c;
+  font-weight: 600;
+}
