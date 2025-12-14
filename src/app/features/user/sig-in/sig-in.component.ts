@@ -62,8 +62,15 @@ export class SigInComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.maxLength(8), Validators.minLength(8)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      email: [
+    '',
+    [
+      Validators.required,
+      Validators.maxLength(8),
+      Validators.pattern(/^[0-9]{8}$/)
+    ]
+  ],
+      password: ['', [Validators.required]],
     });
 
     // Forzamos que Angular actualice el DOM al iniciar
@@ -136,4 +143,20 @@ export class SigInComponent implements OnInit, AfterViewInit {
       })
     }
   }
+  /* Para que que en El usuario solo dea Netamante numeros del DNI */
+  soloNumeros(event: KeyboardEvent): void {
+  const charCode = event.which ? event.which : event.keyCode;
+
+  // Permite solo números (0–9)
+  if (charCode < 48 || charCode > 57) {
+    event.preventDefault();
+  }
+
+  // Evita escribir más de 8 caracteres
+  const input = event.target as HTMLInputElement;
+  if (input.value.length >= 8) {
+    event.preventDefault();
+  }
+}
+
 }
