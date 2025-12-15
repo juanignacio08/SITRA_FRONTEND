@@ -2,36 +2,36 @@
 html, body {
   height: 100%;
   margin: 0;
-  padding: 0;
   overflow: hidden; /* evita scroll global */
 }
 
-mat-sidenav-container {
-  height: 100vh;
+.sidenav-container {
+  height: 100%;
 }
 
-mat-sidenav-content {
+.sidenav {
+  width: 20vw;        /* 20% del ancho de la pantalla */
+  min-width: 240px;   /* seguridad */
+  max-width: 300px;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden; /* evita scroll fuera del contenido */
+  overflow: hidden;
 }
 
 .main-content {
-  background-color: #F5F5F5;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* ❌ no scroll aquí */
+}
+.toolbar {
+  flex: 0 0 auto;
+}
+.content-scroll {
+  flex: 1 1 auto;
+  overflow: hidden; /* ❌ */
 }
 
-/* ====== SIDENAV ====== */
-.sidenav {
-  max-width: 260px;
-  background-color: #fff;
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  width: 100%;
-}
+
 
 /* ====== LOGO EN EL MENÚ LATERAL ====== */
 .login-logo-container {

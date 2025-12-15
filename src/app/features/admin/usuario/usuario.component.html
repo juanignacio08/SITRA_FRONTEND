@@ -1,21 +1,21 @@
-<div class="container">
-  <mat-card class="tabla">
-    @if (loadUsers) {
-    <div class="d-flex justify-content-center">
-      <div class="spinner-grow m-5" style="width: 3rem; height: 3rem;" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
+<mat-card class="tabla">
+  @if (loadUsers) {
+  <div class="d-flex justify-content-center">
+    <div class="spinner-grow m-5" style="width: 3rem; height: 3rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
-    } @else {
-    <mat-card-header class="center-title">
-      <mat-card-title>Usuarios</mat-card-title>
-      <button mat-raised-button color="primary" (click)="abrirModal(null, 'create')">
-        <mat-icon>add</mat-icon>
-        Agregar Usuario
-      </button>
-    </mat-card-header>
+  </div>
+  } @else {
+  <mat-card-header class="center-title">
+    <mat-card-title>Usuarios</mat-card-title>
+    <button mat-raised-button color="primary" (click)="abrirModal(null, 'create')">
+      <mat-icon>add</mat-icon>
+      Agregar Usuario
+    </button>
+  </mat-card-header>
 
-    <mat-card-content class="contenedor">
+  <mat-card-content>
+    <div class="lista">
       <table mat-table [dataSource]="usuarios" class="mat-elevation-z2 full-table">
 
         <!-- Nombre -->
@@ -65,7 +65,8 @@
         <tr mat-header-row *matHeaderRowDef="columnas"></tr>
         <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
       </table>
-    </mat-card-content>
-    }
-  </mat-card>
-</div>
+    </div>
+
+  </mat-card-content>
+  }
+</mat-card>

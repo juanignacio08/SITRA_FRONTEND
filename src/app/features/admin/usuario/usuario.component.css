@@ -1,11 +1,38 @@
-.usuario-container {
-  max-width: 900px;     /* ancho del contenido */
-  margin: 0 auto;       /* centrar horizontal */
-  padding: 24px;        /* espacio interno */
+/* contenedor del mat-card (clase .tabla usada en tu HTML) */
+.tabla {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  overflow: hidden; /* ❌ */
+  background-color: #77d1e7;
+  border-radius: 0%;
 }
+mat-card-header {
+  flex: 0 0 auto;
+}
+mat-card-content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* ❌ */
+}
+.bg-pantalla,
+.div {
+  flex: 0 0 auto;
+}
+.lista {
+  flex: 1 1 auto;     /* ocupa el espacio restante */
+  overflow-y: auto;  /* ✅ ÚNICO SCROLL */
+  border-radius: 5px;
+  
+}
+.lista table {
+  width: 100%;
+  background-color: #eff1fa;
+  
+}
+
+
 
 .header {
   display: flex;
@@ -14,50 +41,6 @@
   margin-bottom: 16px;
 }
 
-.full-table {
-  width: 100%;
-  background: white;
-  border-radius: 8px;
-}
-
-mat-header-cell {
-  font-weight: bold;
-}
-
-.contenedor {
-  max-height: calc(100vh - 190px); /* dinámico según pantalla */
-  overflow-y: auto;
-  padding-right: 4px;
-
-  /* Firefox */
-  scrollbar-width: thin;
-  scrollbar-color: #a7a7a7 transparent;
-}
-
-/* Chrome, Edge, Safari */
-.contenedor::-webkit-scrollbar {
-  width: 8px;
-}
-
-.contenedor::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 10px;
-}
-
-.contenedor::-webkit-scrollbar-thumb {
-  background: rgba(150, 150, 150, 0.5);
-  border-radius: 10px;
-  border: 2px solid transparent; /* efecto de separación */
-  background-clip: padding-box;
-}
-
-.contenedor::-webkit-scrollbar-thumb:hover {
-  background: rgba(120, 120, 120, 0.7);
-}
-
-.contenedor::-webkit-scrollbar-button {
-  display: none; /* quita flechas arriba/abajo */
-}
 
 
 .center-title {
@@ -80,25 +63,11 @@ mat-header-cell {
 
 
 
-/* v */
-.tabla {
-  margin: 24px auto;
-  padding: 16px;
-  max-width: 1200px;
-  background-color: #69bbd3 !important;
-}
-
 /* Centrado de texto general */
 .center {
   text-align: center;
 }
 
-/* Estilo de la tabla principal */
-.tabla-historial {
-  width: 100%;
-  border-radius: 8px;
-  overflow: hidden;
-}
 
 /* Encabezado de la tabla */
 th.mat-header-cell {
