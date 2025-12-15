@@ -74,20 +74,30 @@ export class ReporteRecComponent implements OnInit {
 
     // Inicializar formulario
     this.form = this.fb.group({
-      fechaEng: [null as Date | null], // Para el datepicker
+      fechaEng: [this.today], // Para el datepicker
       fecha: [''], // Para mostrar DD/MM/YYYY
       diaSemana: [null], // Día de la semana
     });
   }
 
   ngOnInit(): void {
-    const date = this.formatOrdenFecha(this.today);
-    const user = this.usuarioService.getUserLoggedIn();
+  const user = this.usuarioService.getUserLoggedIn();
+  if (!user) return;
 
-    if (user) {
-      this.reloadOrderAtentions(date);
-    }
-  }
+  // 🔹 Fecha de hoy
+  const fechaHoy = this.today;
+
+  // 🔹 Inicializar formulario con HOY
+  this.form.patchValue({
+    fechaEng: fechaHoy,
+    fecha: this.formatOrdenFecha(fechaHoy),
+    diaSemana: fechaHoy.getDay(),
+  });
+
+  // 🔹 Cargar historial de HOY
+  this.reloadOrderAtentions(this.formatOrdenFecha(fechaHoy));
+}
+
 
   reloadOrderAtentions(date: string) {
     this.loadList = true;

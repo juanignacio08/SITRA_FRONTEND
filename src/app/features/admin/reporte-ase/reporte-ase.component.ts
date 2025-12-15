@@ -79,20 +79,30 @@ export class ReporteAseComponent implements OnInit {
 
     // Inicializar formulario
     this.form = this.fb.group({
-      fechaEng: [null as Date | null], // Para el datepicker
-      fecha: [''], // Para mostrar DD/MM/YYYY
+      fechaEng: [this.today], // Para el datepicker
+      fecha: [''], // Para mosull as Date trar DD/MM/YYYY
       diaSemana: [null], // Día de la semana
     });
   }
 
   ngOnInit(): void {
-    const date = this.formatOrdenFecha(this.today);
-    const user = this.usuarioService.getUserLoggedIn();
+  const user = this.usuarioService.getUserLoggedIn();
+  if (!user) return;
 
-    if (user) {
-      this.getRecordsByDate(date);
-    }
-  }
+  const fechaHoy = this.today;
+  const fechaFormateada = this.formatOrdenFecha(fechaHoy);
+
+  // 🔹 Sincronizar formulario
+  this.form.patchValue({
+    fechaEng: fechaHoy,
+    fecha: fechaFormateada,
+    diaSemana: fechaHoy.getDay(),
+  });
+
+  // 🔹 Cargar registros de HOY
+  this.getRecordsByDate(fechaFormateada);
+}
+
 
   getRecordsByDate(date : string) {
     this.loading = true;

@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Persona } from '../../../models/seguridad/persona.model';
 import { TablaMaestra, TablaMaestraEstadosOrdenAtencion, TablaMaestraPrioridades, TablaMaestraTypeDocument } from '../../../models/maestros/tablaMaestra.model';
@@ -24,6 +24,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import {  AfterViewInit } from '@angular/core';
+
 
 @Component({
   selector: 'app-pacientes-rec',
@@ -47,7 +49,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
   templateUrl: './pacientes-rec.component.html',
   styleUrl: './pacientes-rec.component.css'
 })
-export class PacientesRecComponent implements OnInit {
+export class PacientesRecComponent implements OnInit, AfterViewInit{
+
+ 
+
+
+
   isDesktop = window.innerWidth > 992; // breakpoint como Bootstrap lg
 
   @HostListener('window:resize') //Escucha eventos del navegador
@@ -104,6 +111,17 @@ export class PacientesRecComponent implements OnInit {
 
     this.loadTypeDocuments();
   }
+
+  /* Para que se haga autofocus con el cursor */
+   @ViewChild('dniInput') dniInput!: ElementRef<HTMLInputElement>;
+  ngAfterViewInit(): void {
+    this.enfocarDni();
+  }
+  private enfocarDni(): void {
+  setTimeout(() => {
+    this.dniInput?.nativeElement.focus();
+  }, 0);
+}
 
   loadTypeDocuments() {
     this.loadTypeDocument = true;
@@ -338,6 +356,8 @@ export class PacientesRecComponent implements OnInit {
     this.existsPerson = false;
     this.personFound = false;
     this.clickedSearch = false;
+    this.enfocarDni();
+
   }
 
   private resetForm() {
