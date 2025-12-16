@@ -35,14 +35,25 @@ export class UsuarioComponent implements OnInit {
 
   columnas = ["nombreCompleto", "dni", "rol","acciones"];
 
+  user?: Usuario | null;
+
   usuarios: Usuario[] = [];
 
   loadUsers: boolean = true;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private usuarioService: UsuarioService) {}
 
   ngOnInit(): void {
-    this.cargarUsuarios();
+    this.user = this.usuarioService.getUserLoggedIn();
+    if (
+      this.user === null ||
+      this.user === undefined ||
+      this.user.rol.denominacion !== 'Administrador'
+    ) {
+      this.router.navigate(['/sig-in']);
+    } else {
+      this.cargarUsuarios();
+    }
   }
 
   cargarUsuarios() {

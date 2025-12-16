@@ -86,7 +86,8 @@ export class ReceptorComponent implements OnInit {
     if (
       this.userCurrent === null ||
       this.userCurrent === undefined ||
-      this.userCurrent.rol.denominacion === 'Asesor'
+      this.userCurrent.rol.denominacion === 'Asesor' ||
+      this.userCurrent.rol.denominacion === 'Administrador'
     ) {
       this.router.navigate(['/sig-in']);
     }

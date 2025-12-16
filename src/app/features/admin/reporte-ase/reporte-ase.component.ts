@@ -14,6 +14,8 @@ import { ViewVentanillaPipe } from '../../../pipes/view-ventanilla.pipe';
 import { MatDialog } from '@angular/material/dialog';
 import { UsuarioService } from '../../../services/seguridad/usuario.service';
 import { ModalerrorComponent } from '../../../components/modalerror/modalerror.component';
+import { Usuario } from '../../../models/seguridad/usuario.model';
+import { Router } from '@angular/router';
 
 // Formatos personalizados para MatDatepicker
 export const CUSTOM_DATE_FORMATS = {
@@ -66,13 +68,16 @@ export class ReporteAseComponent implements OnInit {
 
   loading: boolean = false;
 
+  user?: Usuario | null;
+
   dialog = inject(MatDialog);
   orderAtentionService = inject(OrdenatencionService);
 
   constructor(
     private fb: FormBuilder,
     private dateAdapter: DateAdapter<Date>,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private route: Router
   ) {
     // Forzar locale a español
     this.dateAdapter.setLocale('es-PE');
@@ -86,31 +91,37 @@ export class ReporteAseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  const user = this.usuarioService.getUserLoggedIn();
-  if (!user) return;
+    this.user = this.usuarioService.getUserLoggedIn();
+    if (
+      this.user === null ||
+      this.user === undefined ||
+      this.user.rol.denominacion !== 'Administrador'
+    ) {
+      this.route.navigate(['/sig-in']);
+    } else {
+      const fechaHoy = this.today;
+      const fechaFormateada = this.formatOrdenFecha(fechaHoy);
 
-  const fechaHoy = this.today;
-  const fechaFormateada = this.formatOrdenFecha(fechaHoy);
+      // 🔹 Sincronizar formulario
+      this.form.patchValue({
+        fechaEng: fechaHoy,
+        fecha: fechaFormateada,
+        diaSemana: fechaHoy.getDay(),
+      });
 
-  // 🔹 Sincronizar formulario
-  this.form.patchValue({
-    fechaEng: fechaHoy,
-    fecha: fechaFormateada,
-    diaSemana: fechaHoy.getDay(),
-  });
+      // 🔹 Cargar registros de HOY
+      this.getRecordsByDate(fechaFormateada);
+    }
+  }
 
-  // 🔹 Cargar registros de HOY
-  this.getRecordsByDate(fechaFormateada);
-}
-
-
-  getRecordsByDate(date : string) {
+  getRecordsByDate(date: string) {
     this.loading = true;
     this.orderAtentionService.getRecordByDate(date).subscribe({
       next: (response) => {
         this.orderAtentionList = response.data;
         this.loading = false;
-      }, error: (error) => {
+      },
+      error: (error) => {
         this.openModalError(error);
         this.loading = false;
       },
@@ -118,18 +129,18 @@ export class ReporteAseComponent implements OnInit {
   }
 
   openModalError(error: any) {
-      const dialogRef = this.dialog.open(ModalerrorComponent, {
-        width: '500px',
-        data: error,
-        disableClose: true,
-      });
-  
-      dialogRef.afterClosed().subscribe((result) => {
-        console.log(result);
-  
-        if (!result) return;
-      });
-    }
+    const dialogRef = this.dialog.open(ModalerrorComponent, {
+      width: '500px',
+      data: error,
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
+
+      if (!result) return;
+    });
+  }
 
   // Convierte Date a DD/MM/YYYY
   formatOrdenFecha(fecha: Date): string {

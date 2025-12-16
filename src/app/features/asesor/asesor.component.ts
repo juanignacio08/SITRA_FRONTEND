@@ -58,7 +58,8 @@ export class AsesorComponent implements OnInit {
     if (
       this.userCurrent === null ||
       this.userCurrent === undefined ||
-      this.userCurrent.rol.denominacion === 'Receptor'
+      this.userCurrent.rol.denominacion === 'Receptor' ||
+      this.userCurrent.rol.denominacion === 'Administrador'
     ) {
       this.router.navigate(['/sig-in']);
     }
@@ -69,6 +70,7 @@ export class AsesorComponent implements OnInit {
   }
 
   cerrarSesion() {
+    this.usuarioService.logout();
     this.router.navigate(['/sig-in']);
   }
 

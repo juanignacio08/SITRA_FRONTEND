@@ -26,38 +26,30 @@ import { Usuario } from '../../models/seguridad/usuario.model';
     MatSidenavModule,
     MatButtonModule,
     MatMenuModule,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './admin.component.html',
-  styleUrl: './admin.component.css'
+  styleUrl: './admin.component.css',
 })
 export class AdminComponent implements OnInit {
   isDesktop = window.innerWidth > 992; // breakpoint como Bootstrap lg
 
-  user ?: Usuario | null;
+  user?: Usuario | null;
 
   @HostListener('window:resize') //Escucha eventos del navegador
   onResize() {
     this.isDesktop = window.innerWidth > 992;
   }
 
-
-  columnas: string[] = ['hora', 'nombre', 'documento', 'estado'];
-  pacientes = [
-    { hora: '09:00 AM', nombre: 'Ana García', documento: '101567890', estado: 'Pendiente' },
-    { hora: '09:15 AM', nombre: 'Luis Pérez', documento: '841234567', estado: 'Confirmado' },
-    { hora: '09:30 AM', nombre: 'María López', documento: '721334567', estado: 'Pendiente' },
-    { hora: '09:45 AM', nombre: 'Carlos Ramos', documento: '654334567', estado: 'Confirmado' },
-  ];
-
-  constructor(
-    private router: Router,
-    private usuarioService : UsuarioService
-  ) { }
+  constructor(private router: Router, private usuarioService: UsuarioService) {}
 
   ngOnInit(): void {
     this.user = this.usuarioService.getUserLoggedIn();
-    if (this.user === null || this.user === undefined || this.user.rol.denominacion !== 'Administrador') {
+    if (
+      this.user === null ||
+      this.user === undefined ||
+      this.user.rol.denominacion !== 'Administrador'
+    ) {
       this.router.navigate(['/sig-in']);
     }
   }
@@ -73,7 +65,4 @@ export class AdminComponent implements OnInit {
     this.usuarioService.logout();
     this.router.navigate(['/sig-in']);
   }
-
 }
-
-

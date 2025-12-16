@@ -13,6 +13,8 @@ import { OrdenAtencion } from '../../../models/turnos/ordenatencion.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalerrorComponent } from '../../../components/modalerror/modalerror.component';
 import { ViewStatusOrderAtentionPipe } from '../../../pipes/view-status-order-atention.pipe';
+import { Usuario } from '../../../models/seguridad/usuario.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-historial-rec',
@@ -42,6 +44,8 @@ export class HistorialRecComponent implements OnInit {
   today: Date = new Date();
   form: FormGroup;
 
+  userCurrent?: Usuario | null;
+
   orderAtentionList: OrdenAtencion[] = [];
 
   loadList: boolean = false;
@@ -51,7 +55,8 @@ export class HistorialRecComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private usuarioService: UsuarioService,
-    private orderAtentionService: OrdenatencionService
+    private orderAtentionService: OrdenatencionService,
+    private router : Router
   ) {
     this.form = this.fb.group({
       fechaEng: [null as Date | null], // Para el datepicker
@@ -62,12 +67,21 @@ export class HistorialRecComponent implements OnInit {
 
   ngOnInit(): void {
     const date = this.formatOrdenFecha(this.today);
-    const user = this.usuarioService.getUserLoggedIn();
 
-    if (user) {
+    this.userCurrent = this.usuarioService.getUserLoggedIn();
+    if (
+      this.userCurrent === null ||
+      this.userCurrent === undefined ||
+      this.userCurrent.rol.denominacion === 'Asesor' ||
+      this.userCurrent.rol.denominacion === 'Administrador'
+    ) {
+      this.router.navigate(['/sig-in']);
+    }
+
+    if (this.userCurrent?.rol.denominacion === 'Administrador') {
       this.loadList = true;
       this.orderAtentionService
-        .getLisByDateAndReceptor(date, user.usuarioId)
+        .getLisByDateAndReceptor(date, this.userCurrent.usuarioId)
         .subscribe({
           next: (response) => {
             this.orderAtentionList = response.data;

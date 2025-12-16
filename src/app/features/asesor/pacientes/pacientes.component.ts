@@ -84,12 +84,14 @@ export class PacientesComponent implements OnInit {
     if (
       this.userCurrent === null ||
       this.userCurrent === undefined ||
-      this.userCurrent.rol.denominacion === 'Receptor'
+      this.userCurrent.rol.denominacion === 'Receptor' ||
+      this.userCurrent.rol.denominacion === 'Administrador'
     ) {
       this.router.navigate(['/sig-in']);
+    } else {
+      this.getOrderAtentionInVentanilla();
+      this.getOrdersAtentionNormal();
     }
-    this.getOrderAtentionInVentanilla();
-    this.getOrdersAtentionNormal();
   }
 
   getDateFormatted(date: Date): string {

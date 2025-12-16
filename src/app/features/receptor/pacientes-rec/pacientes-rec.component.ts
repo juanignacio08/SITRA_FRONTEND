@@ -104,12 +104,13 @@ export class PacientesRecComponent implements OnInit, AfterViewInit{
     if (
       this.userCurrent === null ||
       this.userCurrent === undefined ||
-      this.userCurrent.rol.denominacion === 'Asesor'
+      this.userCurrent.rol.denominacion === 'Asesor' ||
+      this.userCurrent.rol.denominacion === 'Administrador'
     ) {
       this.router.navigate(['/sig-in']);
+    } else {
+      this.loadTypeDocuments();
     }
-
-    this.loadTypeDocuments();
   }
 
   /* Para que se haga autofocus con el cursor */

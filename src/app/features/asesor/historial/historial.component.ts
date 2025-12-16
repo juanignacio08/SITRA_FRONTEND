@@ -7,6 +7,9 @@ import { OrdenatencionService } from "../../../services/turnos/ordenatencion.ser
 import { OrdenATencionProjection } from "../../../models/turnos/ordenatencion.model";
 import { ViewStatusOrderAtentionPipe } from "../../../pipes/view-status-order-atention.pipe";
 import { ViewVentanillaPipe } from "../../../pipes/view-ventanilla.pipe";
+import { Usuario } from "../../../models/seguridad/usuario.model";
+import { UsuarioService } from "../../../services/seguridad/usuario.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-historial',
@@ -18,12 +21,28 @@ import { ViewVentanillaPipe } from "../../../pipes/view-ventanilla.pipe";
 export class HistorialComponent implements OnInit {
   columnas: string[] = ['ordenAtencion', 'nombre', 'numeroDocumento', 'horaLlamada', 'llamadas', 'horaInicio', 'horaFin', 'ventanilla', 'estado'];
 
+  userCurrent?: Usuario | null;
+
   orderAtentionList : OrdenATencionProjection[] = [];
 
   orderAtentionService = inject(OrdenatencionService);
 
+  usuarioService = inject(UsuarioService);
+
+  router = inject(Router);
+
   ngOnInit(): void {
-    this.getRecordsByDate();
+    this.userCurrent = this.usuarioService.getUserLoggedIn();
+    if (
+      this.userCurrent === null ||
+      this.userCurrent === undefined ||
+      this.userCurrent.rol.denominacion === 'Receptor' ||
+      this.userCurrent.rol.denominacion === 'Administrador'
+    ) {
+      this.router.navigate(['/sig-in']);
+    } else {
+      this.getRecordsByDate();
+    }
   }
 
   getDateFormatted(date: Date): string {

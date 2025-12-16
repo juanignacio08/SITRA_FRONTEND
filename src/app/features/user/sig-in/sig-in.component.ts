@@ -21,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { UsuarioService } from '../../../services/seguridad/usuario.service';
+import { Usuario } from '../../../models/seguridad/usuario.model';
 
 @Component({
   selector: 'app-sig-in',
@@ -43,6 +44,8 @@ export class SigInComponent implements OnInit, AfterViewInit {
 
   errorMessage ?: string;
   loadSignIn: boolean = false;
+
+  userCurrent : Usuario | null = null;
 
   @ViewChild('loginContainer') container!: ElementRef;
   @ViewChild('wave1') wave1!: ElementRef;
@@ -72,6 +75,32 @@ export class SigInComponent implements OnInit, AfterViewInit {
   ],
       password: ['', [Validators.required]],
     });
+
+    this.userCurrent = this.usuarioService.getUserLoggedIn();
+    if (this.userCurrent) {
+      switch (this.userCurrent.rol.denominacion) {
+        case "Administrador":
+          this.router.navigate(['/admin']);      
+          this.errorMessage = undefined;
+          break;
+        
+        case "Receptor":
+          this.router.navigate(['/receptor']);      
+          this.errorMessage = undefined;
+          break;
+
+        case "Asesor":
+          this.router.navigate(['/asesor']);      
+          this.errorMessage = undefined;
+          break;
+
+        default:
+          this.usuarioService.setUserLoggedIn(null);
+          this.errorMessage = 'Usuario no autorizado.';
+          break;
+          
+      }
+    }
 
     // Forzamos que Angular actualice el DOM al iniciar
     this.cdr.detectChanges();

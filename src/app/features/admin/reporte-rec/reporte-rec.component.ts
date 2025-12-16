@@ -13,6 +13,8 @@ import { UsuarioService } from '../../../services/seguridad/usuario.service';
 import { OrdenatencionService } from '../../../services/turnos/ordenatencion.service';
 import { ModalerrorComponent } from '../../../components/modalerror/modalerror.component';
 import { ViewStatusOrderAtentionPipe } from '../../../pipes/view-status-order-atention.pipe';
+import { Usuario } from '../../../models/seguridad/usuario.model';
+import { Router } from '@angular/router';
 
 // Formatos personalizados para MatDatepicker
 export const CUSTOM_DATE_FORMATS = {
@@ -57,6 +59,8 @@ export class ReporteRecComponent implements OnInit {
   today: Date = new Date();
   form: FormGroup;
 
+  user?: Usuario | null;
+
   orderAtentionList: OrdenAtencion[] = [];
 
   loadList: boolean = false;
@@ -67,7 +71,8 @@ export class ReporteRecComponent implements OnInit {
     private fb: FormBuilder,
     private usuarioService: UsuarioService,
     private orderAtentionService: OrdenatencionService,
-    private dateAdapter: DateAdapter<Date>
+    private dateAdapter: DateAdapter<Date>,
+    private router: Router
   ) {
     // Forzar locale a español
     this.dateAdapter.setLocale('es-PE');
@@ -81,23 +86,28 @@ export class ReporteRecComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  const user = this.usuarioService.getUserLoggedIn();
-  if (!user) return;
+    this.user = this.usuarioService.getUserLoggedIn();
+    if (
+      this.user === null ||
+      this.user === undefined ||
+      this.user.rol.denominacion !== 'Administrador'
+    ) {
+      this.router.navigate(['/sig-in']);
+    } else {
+      // 🔹 Fecha de hoy
+      const fechaHoy = this.today;
 
-  // 🔹 Fecha de hoy
-  const fechaHoy = this.today;
+      // 🔹 Inicializar formulario con HOY
+      this.form.patchValue({
+        fechaEng: fechaHoy,
+        fecha: this.formatOrdenFecha(fechaHoy),
+        diaSemana: fechaHoy.getDay(),
+      });
 
-  // 🔹 Inicializar formulario con HOY
-  this.form.patchValue({
-    fechaEng: fechaHoy,
-    fecha: this.formatOrdenFecha(fechaHoy),
-    diaSemana: fechaHoy.getDay(),
-  });
-
-  // 🔹 Cargar historial de HOY
-  this.reloadOrderAtentions(this.formatOrdenFecha(fechaHoy));
-}
-
+      // 🔹 Cargar historial de HOY
+      this.reloadOrderAtentions(this.formatOrdenFecha(fechaHoy));
+    }
+  }
 
   reloadOrderAtentions(date: string) {
     this.loadList = true;
@@ -150,6 +160,5 @@ export class ReporteRecComponent implements OnInit {
     this.form.patchValue({ diaSemana });
 
     this.reloadOrderAtentions(fechaFormateada);
-    
   }
 }
