@@ -6,6 +6,7 @@ export interface Usuario {
   usuarioId: number
   usuario: string
   contrasena: string
+  codVentanilla : string
   rol: Rol
   persona: Persona
   estado: number
@@ -15,6 +16,7 @@ export interface UsuarioRequest {
   usuarioId: number
   numeroDocumento: string
   contrasena: string
+  codVentanilla?: string
   rolId: number
   estado: number
 

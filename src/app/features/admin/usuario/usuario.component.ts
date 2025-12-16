@@ -11,6 +11,7 @@ import { UsuarioService } from '../../../services/seguridad/usuario.service';
 import { Usuario, UsuarioModal } from '../../../models/seguridad/usuario.model';
 import { ModalerrorComponent } from '../../../components/modalerror/modalerror.component';
 import { Router } from '@angular/router';
+import { ViewVentanillaPipe } from '../../../pipes/view-ventanilla.pipe';
 
 @Component({
   selector: 'app-usuario',
@@ -22,8 +23,8 @@ import { Router } from '@angular/router';
     MatIconModule,
     MatDialogModule,
     MatCardModule,
-    ReactiveFormsModule
-
+    ReactiveFormsModule,
+    ViewVentanillaPipe
   ],
   templateUrl: './usuario.component.html',
   styleUrl: './usuario.component.css'

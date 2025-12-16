@@ -57,6 +57,21 @@
           </mat-select>
         </mat-form-field>
 
+        <!-- VENTANILLA -->
+        @if (form.get('codVentanilla')) {
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Ventanilla</mat-label>
+          <mat-select formControlName="codVentanilla">
+            <mat-option [value]="ventanilla1">
+              Ventanilla 1
+            </mat-option>
+            <mat-option [value]="ventanilla2">
+              Ventanilla 2
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        }
+
         <!-- Contraseña -->
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Contraseña</mat-label>

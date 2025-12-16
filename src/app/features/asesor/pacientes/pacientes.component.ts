@@ -85,7 +85,8 @@ export class PacientesComponent implements OnInit {
       this.userCurrent === null ||
       this.userCurrent === undefined ||
       this.userCurrent.rol.denominacion === 'Receptor' ||
-      this.userCurrent.rol.denominacion === 'Administrador'
+      this.userCurrent.rol.denominacion === 'Administrador' ||
+      this.userCurrent.codVentanilla === (TablaMaestraVentanillas.VENTANILLA_2 as string)
     ) {
       this.router.navigate(['/sig-in']);
     } else {
