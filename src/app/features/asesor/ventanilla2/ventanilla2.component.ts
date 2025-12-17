@@ -247,7 +247,7 @@ export class Ventanilla2Component implements OnInit {
     const texto =
       'Turno de ' +
       this.namePacienteInVentanilla +
-      ', acerquese a ventanilla 1.';
+      ', acerquese a ventanilla 2.';
 
     const mensaje = new SpeechSynthesisUtterance(texto);
     mensaje.lang = 'es-ES'; // idioma español
