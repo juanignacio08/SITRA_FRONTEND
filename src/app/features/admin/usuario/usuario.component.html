@@ -41,7 +41,9 @@
             } @else if (u.rol.denominacion === "Receptor") {
             <span class="badge text-bg-secondary fs-6 fw-normal">{{ u.rol.denominacion }}</span>
             } @else if (u.rol.denominacion === "Asesor") {
-            <span class="badge text-bg-success fs-6 fw-normal">{{ u.rol.denominacion }}</span>
+            <span class="badge text-bg-success fs-6 fw-normal">{{ u.rol.denominacion + " - " }}
+              {{ u.codVentanilla | viewVentanilla}} 
+            </span>
             } @else {
             <span class="badge text-bg-dark fs-6 fw-normal">{{ u.rol.denominacion }}</span>
             }

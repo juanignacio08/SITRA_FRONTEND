@@ -18,16 +18,21 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatOptionModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
-import { TablaMaestraTypeDocument } from '../../../../../models/maestros/tablaMaestra.model';
+import {
+  TablaMaestraTypeDocument,
+  TablaMaestraVentanillas,
+} from '../../../../../models/maestros/tablaMaestra.model';
 import { PersonaService } from '../../../../../services/seguridad/persona.service';
 import { Persona } from '../../../../../models/seguridad/persona.model';
 import { UsuarioService } from '../../../../../services/seguridad/usuario.service';
 import {
   UsuarioRequest,
   UsuarioModal,
+  Usuario,
 } from '../../../../../models/seguridad/usuario.model';
 import { Rol } from '../../../../../models/seguridad/rol.model';
 import { RolService } from '../../../../../services/seguridad/rol.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-usuario-registro',
@@ -69,6 +74,11 @@ export class RegistroComponent implements OnInit {
 
   roles: Rol[] = [];
 
+  selectAsesorRol: boolean = false;
+
+  ventanilla1: string = TablaMaestraVentanillas.VENTANILLA_1 as string;
+  ventanilla2: string = TablaMaestraVentanillas.VENTANILLA_2 as string;
+
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<RegistroComponent>,
@@ -81,63 +91,107 @@ export class RegistroComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.data) {
-      if (this.data.action === 'create') {
-        this.form = this.fb.group({
-          nombres: [{ value: '', disabled: true }, Validators.required],
-          apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
-          apellidoMaterno: [{ value: '', disabled: true }, Validators.required],
-          dni: [
-            '',
-            [
-              Validators.required,
-              Validators.minLength(8),
-              Validators.maxLength(8),
-            ],
-          ],
+    if (!this.data) return;
 
-          rol: ['', Validators.required],
-
-          contraseña: ['', Validators.required],
-        });
+    switch (this.data.action) {
+      case 'create':
+        this.buildCreateForm();
         this.loadRoles();
-      } else if (this.data.action === 'edit') {
+        break;
+
+      case 'edit':
         if (this.data.user) {
-          const user = this.data.user;
-          this.form = this.fb.group({
-            nombres: [
-              { value: user.persona.nombre, disabled: true },
-              Validators.required,
-            ],
-            apellidoPaterno: [
-              { value: user.persona.apellidoPaterno, disabled: true },
-              Validators.required,
-            ],
-            apellidoMaterno: [
-              { value: user.persona.apellidoMaterno, disabled: true },
-              Validators.required,
-            ],
-            dni: [
-              { value: user.persona.numeroDocumentoIdentidad, disabled: true },
-              [
-                Validators.required,
-                Validators.minLength(8),
-                Validators.maxLength(8),
-              ],
-            ],
-
-            rol: ['', Validators.required],
-
-            contraseña: ['', Validators.required],
-          });
+          this.buildEditForm(this.data.user);
           this.loadRoles();
         }
-      } else if (this.data.action == 'delete') {
+        break;
+
+      case 'delete':
+        this.loadRol = false;
         if (this.data.user) {
-          this.loadRol = false;
           this.messageDelete = `¿Está seguro que desea eliminar al usuario con DNI ${this.data.user.persona.numeroDocumentoIdentidad}?`;
         }
-      }
+        break;
+    }
+  }
+
+  private buildCreateForm(): void {
+    this.form = this.fb.group({
+      nombres: [{ value: '', disabled: true }, Validators.required],
+      apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
+      apellidoMaterno: [{ value: '', disabled: true }, Validators.required],
+      dni: [
+        '',
+        [Validators.required, Validators.minLength(8), Validators.maxLength(8)],
+      ],
+      rol: ['', Validators.required],
+      contraseña: ['', Validators.required],
+    });
+
+    this.listenRolChanges();
+  }
+
+  private buildEditForm(user: Usuario): void { 
+    this.form = this.fb.group({
+      nombres: [
+        { value: user.persona.nombre, disabled: true },
+        Validators.required,
+      ],
+      apellidoPaterno: [
+        { value: user.persona.apellidoPaterno, disabled: true },
+        Validators.required,
+      ],
+      apellidoMaterno: [
+        { value: user.persona.apellidoMaterno, disabled: true },
+        Validators.required,
+      ],
+      dni: [
+        { value: user.persona.numeroDocumentoIdentidad, disabled: true },
+        [Validators.required, Validators.minLength(8), Validators.maxLength(8)],
+      ],
+      rol: [
+        { value: user.rol.rolId, disabled: true}, 
+        Validators.required
+      ],
+      contraseña: ['', Validators.required],
+    });
+    this.selectAsesorRol = false;
+    if(user.rol.denominacion === "Asesor") {
+      this.form.addControl(
+        'codVentanilla',
+        this.fb.control('', Validators.required)
+      );
+      this.selectAsesorRol = true;
+    }
+  }
+
+  private listenRolChanges(): void {
+    this.selectAsesorRol = false;
+    this.form.get('rol')?.valueChanges.subscribe((rolId: number) => {
+      this.handleRolChange(rolId);
+    });
+  }
+
+  private handleRolChange(rolId: number): void {
+    // Solo aplica en CREATE
+    if (this.data.action !== 'create') {
+      return;
+    }
+
+    // Quitamos si ya existe
+    if (this.form.contains('codVentanilla')) {
+      this.form.removeControl('codVentanilla');
+    }
+
+    const rolSeleccionado = this.roles.find((r) => r.rolId === rolId);
+    this.selectAsesorRol = rolSeleccionado?.denominacion === 'Asesor';
+
+    // Agregamos solo si el rol lo requiere
+    if (this.selectAsesorRol) {
+      this.form.addControl(
+        'codVentanilla',
+        this.fb.control('', Validators.required)
+      );
     }
   }
 
@@ -264,12 +318,18 @@ export class RegistroComponent implements OnInit {
     if (this.form.valid) {
       this.loadSave = true;
 
+      let codVen: string | undefined = undefined;
+      if (this.selectAsesorRol) {
+        codVen = this.form.get('codVentanilla')?.value;
+      }
+
       if (this.personFound && this.person) {
         this.user = {
           usuarioId: 1,
           numeroDocumento: this.person.numeroDocumentoIdentidad,
           contrasena: this.form.get('contraseña')?.value,
           rolId: this.form.get('rol')?.value,
+          codVentanilla: codVen,
           estado: 1,
         };
       } else if (this.existsPerson) {
@@ -278,6 +338,7 @@ export class RegistroComponent implements OnInit {
           numeroDocumento: this.form.get('dni')?.value,
           contrasena: this.form.get('contraseña')?.value,
           rolId: this.form.get('rol')?.value,
+          codVentanilla: codVen,
           estado: 1,
           name: this.form.get('nombres')?.value,
           lastName1: this.form.get('apellidoPaterno')?.value,
@@ -290,6 +351,7 @@ export class RegistroComponent implements OnInit {
           numeroDocumento: this.form.get('dni')?.value,
           contrasena: this.form.get('contraseña')?.value,
           rolId: this.form.get('rol')?.value,
+          codVentanilla: codVen,
           estado: 1,
           name: this.form.get('nombres')?.value,
           lastName1: this.form.get('apellidoPaterno')?.value,
@@ -320,11 +382,17 @@ export class RegistroComponent implements OnInit {
   editUser() {
     if (this.form.valid && this.data.user && this.data.action === 'edit') {
       this.loadEdit = true;
+      let codVen: string | undefined = undefined;
+      if (this.selectAsesorRol) {
+        codVen = this.form.get('codVentanilla')?.value;
+      }
+
       const userRequest: UsuarioRequest = {
         usuarioId: this.data.user.usuarioId,
         numeroDocumento: this.data.user.usuario,
         contrasena: this.form.get('contraseña')?.value,
         rolId: this.form.get('rol')?.value,
+        codVentanilla: codVen,
         estado: 1,
       };
 

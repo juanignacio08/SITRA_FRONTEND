@@ -22,6 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { UsuarioService } from '../../../services/seguridad/usuario.service';
 import { Usuario } from '../../../models/seguridad/usuario.model';
+import { TablaMaestraVentanillas } from '../../../models/maestros/tablaMaestra.model';
 
 @Component({
   selector: 'app-sig-in',
@@ -42,10 +43,10 @@ export class SigInComponent implements OnInit, AfterViewInit {
   loginForm!: FormGroup;
   hide = true;
 
-  errorMessage ?: string;
+  errorMessage?: string;
   loadSignIn: boolean = false;
 
-  userCurrent : Usuario | null = null;
+  userCurrent: Usuario | null = null;
 
   @ViewChild('loginContainer') container!: ElementRef;
   @ViewChild('wave1') wave1!: ElementRef;
@@ -58,7 +59,7 @@ export class SigInComponent implements OnInit, AfterViewInit {
 
   constructor(
     private fb: FormBuilder,
-    private usuarioService : UsuarioService,
+    private usuarioService: UsuarioService,
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {}
@@ -66,31 +67,44 @@ export class SigInComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: [
-    '',
-    [
-      Validators.required,
-      Validators.maxLength(8),
-      Validators.pattern(/^[0-9]{8}$/)
-    ]
-  ],
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(8),
+          Validators.pattern(/^[0-9]{8}$/),
+        ],
+      ],
       password: ['', [Validators.required]],
     });
 
     this.userCurrent = this.usuarioService.getUserLoggedIn();
     if (this.userCurrent) {
       switch (this.userCurrent.rol.denominacion) {
-        case "Administrador":
-          this.router.navigate(['/admin']);      
-          this.errorMessage = undefined;
-          break;
-        
-        case "Receptor":
-          this.router.navigate(['/receptor']);      
+        case 'Administrador':
+          this.router.navigate(['/admin']);
           this.errorMessage = undefined;
           break;
 
-        case "Asesor":
-          this.router.navigate(['/asesor']);      
+        case 'Receptor':
+          this.router.navigate(['/receptor']);
+          this.errorMessage = undefined;
+          break;
+
+        case 'Asesor':
+          if (
+            this.userCurrent.codVentanilla ===
+            (TablaMaestraVentanillas.VENTANILLA_1 as string)
+          ) {
+            this.router.navigate(['/asesor/pacientes']);
+          } else if (
+            this.userCurrent.codVentanilla ===
+            (TablaMaestraVentanillas.VENTANILLA_2 as string)
+          ) {
+            this.router.navigate(['/asesor/ventanilla2']);
+          } else {
+            this.usuarioService.setUserLoggedIn(null);
+            this.errorMessage = 'Usuario no autorizado.';
+          }
           this.errorMessage = undefined;
           break;
 
@@ -98,7 +112,6 @@ export class SigInComponent implements OnInit, AfterViewInit {
           this.usuarioService.setUserLoggedIn(null);
           this.errorMessage = 'Usuario no autorizado.';
           break;
-          
       }
     }
 
@@ -151,41 +164,62 @@ export class SigInComponent implements OnInit, AfterViewInit {
       this.usuarioService.sigIn(user, password).subscribe({
         next: (response) => {
           this.usuarioService.setUserLoggedIn(response.data);
-          if (this.usuarioService.getUserLoggedIn()?.rol.denominacion === 'Administrador') {
-            this.router.navigate(['/admin']);      
+          if (
+            this.usuarioService.getUserLoggedIn()?.rol.denominacion ===
+            'Administrador'
+          ) {
+            this.router.navigate(['/admin']);
             this.errorMessage = undefined;
-          } else if (this.usuarioService.getUserLoggedIn()?.rol.denominacion === 'Receptor') {
+          } else if (
+            this.usuarioService.getUserLoggedIn()?.rol.denominacion ===
+            'Receptor'
+          ) {
             this.router.navigate(['/receptor']);
-            this.errorMessage = undefined;      
-          } else if (this.usuarioService.getUserLoggedIn()?.rol.denominacion === 'Asesor') {
-            this.router.navigate(['/asesor']);
+            this.errorMessage = undefined;
+          } else if (
+            this.usuarioService.getUserLoggedIn()?.rol.denominacion === 'Asesor'
+          ) {
+            if (
+              this.usuarioService.getUserLoggedIn()?.codVentanilla ===
+              (TablaMaestraVentanillas.VENTANILLA_1 as string)
+            ) {
+              this.router.navigate(['/asesor/pacientes']);
+            } else if (
+              this.usuarioService.getUserLoggedIn()?.codVentanilla ===
+              (TablaMaestraVentanillas.VENTANILLA_2 as string)
+            ) {
+              this.router.navigate(['/asesor/ventanilla2']);
+            } else {
+              this.usuarioService.setUserLoggedIn(null);
+              this.errorMessage = 'Usuario no autorizado.';
+            }
             this.errorMessage = undefined;
           } else {
             this.usuarioService.setUserLoggedIn(null);
             this.errorMessage = 'Usuario no autorizado.';
           }
           this.loadSignIn = false;
-        }, error: (err) => {
+        },
+        error: (err) => {
           this.errorMessage = err.error.detail || 'Error al iniciar sesión.';
           this.loadSignIn = false;
-        }
-      })
+        },
+      });
     }
   }
   /* Para que que en El usuario solo dea Netamante numeros del DNI */
   soloNumeros(event: KeyboardEvent): void {
-  const charCode = event.which ? event.which : event.keyCode;
+    const charCode = event.which ? event.which : event.keyCode;
 
-  // Permite solo números (0–9)
-  if (charCode < 48 || charCode > 57) {
-    event.preventDefault();
+    // Permite solo números (0–9)
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+
+    // Evita escribir más de 8 caracteres
+    const input = event.target as HTMLInputElement;
+    if (input.value.length >= 8) {
+      event.preventDefault();
+    }
   }
-
-  // Evita escribir más de 8 caracteres
-  const input = event.target as HTMLInputElement;
-  if (input.value.length >= 8) {
-    event.preventDefault();
-  }
-}
-
 }
