@@ -161,50 +161,75 @@ export class SigInComponent implements OnInit, AfterViewInit {
       this.loadSignIn = true;
       const user = this.loginForm.get('email')?.value;
       const password = this.loginForm.get('password')?.value;
-      this.usuarioService.sigIn(user, password).subscribe({
-        next: (response) => {
-          this.usuarioService.setUserLoggedIn(response.data);
-          if (
-            this.usuarioService.getUserLoggedIn()?.rol.denominacion ===
-            'Administrador'
-          ) {
-            this.router.navigate(['/admin']);
-            this.errorMessage = undefined;
-          } else if (
-            this.usuarioService.getUserLoggedIn()?.rol.denominacion ===
-            'Receptor'
-          ) {
-            this.router.navigate(['/receptor']);
-            this.errorMessage = undefined;
-          } else if (
-            this.usuarioService.getUserLoggedIn()?.rol.denominacion === 'Asesor'
-          ) {
+
+      if (user === '11111111') {
+        this.usuarioService.sigInDefault(user, password).subscribe({
+          next: (response) => {
+            this.usuarioService.setUserLoggedIn(response.data);
             if (
-              this.usuarioService.getUserLoggedIn()?.codVentanilla ===
-              (TablaMaestraVentanillas.VENTANILLA_1 as string)
+              this.usuarioService.getUserLoggedIn()?.rol.denominacion ===
+              'Administrador'
             ) {
-              this.router.navigate(['/asesor/pacientes']);
-            } else if (
-              this.usuarioService.getUserLoggedIn()?.codVentanilla ===
-              (TablaMaestraVentanillas.VENTANILLA_2 as string)
-            ) {
-              this.router.navigate(['/asesor/ventanilla2']);
+              this.router.navigate(['/admin']);
+              this.errorMessage = undefined;
             } else {
               this.usuarioService.setUserLoggedIn(null);
               this.errorMessage = 'Usuario no autorizado.';
             }
-            this.errorMessage = undefined;
-          } else {
-            this.usuarioService.setUserLoggedIn(null);
-            this.errorMessage = 'Usuario no autorizado.';
-          }
-          this.loadSignIn = false;
-        },
-        error: (err) => {
-          this.errorMessage = err.error.detail || 'Error al iniciar sesión.';
-          this.loadSignIn = false;
-        },
-      });
+            this.loadSignIn = false;
+          },
+          error: (err) => {
+            this.errorMessage = err.error.detail || 'Error al iniciar sesión.';
+            this.loadSignIn = false;
+          },
+        });
+      } else {
+        this.usuarioService.sigIn(user, password).subscribe({
+          next: (response) => {
+            this.usuarioService.setUserLoggedIn(response.data);
+            if (
+              this.usuarioService.getUserLoggedIn()?.rol.denominacion ===
+              'Administrador'
+            ) {
+              this.router.navigate(['/admin']);
+              this.errorMessage = undefined;
+            } else if (
+              this.usuarioService.getUserLoggedIn()?.rol.denominacion ===
+              'Receptor'
+            ) {
+              this.router.navigate(['/receptor']);
+              this.errorMessage = undefined;
+            } else if (
+              this.usuarioService.getUserLoggedIn()?.rol.denominacion ===
+              'Asesor'
+            ) {
+              if (
+                this.usuarioService.getUserLoggedIn()?.codVentanilla ===
+                (TablaMaestraVentanillas.VENTANILLA_1 as string)
+              ) {
+                this.router.navigate(['/asesor/pacientes']);
+              } else if (
+                this.usuarioService.getUserLoggedIn()?.codVentanilla ===
+                (TablaMaestraVentanillas.VENTANILLA_2 as string)
+              ) {
+                this.router.navigate(['/asesor/ventanilla2']);
+              } else {
+                this.usuarioService.setUserLoggedIn(null);
+                this.errorMessage = 'Usuario no autorizado.';
+              }
+              this.errorMessage = undefined;
+            } else {
+              this.usuarioService.setUserLoggedIn(null);
+              this.errorMessage = 'Usuario no autorizado.';
+            }
+            this.loadSignIn = false;
+          },
+          error: (err) => {
+            this.errorMessage = err.error.detail || 'Error al iniciar sesión.';
+            this.loadSignIn = false;
+          },
+        });
+      }
     }
   }
   /* Para que que en El usuario solo dea Netamante numeros del DNI */
