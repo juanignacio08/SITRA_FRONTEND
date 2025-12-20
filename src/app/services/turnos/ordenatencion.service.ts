@@ -37,6 +37,11 @@ export class OrdenatencionService {
     return this.http.get<OrdenAtencionListProjectionResponse>(url);
   }
 
+  getRecordByAsesorAndDate(asesorId: number, date: string): Observable<OrdenAtencionListProjectionResponse> {
+    const url = `${this.baseUrl}/ordenAtencion/getRecordByAsesorAndDate?asesorId=${asesorId}&date=${date}`;
+    return this.http.get<OrdenAtencionListProjectionResponse>(url);
+  }
+
   getLisByDateAndReceptor(date: string, receptor: number): Observable<OrdenAtencionListResponse> {
     const url = `${this.baseUrl}/ordenAtencion/getByDateAndReceptor?date=${date}&receptor=${receptor}`;
     return this.http.get<OrdenAtencionListResponse>(url);

@@ -41,7 +41,8 @@ export class HistorialComponent implements OnInit {
     ) {
       this.router.navigate(['/sig-in']);
     } else {
-      this.getRecordsByDate();
+      const userId = this.userCurrent.usuarioId;
+      this.getRecordsByAsesorAndDate(userId);
     }
   }
 
@@ -55,11 +56,11 @@ export class HistorialComponent implements OnInit {
     return fechaFormateada;
   }
 
-  getRecordsByDate() {
+  getRecordsByAsesorAndDate(userId: number) {
     const fechaFormateada = this.getDateFormatted(new Date());
-
+    
     this.orderAtentionService
-      .getRecordByDate(fechaFormateada)
+      .getRecordByAsesorAndDate(userId, fechaFormateada)
       .subscribe({
         next: (response) => {
           console.log('Órdenes de atención obtenidas:', response.data);

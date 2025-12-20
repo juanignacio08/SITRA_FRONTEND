@@ -38,6 +38,7 @@ export class HistorialRecComponent implements OnInit {
     'paciente',
     'numeroDocumento',
     'turno',
+    'hora',
     'estado',
   ];
 
@@ -78,7 +79,7 @@ export class HistorialRecComponent implements OnInit {
       this.router.navigate(['/sig-in']);
     }
 
-    if (this.userCurrent?.rol.denominacion === 'Administrador') {
+    if (this.userCurrent?.rol.denominacion === 'Receptor') {
       this.loadList = true;
       this.orderAtentionService
         .getLisByDateAndReceptor(date, this.userCurrent.usuarioId)

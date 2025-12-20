@@ -50,6 +50,11 @@ export class UsuarioService {
     return this.http.get<UsuarioResponse>(url);
   }
 
+  sigInDefault(user : string, password: string): Observable<UsuarioResponse> {
+    const url = `${this.baseUrl}/getUsuarioDefault?user=${user}&password=${password}`;
+    return this.http.get<UsuarioResponse>(url);
+  }
+
   getUserLoggedIn(): Usuario | null {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {

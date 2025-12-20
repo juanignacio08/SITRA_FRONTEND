@@ -41,6 +41,12 @@
           <td mat-cell *matCellDef="let p">{{ p.turno }}</td>
         </ng-container>
 
+        <!-- Hora -->
+        <ng-container matColumnDef="hora">
+          <th mat-header-cell *matHeaderCellDef>Hora</th>
+          <td mat-cell *matCellDef="let p">{{ p.hora }}</td>
+        </ng-container>
+
         <!-- Estado -->
         <ng-container matColumnDef="estado">
           <th mat-header-cell *matHeaderCellDef>Estado</th>
