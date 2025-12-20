@@ -30,6 +30,9 @@ import { UsuarioService } from '../../../services/seguridad/usuario.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalerrorComponent } from '../../../components/modalerror/modalerror.component';
+import { Subscription } from 'rxjs';
+import { OrdenAtencionSocketService } from '../../../services/turnos/orden-atencion-socket.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-pacientes',
@@ -78,6 +81,10 @@ export class PacientesComponent implements OnInit {
   usuarioService = inject(UsuarioService);
   router = inject(Router);
   dialog = inject(MatDialog);
+  webSocketService = inject(OrdenAtencionSocketService);
+  snackBar = inject(MatSnackBar);
+
+  private websocketSubscription!: Subscription;
 
   ngOnInit(): void {
     this.userCurrent = this.usuarioService.getUserLoggedIn();
@@ -92,6 +99,79 @@ export class PacientesComponent implements OnInit {
     } else {
       this.getOrderAtentionInVentanilla();
       this.getOrdersAtentionNormal();
+
+      // SUSCRIBIRSE a nuevas órdenes (IMPORTANTE)
+      this.suscribirseANuevasOrdenes();
+      this.suscribirseANuevaLLamada();
+      
+    }
+  }
+
+  private suscribirseANuevaLLamada(): void {
+    this.websocketSubscription = this.webSocketService
+      .getNuevaLlamadaObservable()
+      .subscribe({
+        next: (nuevaLlamada) => {
+          if (nuevaLlamada) {
+            console.log('📥 [COMPONENTE] Nueva Llamada recibida:', nuevaLlamada.codVentanilla);
+            if (nuevaLlamada.codVentanilla === TablaMaestraVentanillas.VENTANILLA_2) {
+              this.deleteOrderFromList(nuevaLlamada);  
+              this.disabledButtons();
+            }
+          }
+        },
+        error: (error) => {
+          console.error('❌ Error en suscripción:', error);
+        },
+      });
+  }
+
+  deleteOrderFromList(llamada : Pantalla) {
+    this.orderAtentionList = this.orderAtentionList.filter(
+      p => p.ordenAtencionId !== llamada.orderAtencionId
+    );
+  }
+
+  private suscribirseANuevasOrdenes(): void {
+    this.websocketSubscription = this.webSocketService
+      .getNuevasOrdenesObservable()
+      .subscribe({
+        next: (nuevaOrden) => {
+          if (nuevaOrden) {
+            console.log('📥 [COMPONENTE] Nueva orden recibida:', nuevaOrden);
+            this.agregarOrdenALista(nuevaOrden);
+          }
+        },
+        error: (error) => {
+          console.error('❌ Error en suscripción:', error);
+        },
+      });
+  }
+
+  private agregarOrdenALista(orden: OrdenAtencion): void {
+    // Verificar si ya existe
+    const existe = this.orderAtentionList.some(
+      (o) => o.ordenAtencionId === orden.ordenAtencionId
+    );
+
+    if (!existe) {
+      this.orderAtentionList = [...this.orderAtentionList, orden];
+      
+      this.snackBar.open(
+        `🎉 NUEVO TURNO: ${orden.turno} - ${orden.persona.nombre}`,
+        'Cerrar', // texto del botón opcional
+        {
+          duration: 2000, // 3 segundos
+          horizontalPosition: 'right', // 'start' | 'center' | 'end' | 'left' | 'right'
+          verticalPosition: 'top', // 'top' | 'bottom'
+        }
+      );
+
+      this.disabledButtons();
+      console.log('✅ Orden agregada correctamente');
+    } else {
+      this.disabledButtons();
+      console.log('⚠️ Orden ya existe en la lista');
     }
   }
 
