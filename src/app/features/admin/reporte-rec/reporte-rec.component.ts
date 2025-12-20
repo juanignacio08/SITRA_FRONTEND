@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -62,6 +62,7 @@ export class ReporteRecComponent implements OnInit {
   user?: Usuario | null;
 
   orderAtentionList: OrdenAtencion[] = [];
+  orderAtentionListOriginal: OrdenAtencion[] = [];
 
   loadList: boolean = false;
 
@@ -82,7 +83,9 @@ export class ReporteRecComponent implements OnInit {
       fechaEng: [this.today], // Para el datepicker
       fecha: [''], // Para mostrar DD/MM/YYYY
       diaSemana: [null], // Día de la semana
+      dni: ['', [Validators.minLength(8)]],
     });
+
   }
 
   ngOnInit(): void {
@@ -107,6 +110,10 @@ export class ReporteRecComponent implements OnInit {
       // 🔹 Cargar historial de HOY
       this.reloadOrderAtentions(this.formatOrdenFecha(fechaHoy));
     }
+    this.form.get('dni')?.valueChanges.subscribe(dni => {
+  this.filtrarPorDni(dni);
+});
+
   }
 
   reloadOrderAtentions(date: string) {
@@ -114,6 +121,7 @@ export class ReporteRecComponent implements OnInit {
     this.orderAtentionService.getLisByDate(date).subscribe({
       next: (response) => {
         this.orderAtentionList = response.data;
+        this.orderAtentionListOriginal = response.data;
         this.loadList = false;
       },
       error: (error) => {
@@ -161,4 +169,24 @@ export class ReporteRecComponent implements OnInit {
 
     this.reloadOrderAtentions(fechaFormateada);
   }
+  soloNumeros(event: any) {
+    const value = event.target.value.replace(/[^0-9]/g, '');
+    this.form.get('dni')?.setValue(value, { emitEvent: false });
+  }
+
+  filtrarPorDni(dni: string) {
+  if (!dni) {
+    this.orderAtentionList = this.orderAtentionListOriginal;
+    return;
+  }
+
+  this.orderAtentionList = this.orderAtentionListOriginal.filter(p =>
+    p.persona?.numeroDocumentoIdentidad
+      ?.toString()
+      .includes(dni)
+  );
+}
+
+
+
 }

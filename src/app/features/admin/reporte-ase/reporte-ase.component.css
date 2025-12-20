@@ -142,3 +142,13 @@ color: #2E7D32;
   background-color: #e0e0e0; /* gris */
   color: #424242;
 }
+/* LLAMANDO */
+.estado-llamando {
+  background-color: #eef6f7; /* gris */
+  color: #66eaf4;
+}
+/* PENDIENTE*/
+.estado-pendiente {
+  background-color: #d7d775; /* gris */
+  color: #646e0b;
+}

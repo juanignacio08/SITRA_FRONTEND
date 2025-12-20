@@ -6,36 +6,36 @@
   <mat-card-content>
     <form [formGroup]="form">
       <div class="row">
-         <div class="col-3 left m-b-20">
-        <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Fecha</mat-label>
+        <div class="col-3 left m-b-20">
+          <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Fecha</mat-label>
 
-        <mat-form-field appearance="outline" class="w-100" color="primary">
-          <input matInput [matDatepicker]="picker" formControlName="fechaEng" placeholder="Seleccione"
-            (dateChange)="obtenerFechaFormateada($event.value)" [max]="today" />
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput [matDatepicker]="picker" formControlName="fechaEng" placeholder="Seleccione"
+              (dateChange)="obtenerFechaFormateada($event.value)" [max]="today" />
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-3 left m-b-20">
+          <mat-label class="f-s-14 f-w-600 m-b-8 d-block">
+            DNI
+          </mat-label>
+
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput formControlName="dni" placeholder="Ingrese DNI" maxlength="8" type="text"
+              (input)="soloNumeros($event)" />
+
+            <mat-error *ngIf="form.get('dni')?.hasError('required')">
+              El DNI es obligatorio
+            </mat-error>
+
+            <mat-error *ngIf="form.get('dni')?.hasError('minlength')">
+              El DNI debe tener 8 dígitos
+            </mat-error>
+          </mat-form-field>
+        </div>
       </div>
-      <div class="col-3 left m-b-20">
-        <mat-label class="f-s-14 f-w-600 m-b-8 d-block">
-          DNI
-        </mat-label>
 
-        <mat-form-field appearance="outline" class="w-100" color="primary">
-          <input matInput formControlName="dni" placeholder="Ingrese DNI" maxlength="8" type="text"
-            (input)="soloNumeros($event)" />
-
-          <mat-error *ngIf="form.get('dni')?.hasError('required')">
-            El DNI es obligatorio
-          </mat-error>
-
-          <mat-error *ngIf="form.get('dni')?.hasError('minlength')">
-            El DNI debe tener 8 dígitos
-          </mat-error>
-        </mat-form-field>
-      </div>
-      </div>
-     
     </form>
 
     <!-- Tabla ejemplo -->
@@ -113,10 +113,9 @@
           <th mat-header-cell *matHeaderCellDef>Ventanilla</th>
           <td mat-cell *matCellDef="let p">
             @if (p.codventanillaLl) {
-              <span class="ventanilla-badge"
-          [class.ventanilla-01]="p.codventanillaLl.includes('01')"
-          [class.ventanilla-02]="p.codventanillaLl.includes('02')">
-            {{ p.codventanillaLl | viewVentanilla }}  </span>
+            <span class="ventanilla-badge" [class.ventanilla-01]="p.codventanillaLl.includes('01')"
+              [class.ventanilla-02]="p.codventanillaLl.includes('02')">
+              {{ p.codventanillaLl | viewVentanilla }} </span>
             } @else {---}
           </td>
         </ng-container>
@@ -126,11 +125,13 @@
           <th mat-header-cell *matHeaderCellDef>Estado</th>
           <td mat-cell *matCellDef="let p">
             <span class="estado-badge"
-          [class.estado-atendido]="(p.codestadoatencion | viewStatusOrderAtention) === 'Atendido'"
-          [class.estado-ausente]="(p.codestadoatencion | viewStatusOrderAtention) === 'Ausente'"
-          [class.estado-atendiendo]="(p.codestadoatencion | viewStatusOrderAtention) === 'Atendiendo'">
-      {{ p.codestadoatencion | viewStatusOrderAtention }}
-    </span>
+              [class.estado-atendido]="(p.codestadoatencion | viewStatusOrderAtention) === 'Atendido'"
+              [class.estado-ausente]="(p.codestadoatencion | viewStatusOrderAtention) === 'Ausente'"
+              [class.estado-atendiendo]="(p.codestadoatencion | viewStatusOrderAtention) === 'Atendiendo...'"
+              [class.estado-llamando]="(p.codestadoatencion | viewStatusOrderAtention) === 'Llamando...'"
+              [class.estado-pendiente]="(p.codestadoatencion | viewStatusOrderAtention) === 'Pendiente'">
+              {{ p.codestadoatencion | viewStatusOrderAtention }}
+            </span>
           </td>
         </ng-container>
 

@@ -5,16 +5,40 @@
 
   <mat-card-content>
     <form [formGroup]="form">
-      <div class="col-3 left m-b-20">
-        <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Fecha</mat-label>
+      <div class="row">
+        <div class="col-3 left m-b-20">
+          <mat-label class="f-s-14 f-w-600 m-b-8 d-block">Fecha</mat-label>
 
-        <mat-form-field appearance="outline" class="w-100" color="primary">
-          <input matInput [matDatepicker]="picker" formControlName="fechaEng" placeholder="Seleccione"
-            (dateChange)="obtenerFechaFormateada($event.value)" [max]="today" />
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput [matDatepicker]="picker" formControlName="fechaEng" placeholder="Seleccione"
+              (dateChange)="obtenerFechaFormateada($event.value)" [max]="today" />
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-3 left m-b-20">
+          <mat-label class="f-s-14 f-w-600 m-b-8 d-block">
+            DNI
+          </mat-label>
+
+          <mat-form-field appearance="outline" class="w-100" color="primary">
+            <input matInput formControlName="dni" placeholder="Ingrese DNI" maxlength="8" type="text"
+              (input)="soloNumeros($event)" />
+
+            <mat-icon matSuffix>badge</mat-icon>
+
+            <mat-error *ngIf="form.get('dni')?.hasError('required')">
+              El DNI es obligatorio
+            </mat-error>
+
+            <mat-error *ngIf="form.get('dni')?.hasError('minlength')">
+              El DNI debe tener 8 dígitos
+            </mat-error>
+          </mat-form-field>
+        </div>
       </div>
+
+
     </form>
 
 
