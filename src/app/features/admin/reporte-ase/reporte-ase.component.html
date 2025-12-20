@@ -116,7 +116,7 @@
               <span class="ventanilla-badge"
           [class.ventanilla-01]="p.codventanillaLl.includes('01')"
           [class.ventanilla-02]="p.codventanillaLl.includes('02')">
-            {{ p.codventanillaLl | viewVentanilla }}  </span>
+            {{ p.codventanillaLl | viewVentanilla }} - {{ p.asesorNombre | truncate:7 }} </span>
             } @else {---}
           </td>
         </ng-container>

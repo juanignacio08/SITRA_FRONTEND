@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -16,6 +21,7 @@ import { UsuarioService } from '../../../services/seguridad/usuario.service';
 import { ModalerrorComponent } from '../../../components/modalerror/modalerror.component';
 import { Usuario } from '../../../models/seguridad/usuario.model';
 import { Router } from '@angular/router';
+import { TruncatePipe } from '../../../pipes/truncate.pipe'; 
 
 // Formatos personalizados para MatDatepicker
 export const CUSTOM_DATE_FORMATS = {
@@ -44,6 +50,7 @@ export const CUSTOM_DATE_FORMATS = {
     MatNativeDateModule,
     ViewStatusOrderAtentionPipe,
     ViewVentanillaPipe,
+    TruncatePipe
   ],
   templateUrl: './reporte-ase.component.html',
   styleUrls: ['./reporte-ase.component.css'],
@@ -68,7 +75,6 @@ export class ReporteAseComponent implements OnInit {
   /* para la busqueda */
   orderAtentionListOriginal: OrdenATencionProjection[] = [];
 
-
   loading: boolean = false;
 
   user?: Usuario | null;
@@ -90,7 +96,7 @@ export class ReporteAseComponent implements OnInit {
       fechaEng: [this.today], // Para el datepicker
       fecha: [''], // Para mosull as Date trar DD/MM/YYYY
       diaSemana: [null], // Día de la semana
-      dni: ['', [Validators.required, Validators.minLength(8)]]
+      dni: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 
@@ -116,10 +122,9 @@ export class ReporteAseComponent implements OnInit {
       // 🔹 Cargar registros de HOY
       this.getRecordsByDate(fechaFormateada);
     }
-    this.form.get('dni')?.valueChanges.subscribe(dni => {
+    this.form.get('dni')?.valueChanges.subscribe((dni) => {
       this.filtrarPorDni(dni);
     });
-
   }
 
   getRecordsByDate(date: string) {
@@ -179,19 +184,15 @@ export class ReporteAseComponent implements OnInit {
     event.target.value = event.target.value.replace(/[^0-9]/g, '');
     this.form.get('dni')?.setValue(event.target.value);
   }
+
   filtrarPorDni(dni: string) {
+    if (!dni || dni.length === 0) {
+      this.orderAtentionList = this.orderAtentionListOriginal;
+      return;
+    }
 
-  if (!dni || dni.length === 0) {
-    this.orderAtentionList = this.orderAtentionListOriginal;
-    return;
+    this.orderAtentionList = this.orderAtentionListOriginal.filter((p) =>
+      p.numerodocumentoidentidad?.toString().includes(dni)
+    );
   }
-
-  this.orderAtentionList = this.orderAtentionListOriginal.filter(p =>
-    p.numerodocumentoidentidad
-      ?.toString()
-      .includes(dni)
-  );
-}
-
-
 }

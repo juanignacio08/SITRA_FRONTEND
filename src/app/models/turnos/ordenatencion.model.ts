@@ -47,6 +47,8 @@ export interface OrdenATencionProjection {
   numllamada: number
   codresultado: string
   
+  asesorNombre : number
+
   atencionid: number
   fechaatencion: string
   horainicio: string
