@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -65,6 +65,9 @@ export class ReporteAseComponent implements OnInit {
   form: FormGroup;
 
   orderAtentionList: OrdenATencionProjection[] = [];
+  /* para la busqueda */
+  orderAtentionListOriginal: OrdenATencionProjection[] = [];
+
 
   loading: boolean = false;
 
@@ -87,6 +90,7 @@ export class ReporteAseComponent implements OnInit {
       fechaEng: [this.today], // Para el datepicker
       fecha: [''], // Para mosull as Date trar DD/MM/YYYY
       diaSemana: [null], // Día de la semana
+      dni: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
 
@@ -112,6 +116,10 @@ export class ReporteAseComponent implements OnInit {
       // 🔹 Cargar registros de HOY
       this.getRecordsByDate(fechaFormateada);
     }
+    this.form.get('dni')?.valueChanges.subscribe(dni => {
+      this.filtrarPorDni(dni);
+    });
+
   }
 
   getRecordsByDate(date: string) {
@@ -119,6 +127,7 @@ export class ReporteAseComponent implements OnInit {
     this.orderAtentionService.getRecordByDate(date).subscribe({
       next: (response) => {
         this.orderAtentionList = response.data;
+        this.orderAtentionListOriginal = response.data;
         this.loading = false;
       },
       error: (error) => {
@@ -166,4 +175,23 @@ export class ReporteAseComponent implements OnInit {
 
     this.getRecordsByDate(fechaFormateada);
   }
+  soloNumeros(event: any) {
+    event.target.value = event.target.value.replace(/[^0-9]/g, '');
+    this.form.get('dni')?.setValue(event.target.value);
+  }
+  filtrarPorDni(dni: string) {
+
+  if (!dni || dni.length === 0) {
+    this.orderAtentionList = this.orderAtentionListOriginal;
+    return;
+  }
+
+  this.orderAtentionList = this.orderAtentionListOriginal.filter(p =>
+    p.numerodocumentoidentidad
+      ?.toString()
+      .includes(dni)
+  );
+}
+
+
 }

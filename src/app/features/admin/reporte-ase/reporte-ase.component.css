@@ -89,3 +89,56 @@ td.mat-cell {
   color: #388e3c;
   font-weight: 600;
 }
+
+
+/* color de ventanilla */
+.ventanilla-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* V 01 → celeste */
+.ventanilla-01 {
+  background-color: #ccbdf9;
+  color: #01579b;
+}
+
+/* V 02 → turquesa */
+.ventanilla-02 {
+  background-color: #80deea;
+  color: #3302f7;
+}
+
+
+/* para estado */
+.estado-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* ATENDIDO */
+.estado-atendido {
+   background-color: #d5e9de;
+border-color: #43A047;
+color: #2E7D32;
+
+}
+
+/* AUSENTE */
+.estado-ausente {
+  background-color: #e8dadd;
+  border-color: #C62828;
+  color: #C62828;
+}
+
+/* ATENDIENDO */
+.estado-atendiendo {
+  background-color: #e0e0e0; /* gris */
+  color: #424242;
+}
