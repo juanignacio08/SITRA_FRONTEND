@@ -306,8 +306,8 @@ export class PacientesComponent implements OnInit {
       this.atencionService.saveAtention(atention).subscribe({
         next: (response) => {
           this.screenNormal = response.data;
-          const message = "Iniciando atención a " + this.getFullName();
-          this.talk(message)
+          //const message = "Iniciando atención a " + this.getFullName();
+          //this.talk(message)
           this.disabledButtons();
           this.getOrdersAtentionNormal();
           this.loadStart = false;
@@ -341,8 +341,8 @@ export class PacientesComponent implements OnInit {
       this.atencionService.finish(atention).subscribe({
         next: (response) => {
           console.log(response.data);
-          const message = "Finalizando atencion a " + this.getFullName();
-          this.talk(message);
+          //const message = "Finalizando atencion a " + this.getFullName();
+          //this.talk(message);
 
           this.screenNormal = undefined;
           this.disabledButtons();
@@ -371,8 +371,8 @@ export class PacientesComponent implements OnInit {
       this.llamadaService.markAsAbsent(this.screenNormal.llamadaId, TablaMaestraVentanillas.VENTANILLA_1).subscribe({
         next: (response) => {
           this.screenNormal = response.data;
-          const message = "Marcando como ausente a " + this.getFullName();
-          this.talk(message);
+          //const message = "Marcando como ausente a " + this.getFullName();
+          //this.talk(message);
 
           this.screenNormal = undefined;
           this.disabledButtons();

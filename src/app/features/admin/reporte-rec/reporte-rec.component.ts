@@ -15,6 +15,9 @@ import { ModalerrorComponent } from '../../../components/modalerror/modalerror.c
 import { ViewStatusOrderAtentionPipe } from '../../../pipes/view-status-order-atention.pipe';
 import { Usuario } from '../../../models/seguridad/usuario.model';
 import { Router } from '@angular/router';
+/* sin segundos */
+import { HoraSinMsPipe } from '../../../pipes/hora-sin-ms.pipe';
+
 
 // Formatos personalizados para MatDatepicker
 export const CUSTOM_DATE_FORMATS = {
@@ -42,6 +45,7 @@ export const CUSTOM_DATE_FORMATS = {
     MatDatepickerModule,
     MatNativeDateModule,
     ViewStatusOrderAtentionPipe,
+    HoraSinMsPipe,
   ],
   templateUrl: './reporte-rec.component.html',
   styleUrls: ['./reporte-rec.component.css'],
