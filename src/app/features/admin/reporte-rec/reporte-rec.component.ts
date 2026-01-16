@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -15,9 +20,9 @@ import { ModalerrorComponent } from '../../../components/modalerror/modalerror.c
 import { ViewStatusOrderAtentionPipe } from '../../../pipes/view-status-order-atention.pipe';
 import { Usuario } from '../../../models/seguridad/usuario.model';
 import { Router } from '@angular/router';
-/* sin segundos */
-import { HoraSinMsPipe } from '../../../pipes/hora-sin-ms.pipe';
-
+import { OrdenAtencionSocketService } from '../../../services/turnos/orden-atencion-socket.service';
+import { Subscription } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Formatos personalizados para MatDatepicker
 export const CUSTOM_DATE_FORMATS = {
@@ -45,7 +50,7 @@ export const CUSTOM_DATE_FORMATS = {
     MatDatepickerModule,
     MatNativeDateModule,
     ViewStatusOrderAtentionPipe,
-    HoraSinMsPipe,
+    //HoraSinMsPipe,
   ],
   templateUrl: './reporte-rec.component.html',
   styleUrls: ['./reporte-rec.component.css'],
@@ -72,12 +77,16 @@ export class ReporteRecComponent implements OnInit {
 
   dialog = inject(MatDialog);
 
+  private websocketSubscription!: Subscription;
+
   constructor(
     private fb: FormBuilder,
     private usuarioService: UsuarioService,
     private orderAtentionService: OrdenatencionService,
     private dateAdapter: DateAdapter<Date>,
-    private router: Router
+    private router: Router,
+    public webSocketService: OrdenAtencionSocketService,
+    private snackBar: MatSnackBar
   ) {
     // Forzar locale a español
     this.dateAdapter.setLocale('es-PE');
@@ -89,7 +98,6 @@ export class ReporteRecComponent implements OnInit {
       diaSemana: [null], // Día de la semana
       dni: ['', [Validators.minLength(8)]],
     });
-
   }
 
   ngOnInit(): void {
@@ -113,11 +121,13 @@ export class ReporteRecComponent implements OnInit {
 
       // 🔹 Cargar historial de HOY
       this.reloadOrderAtentions(this.formatOrdenFecha(fechaHoy));
-    }
-    this.form.get('dni')?.valueChanges.subscribe(dni => {
-  this.filtrarPorDni(dni);
-});
 
+      // SUSCRIBIRSE a nuevas órdenes (IMPORTANTE)
+      this.suscribirseANuevasOrdenes();
+    }
+    this.form.get('dni')?.valueChanges.subscribe((dni) => {
+      this.filtrarPorDni(dni);
+    });
   }
 
   reloadOrderAtentions(date: string) {
@@ -133,6 +143,48 @@ export class ReporteRecComponent implements OnInit {
         this.loadList = false;
       },
     });
+  }
+
+  private suscribirseANuevasOrdenes(): void {
+    this.websocketSubscription = this.webSocketService
+      .getNuevasOrdenesObservable()
+      .subscribe({
+        next: (nuevaOrden) => {
+          if (nuevaOrden) {
+            console.log('📥 [COMPONENTE] Nueva orden recibida:', nuevaOrden);
+            this.agregarOrdenALista(nuevaOrden);
+          }
+        },
+        error: (error) => {
+          console.error('❌ Error en suscripción:', error);
+        },
+      });
+  }
+
+  private agregarOrdenALista(orden: OrdenAtencion): void {
+    // Verificar si ya existe
+    const existe = this.orderAtentionListOriginal.some(
+      (o) => o.ordenAtencionId === orden.ordenAtencionId
+    );
+
+    if (!existe) {
+      this.orderAtentionListOriginal = [...this.orderAtentionListOriginal, orden];
+      this.orderAtentionList = [...this.orderAtentionListOriginal];
+
+      this.snackBar.open(
+        `🎉 NUEVO TURNO: ${orden.turno} - ${orden.persona.nombre}`,
+        'Cerrar', // texto del botón opcional
+        {
+          duration: 2000, // 3 segundos
+          horizontalPosition: 'right', // 'start' | 'center' | 'end' | 'left' | 'right'
+          verticalPosition: 'top', // 'top' | 'bottom'
+        }
+      );
+
+      console.log('✅ Orden agregada correctamente');
+    } else {
+      console.log('⚠️ Orden ya existe en la lista');
+    }
   }
 
   openModalError(error: any) {
@@ -179,18 +231,13 @@ export class ReporteRecComponent implements OnInit {
   }
 
   filtrarPorDni(dni: string) {
-  if (!dni) {
-    this.orderAtentionList = this.orderAtentionListOriginal;
-    return;
+    if (!dni) {
+      this.orderAtentionList = this.orderAtentionListOriginal;
+      return;
+    }
+
+    this.orderAtentionList = this.orderAtentionListOriginal.filter((p) =>
+      p.persona?.numeroDocumentoIdentidad?.toString().includes(dni)
+    );
   }
-
-  this.orderAtentionList = this.orderAtentionListOriginal.filter(p =>
-    p.persona?.numeroDocumentoIdentidad
-      ?.toString()
-      .includes(dni)
-  );
-}
-
-
-
 }
