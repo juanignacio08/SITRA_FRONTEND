@@ -22,8 +22,6 @@ import { ModalerrorComponent } from '../../../components/modalerror/modalerror.c
 import { Usuario } from '../../../models/seguridad/usuario.model';
 import { Router } from '@angular/router';
 import { TruncatePipe } from '../../../pipes/truncate.pipe'; 
-/* sin segundos */
-import { HoraSinMsPipe } from '../../../pipes/hora-sin-ms.pipe';
 
 // Formatos personalizados para MatDatepicker
 export const CUSTOM_DATE_FORMATS = {
@@ -52,8 +50,7 @@ export const CUSTOM_DATE_FORMATS = {
     MatNativeDateModule,
     ViewStatusOrderAtentionPipe,
     ViewVentanillaPipe,
-    TruncatePipe,
-    HoraSinMsPipe,
+    TruncatePipe
   ],
   templateUrl: './reporte-ase.component.html',
   styleUrls: ['./reporte-ase.component.css'],
@@ -69,7 +66,6 @@ export class ReporteAseComponent implements OnInit {
     'horaFin',
     'ventanilla',
     'estado',
-    
   ];
 
   today: Date = new Date();
