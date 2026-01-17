@@ -65,6 +65,7 @@ export class OrdenAtencionSocketService {
     try {
       // URL EXACTA que usa Spring Boot con SockJS
       const socketUrl = 'http://localhost:8080/sitra/api/v1/ws';
+      //const socketUrl = 'http://192.168.18.41:8080/sitra/api/v1/ws';
       console.log('🔗 Conectando a:', socketUrl);
 
       const socket = new SockJS(socketUrl);

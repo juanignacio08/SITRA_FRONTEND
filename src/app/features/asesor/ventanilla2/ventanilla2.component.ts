@@ -186,7 +186,7 @@ export class Ventanilla2Component implements OnInit {
     const fechaFormateada = this.getDateFormatted(new Date());
 
     this.orderAtentionService
-      .getNormalPaginatedOrders(0, 100, fechaFormateada)
+      .getNormalPaginatedOrders(0, 1000, fechaFormateada)
       .subscribe({
         next: (response) => {
           this.orderAtentionList = response.data;
@@ -382,8 +382,8 @@ export class Ventanilla2Component implements OnInit {
       this.atencionService.saveAtention(atention).subscribe({
         next: (response) => {
           this.screenNormal = response.data;
-          const message = "Iniciando atención a " + this.getFullName();
-          this.talk(message)
+          // const message = "Iniciando atención a " + this.getFullName();
+          // this.talk(message)
           this.disabledButtons();
           this.getOrdersAtentionNormal();
           this.loadStart = false;
@@ -417,8 +417,8 @@ export class Ventanilla2Component implements OnInit {
       this.atencionService.finish(atention).subscribe({
         next: (response) => {
           console.log(response.data);
-          const message = "Finalizando atencion a " + this.getFullName();
-          this.talk(message);
+          // const message = "Finalizando atencion a " + this.getFullName();
+          // this.talk(message);
 
           this.screenNormal = undefined;
           this.disabledButtons();
@@ -447,8 +447,8 @@ export class Ventanilla2Component implements OnInit {
       this.llamadaService.markAsAbsent(this.screenNormal.llamadaId, TablaMaestraVentanillas.VENTANILLA_2).subscribe({
         next: (response) => {
           this.screenNormal = response.data;
-          const message = "Marcando como ausente a " + this.getFullName();
-          this.talk(message);
+          // const message = "Marcando como ausente a " + this.getFullName();
+          // this.talk(message);
 
           this.screenNormal = undefined;
           this.disabledButtons();
