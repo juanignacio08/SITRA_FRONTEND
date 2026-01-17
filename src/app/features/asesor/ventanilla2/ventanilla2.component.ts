@@ -186,7 +186,7 @@ export class Ventanilla2Component implements OnInit {
     const fechaFormateada = this.getDateFormatted(new Date());
 
     this.orderAtentionService
-      .getNormalPaginatedOrders(0, 100, fechaFormateada)
+      .getNormalPaginatedOrders(0, 1000, fechaFormateada)
       .subscribe({
         next: (response) => {
           this.orderAtentionList = response.data;
