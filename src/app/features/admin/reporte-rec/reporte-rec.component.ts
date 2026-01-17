@@ -50,6 +50,7 @@ export const CUSTOM_DATE_FORMATS = {
     MatDatepickerModule,
     MatNativeDateModule,
     ViewStatusOrderAtentionPipe,
+    //HoraSinMsPipe,
   ],
   templateUrl: './reporte-rec.component.html',
   styleUrls: ['./reporte-rec.component.css'],

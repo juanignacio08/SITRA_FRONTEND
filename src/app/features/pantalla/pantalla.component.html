@@ -62,7 +62,6 @@
             </div>
 
             <div class="col-12">
-                <p class=" text-end fs-5 fw-bold p-0 m-0">Pacientes: {{orderAtentionListTruncate.length}} / {{ordersAtentionNormalList.length}}</p>
                 <div class="row p-2">
                     @for (item of orderAtentionListTruncate; track item.ordenAtencionId) {
                     @if (item.turno % 2 == 0) {
